@@ -1,0 +1,251 @@
+% This is a Homework Template for CS 1010.  
+% It was modified by  Michael Carl Tschantz (mtschant) 
+% who provided the ``useful infomation on latex''.
+
+% THE ONLY THING YOU NEED TO DO IN THIS PART IS 
+% TO FILL IN THE HOMEWORK NUMBER, YOUR NAME AND LOG IN BELOW
+% REPLACE ``X'' WITH THE HW NUMBER, ``Your Name'' WITH YOUR NAME,
+% AND ``your login'' WITH YOUR LOGIN.
+
+\newcommand{\hwnumber}{12}
+\newcommand{\yourname}{Michael Mueller}
+
+% NOW YOU MAY SKIP DOWN TO THE PART CALLED ``YOUR DOCUMENT''.
+
+%==============================================================================
+% Formatting parameters (how the page is set up)
+%==============================================================================
+\newcommand{\yourcourse}{Math 695}
+\newcommand{\chapter}{0}
+\newcommand{\mgn}{\mathcal M_{g,n}}
+\newcommand{\mgnb}{\overline{\mathcal M_{g,n}}}
+\newcommand{\mgb}[1]{\overline{\mathcal M_{g,#1}}}
+
+\documentclass[11pt]{article}           % 11pt article
+\makeatletter                   % Make '@' accessible.
+\pagestyle{myheadings}              % We do our own page headers.
+\newcommand{\thishw}{\bf Elliptic curve question}
+\def\@oddhead{\bf \thishw \hfill \yourname}
+\oddsidemargin=0in              % Left margin minus 1 inch.
+\evensidemargin=0in             % Same for even-numbered pages.
+\textwidth=6.5in                % Text width (8.5in - margins).
+\topmargin=0in                  % Top margin minus 1 inch.
+\headsep=0.2in                  % Distance from header to body.
+\textheight=8in                 % Body height (incl. footnotes)
+\skip\footins=4ex               % Space above first footnote.
+\hbadness=10000                 % No "underfull hbox" messages.
+\makeatother                    % Make '@' special again.
+
+%==============================================================================
+% Packages used (packages add more commands)
+%==============================================================================
+
+\usepackage{amsmath}                % give more fonts and symbols
+\usepackage{amsfonts}               % want AMS fonts
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{tikz-cd}
+\usepackage{bbm}                % given mathbbm fonts
+\usepackage[shortlabels]{enumitem}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\makeatletter
+\newcommand*{\relrelbarsep}{.386ex}
+\newcommand*{\relrelbar}{%
+  \mathrel{%
+    \mathpalette\@relrelbar\relrelbarsep
+  }%
+}
+\newcommand*{\@relrelbar}[2]{%
+  \raise#2\hbox to 0pt{$\m@th#1\relbar$\hss}%
+  \lower#2\hbox{$\m@th#1\relbar$}%
+}
+\providecommand*{\rightrightarrowsfill@}{%
+  \arrowfill@\relrelbar\relrelbar\rightrightarrows
+}
+\providecommand*{\leftleftarrowsfill@}{%
+  \arrowfill@\leftleftarrows\relrelbar\relrelbar
+}
+\providecommand*{\xrightrightarrows}[2][]{%
+  \ext@arrow 0359\rightrightarrowsfill@{#1}{#2}%
+}
+\providecommand*{\xleftleftarrows}[2][]{%
+  \ext@arrow 3095\leftleftarrowsfill@{#1}{#2}%
+}
+\makeatother
+
+%==============================================================================
+% Macros (make your own commands)
+%==============================================================================
+
+% For problem and part headers
+\newcounter{problemcounter}
+\newcounter{subproblemcounter}
+\newcommand{\problem}{
+    \addtocounter{problemcounter}{1}
+    \bigskip
+    \noindent {\Large Problem \hwnumber .\theproblemcounter}
+    \smallskip
+    \setcounter{subproblemcounter}{0}
+}
+\newcommand{\subproblem}{
+    \addtocounter{subproblemcounter}{1}
+    \smallskip
+    \noindent {\bf \alph{subproblemcounter})} 
+}
+
+% Nice things
+\newcommand{\set}[1]{\{#1\}}            % Set (as in \set{1,2,3})
+\newcommand{\setof}[2]{\{\,{#1}|~{#2}\,\}}  % Set (as in \setof{x}{x > 0})
+
+% Some letter symbols
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+\newcommand{\hTop}{\textbf{hTop}}
+\newtheorem*{Proposition}{Proposition}
+\newtheorem*{Corollary}{Corollary}
+\newcommand{\Tor}{\text{Tor}}
+\newcommand{\Ext}{\text{Ext}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\CP}{\mathbb{CP}}
+\newcommand{\RP}{\mathbb{RP}}
+\newcommand{\Spec}{\text{Spec}}
+\newcommand{\Aut}{\text{Aut}}
+\newcommand{\Proj}{\text{Proj}}
+\newcommand{\Mor}{\text{Mor}}
+\newcommand{\codim}{\text{codim}}
+\newcommand{\exer}[1]{{\bf Exercise #1} \\}
+\newcommand{\Hom}{\text{Hom}}
+\newcommand{\coker}{\text{coker}}
+\newcommand*\simplex{\includegraphics[scale=0.017]{simplex.png}}
+\newcommand{\Sch}{\textbf{Sch}}
+\newcommand{\Set}{\textbf{Set}}
+\renewcommand{\P}{\mathbb P}
+\theoremstyle{definition}
+\newtheorem*{thm}{Theorem}
+\newtheorem*{prob}{Problem}
+\newtheorem*{dfn}{Definition}
+\newtheorem*{claim}{Claim}
+\theoremstyle{definition}
+\newtheorem*{lem}{Lemma}
+\newtheorem*{ex}{Exercise}
+\newtheorem*{eg}{Example}
+\newtheorem*{note}{Note}
+
+%==============================================================================
+% YOUR DOCUMENT (start here)
+%==============================================================================
+
+\begin{document}
+\centerline{\LARGE\thishw}
+\begin{prob}
+  Consider the relative moduli stack $\overline{\mathcal M}_{1,1}(\P^1_{\Z/2,\Z/2},(d))$ of degree $d$ stable maps from an elliptic curve $(E,p)$
+  to the orbifold $\P^1_{\Z/2,\Z/2}$ ($\P^1$ with $\Z/2$ stabilizer at $1$ and $\infty$) fully ramified at $p$ over $0$.
+  There is a map $\pi$ from this moduli stack to $\overline{\mathcal M}_{1,1}$, and the image of the virtual fundamental class is an element of $A^0(\overline{\mathcal M}_{1,1})\cong \Z$.
+  What is this number $N_d$?
+\end{prob}
+
+Alternatively:
+
+\begin{prob}
+  Let $(E,p)$ be an elliptic curve. How many maps $f:(E,p)\to (\P^1,0)$ are there such that $f$ has ramification profile $(d)$ over $0$, $(2)^d$ over $1$, and $(2)^d$ over $\infty$, weighted by automorphisms? (Let's call such a map {\bf special}.)
+\end{prob}
+
+First nontrivial case I studied is $d=4$:
+See ``Documents/four\_curves\_linear.m2'' for the computation in M2. The idea is to consider
+\[
+\P^3\supset A=\{(x,y)\in E^2:x+y=\text{2-torsion}\}\to B=\{H:H\cap E=2x+2y\}\subset(\P^3)^*
+\]
+Both of these have 4 connected components: $A_i\cong E$ and $B_i\cong\P^1$, quotienting by the elliptic involution. Then $B$ has a map
+to $\P^2$ (locus of lines contained in $H_0$) sending $H\mapsto H\cap H_0$, with image $C$. See my notes for a picture of $C$;
+there are 4 singular points of $C$, corresponding to $3$ valid lines (and one where the map $E\to\ell$ is undefined). For each other line,
+we have a map $E\to \ell$ and can postcompose by a map $\P^1\cong\P^1$ fixing $0$ and interchanging $1$ and $\infty$, so 2 maps per line.
+Each map has 2 automorphisms, so $N_4=3\cdot 2\cdot\frac 12=3$.
+
+For the general case, I claim that $N_d=3$ for $d$ even and $N_d=0$ for $d$ odd. The idea here is that every special map factors through the degree 2 map $E\to\P^1$. To see this, we can do a Hurwitz count. TODO...
+
+\includegraphics[scale=0.2]{diagram.jpg}
+
+\includegraphics[angle=90,scale=0.15]{diagram2.jpg}
+
+\begin{claim}
+  Let $f:E\to\P^1$ be of degree $d=2e$ such that $f(p)=0$ with full ramification,
+  and $f$ has ramification profiles $(2)^e$ over $1$ and $\infty$. Then $f$ factors as
+  $E\to\P^1\to\P^1$ where the first map is degree $2$ and the second is degree $e$.
+\end{claim}
+\begin{proof}
+  Let $w\in\P^1$ be the point over which $f$ has ramification profile $(2,1,1,\dots,1)$, which exists by Riemann-Hurwitz. I will
+  count the number of Hurwitz covers over $0,1,\infty,w$ which factor (i.e., count the degree $e$ maps pictured above) and the
+  total number of Hurwitz covers (in the 2nd picture), and show these are the same. The first
+  count is $e$, since there is one unique map $\P^1\to\P^1$ by the count in the proof of the claim below, and there are then $e$ choices
+  for $d$ (the 4th ramification point of $E\to\P^1$) out of all the preimages of $w$.
+
+  For the second count...TODO
+\end{proof}
+\begin{claim}
+  The count of maps in the last claim is $6$. Each such map has 2 automorphisms, so the weighted count is $\frac 62=3$.
+\end{claim}
+\begin{proof}
+
+  The first map $E\to\P^1$ is unique up to choice of 4-tuple $(a,b,c,d)$, so we want to count maps $\P^1\to\P^1$ of the required
+  form. To form a map as pictured, we have $3$ choices for which of $b,c,d$ should lie
+  over an extra point $w$, and $2$ choices for whether a
+  fixed one of the remaining $2$ points lies over $1$ or $\infty$,
+  so $6$ choices in total. It remains to show that there is a unique map pictured
+  once $a,b,c,d$ have been worked out, which can be shown by a Hurwitz count.
+  
+  In the case where $e$ is odd, we want to count the number of triples $(\sigma_1,\sigma_2,\sigma_3)$
+  such that $\sigma_1\sigma_2=\sigma_3$ and $\sigma_1,\sigma_2$ are a product of
+  $(e-1)/2$ disjoint transpositions while $\sigma_3$ is an $e$-cycle.
+  Let's assume
+  \[
+  \sigma_1=(1\ 2)(3\ 4)\cdots (e-2\ e-1).
+  \]
+  Then $\sigma_2$ can't fix $e$ (otherwise $\sigma_3$ would), so $\sigma_2$
+  has a transposition of the form $(e\ x_1)$. The following claim will be used to show that up to relabeling, the only way to do this is
+  \[
+  (1\ 2)(3\ 4)\cdots (e-2\ e-1)(e\ 1)(2\ 3)(4\ 5)\cdots (e-3\ e-2)=(e\ 2\ 4\ 6\ \cdots\ e-1\ e-2\ e-4\ \dots\ 1)
+  \]
+
+  {\bf Claim:} Suppose $\sigma_1\sigma_2$ is an $e$-cycle. For all odd $i\leq e-2$,
+  $\sigma_2$ includes disjoint transpositions $(x_0\ x_1)(x_2\ x_3)\cdots (x_{i-1}\ x_i)$
+  where $x_0=e$ and $\sigma_1$ has transpositions $(x_1\ x_2)\cdots (x_{i-2}\ x_{i-1})$.
+
+  {\bf Proof:} The base case $i=1$ holds since $\sigma_2$ includes the transposition $(e\ x_1)$.
+  Now suppose it holds for $i$,
+  where $i<e-2$; I claim that it holds for $i+2$ as well. Let $\sigma_1$ have the transposition $(x_i\ x_{i+1})$ (this exists
+  since $x_i\neq e$).
+  Note that $\sigma_1\sigma_2$ sends
+  $x_j\mapsto x_{j+2}$ for even $j$ where $j\leq i-1$. If $\sigma_2$ fixes $x_{i+1}$, then $\sigma_1\sigma_2$ will include the cycle
+  \[
+  x_0\mapsto x_2\mapsto x_4\mapsto\cdots\mapsto x_{i+1}\mapsto x_i\mapsto x_{i-2}\mapsto\cdots\mapsto x_1\mapsto x_0
+  \]
+  This is a cycle of length $i+2<e$, contradicting the assumption that $\sigma_1\sigma_2$ is an $e$-cycle. Therefore
+  $\sigma_1$ doesn't fix $x_{i+1}$ and so it includes a transposition $(x_{i+1}\ x_{i+2})$, as claimed.
+
+  Letting $i=e-2$, this shows that
+  \[
+  \sigma_2=(x_0\ x_1)(x_2\ x_3)\cdots (x_{e-3}\ x_{e-2}).
+  \]
+  (TODO: show that $\sigma_2$ of this form do actually work.) There are $e-1$ options for $x_1$, $e-3$ options for $x_3$, and so on,
+  for a total of $(e-1)(e-3)\cdots (4)(2)=2^{(e-1)/2}((e-1)/2)!$ choices.
+  There are
+  \[
+  \binom{e}{2}\cdot\binom{e-2}{2}\cdots\binom{3}{2}\cdot\frac 1{((e-1)/2)!}
+  \]
+  choices for $\sigma_1$, so multiplying these together we get a total of
+  \[
+  2^{(e-1)/2}\cdot\frac{e(e-1)(e-2)(e-3)\cdots (3)(2)}{2^{(e-1)/2}}=e!
+  \]
+  choices. Therefore the Hurwitz count is $1$, and since these covers have no automorphisms (as $a,b,c$ are fixed), it is an enumerative count.
+  A similar technique will work for $e$ even.
+
+  \end{proof}
+
+
+\end{document}

@@ -1,0 +1,170 @@
+% This is a Homework Template for CS 1010.  
+% It was modified by  Michael Carl Tschantz (mtschant) 
+% who provided the ``useful infomation on latex''.
+
+% THE ONLY THING YOU NEED TO DO IN THIS PART IS 
+% TO FILL IN THE HOMEWORK NUMBER, YOUR NAME AND LOG IN BELOW
+% REPLACE ``X'' WITH THE HW NUMBER, ``Your Name'' WITH YOUR NAME,
+% AND ``your login'' WITH YOUR LOGIN.
+
+\newcommand{\hwnumber}{12}
+\newcommand{\yourname}{Michael Mueller}
+
+% NOW YOU MAY SKIP DOWN TO THE PART CALLED ``YOUR DOCUMENT''.
+
+%==============================================================================
+% Formatting parameters (how the page is set up)
+%==============================================================================
+\newcommand{\yourcourse}{Math 695}
+\newcommand{\chapter}{0}
+\newcommand{\mgn}{\mathcal M_{g,n}}
+\newcommand{\mgnb}{\overline{\mathcal M_{g,n}}}
+\newcommand{\mgb}[1]{\overline{\mathcal M_{g,#1}}}
+
+\documentclass[11pt]{article}           % 11pt article
+\makeatletter                   % Make '@' accessible.
+\pagestyle{myheadings}              % We do our own page headers.
+\newcommand{\thishw}{\bf Elliptic curve question}
+\def\@oddhead{\bf \thishw \hfill \yourname}
+\oddsidemargin=0in              % Left margin minus 1 inch.
+\evensidemargin=0in             % Same for even-numbered pages.
+\textwidth=6.5in                % Text width (8.5in - margins).
+\topmargin=0in                  % Top margin minus 1 inch.
+\headsep=0.2in                  % Distance from header to body.
+\textheight=8in                 % Body height (incl. footnotes)
+\skip\footins=4ex               % Space above first footnote.
+\hbadness=10000                 % No "underfull hbox" messages.
+\makeatother                    % Make '@' special again.
+
+%==============================================================================
+% Packages used (packages add more commands)
+%==============================================================================
+
+\usepackage{amsmath}                % give more fonts and symbols
+\usepackage{amsfonts}               % want AMS fonts
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{tikz-cd}
+\usepackage{bbm}                % given mathbbm fonts
+\usepackage[shortlabels]{enumitem}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\makeatletter
+\newcommand*{\relrelbarsep}{.386ex}
+\newcommand*{\relrelbar}{%
+  \mathrel{%
+    \mathpalette\@relrelbar\relrelbarsep
+  }%
+}
+\newcommand*{\@relrelbar}[2]{%
+  \raise#2\hbox to 0pt{$\m@th#1\relbar$\hss}%
+  \lower#2\hbox{$\m@th#1\relbar$}%
+}
+\providecommand*{\rightrightarrowsfill@}{%
+  \arrowfill@\relrelbar\relrelbar\rightrightarrows
+}
+\providecommand*{\leftleftarrowsfill@}{%
+  \arrowfill@\leftleftarrows\relrelbar\relrelbar
+}
+\providecommand*{\xrightrightarrows}[2][]{%
+  \ext@arrow 0359\rightrightarrowsfill@{#1}{#2}%
+}
+\providecommand*{\xleftleftarrows}[2][]{%
+  \ext@arrow 3095\leftleftarrowsfill@{#1}{#2}%
+}
+\makeatother
+
+%==============================================================================
+% Macros (make your own commands)
+%==============================================================================
+
+% For problem and part headers
+\newcounter{problemcounter}
+\newcounter{subproblemcounter}
+\newcommand{\problem}{
+    \addtocounter{problemcounter}{1}
+    \bigskip
+    \noindent {\Large Problem \hwnumber .\theproblemcounter}
+    \smallskip
+    \setcounter{subproblemcounter}{0}
+}
+\newcommand{\subproblem}{
+    \addtocounter{subproblemcounter}{1}
+    \smallskip
+    \noindent {\bf \alph{subproblemcounter})} 
+}
+
+% Nice things
+\newcommand{\set}[1]{\{#1\}}            % Set (as in \set{1,2,3})
+\newcommand{\setof}[2]{\{\,{#1}|~{#2}\,\}}  % Set (as in \setof{x}{x > 0})
+
+% Some letter symbols
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+\newcommand{\hTop}{\textbf{hTop}}
+\newtheorem*{Proposition}{Proposition}
+\newtheorem*{Corollary}{Corollary}
+\newcommand{\Tor}{\text{Tor}}
+\newcommand{\Ext}{\text{Ext}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\CP}{\mathbb{CP}}
+\newcommand{\RP}{\mathbb{RP}}
+\newcommand{\Spec}{\text{Spec}}
+\newcommand{\Aut}{\text{Aut}}
+\newcommand{\Proj}{\text{Proj}}
+\newcommand{\Mor}{\text{Mor}}
+\newcommand{\codim}{\text{codim}}
+\newcommand{\exer}[1]{{\bf Exercise #1} \\}
+\newcommand{\Hom}{\text{Hom}}
+\newcommand{\coker}{\text{coker}}
+\newcommand*\simplex{\includegraphics[scale=0.017]{simplex.png}}
+\newcommand{\Sch}{\textbf{Sch}}
+\newcommand{\Set}{\textbf{Set}}
+\renewcommand{\P}{\mathbb P}
+\theoremstyle{definition}
+\newtheorem*{thm}{Theorem}
+\newtheorem*{prob}{Problem}
+\newtheorem*{dfn}{Definition}
+\theoremstyle{definition}
+\newtheorem*{lem}{Lemma}
+\newtheorem*{ex}{Exercise}
+\newtheorem*{eg}{Example}
+\newtheorem*{note}{Note}
+
+%==============================================================================
+% YOUR DOCUMENT (start here)
+%==============================================================================
+
+\begin{document}
+\centerline{\LARGE\thishw}
+\begin{prob}
+  Consider the relative moduli stack $\overline{\mathcal M}_{1,1}(\P^1_{\Z/2,\Z/2},(4))$ of degree 4 stable maps from an elliptic curve $(E,p)$
+  to the orbifold $\P^1_{\Z/2,\Z/2}$ ($\P^1$ with $\Z/2$ stabilizer at $1$ and $\infty$) fully ramified at $p$ over $0$.
+  There is a map $\pi$ from this moduli stack to $\overline{\mathcal M}_{1,1}$, and the image of the virtual fundamental class is an element of $A^0(\overline{\mathcal M}_{1,1})\cong \Z$.
+  What is this number?
+\end{prob}
+
+Alternatively:
+
+\begin{prob}
+  Let $(E,p)$ be an elliptic curve. How many maps $f:(E,p)\to (\P^1,0)$ are there such that $f$ has ramification profile $(4)$ over $0$, $(2,2)$ over $1$, and $(2,2)$ over $\infty$? (Let's call such a map {\bf special}.)
+\end{prob}
+
+Consider such a map $f$. It corresponds to a choice of line bundle $\mathcal L$, and two sections $s_0,s_1$ which don't simultaneously vanish. Since
+$\text{div}(s_0)=4p$, this means that $\mathcal L\cong\mathcal O(4p)$. By Riemann-Roch, $h^0(\mathcal O(4p))=4$ and so $s_0,s_1$ can be completed to a basis $s_0,s_1,s_2,s_3$ of $h^0(\mathcal O(4p))$. This gives a linear system which is basepoint-free (again by Riemann-Roch),
+so corresponds to an embedding $[s_0:s_1:s_2:s_3]:E\hookrightarrow\P^3$. Composing this with the projection onto a line
+\[
+\P^3\dashrightarrow\P^1,\ [x:y:z:w]\mapsto [x:y]
+\]
+yields $f$. I want to say that for $(E,p)$ embedded in $\P^3$ with $\{x=0\}\cap E=4p$, a special map corresponds to a choice of line $\ell$
+such that
+
+
+
+
+\end{document}
