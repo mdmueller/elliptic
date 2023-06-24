@@ -1,6 +1,6 @@
 -- four_curves_affine.m2, but using linear automorphisms for x->t-x
 
-loadPackage "MultiprojectiveVarieties"
+needsPackage "MultiprojectiveVarieties"
 
 -- x->-x
 A1 = matrix{ {1, 0, 0, 0},
