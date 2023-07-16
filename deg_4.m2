@@ -5,11 +5,14 @@ load "osculating.m2"
 getLengths = I -> (
     K := primaryDecomposition(I);
     L := {};
+    D1 := 0;
+    D2 := 0;
+    J := 0;
     for j from 1 to #K do (
-	J := K_(j-1);
-	D1 := degree(projectiveVariety(J));
-	D2 := degree(projectiveVariety(radical(J)));
-	L := append(L, {D1,D2});
+	J = K_(j-1);
+	D1 = degree(projectiveVariety(J));
+	D2 = degree(projectiveVariety(radical(J)));
+	L = append(L, {D1,D2});
 	);
     L)
 
@@ -43,8 +46,8 @@ doublefibers := (P,V) -> (
 	);
     result)
 
-k = ZZ/107
-sqrt10 = 44 -- 44^2 = 10 mod 107
+k = ZZ/6151
+sqrt10 = 2024 -- 2024^2 = 10 mod 6151
 
 R = k[x,y,z,w] -- P^3
 F = x^2+y^2+z^2-x*y-w^2
@@ -69,16 +72,16 @@ fourtorsion = reduce((pi4 ^* (getcusps(Y31)))*X31) -- 4-torsion points
 sing = singularLocus(Y31)
 --print(2*degree(reduce(sing)) - degree(sing))
 --print doublefibers((multirationalMap{pi4})|X31, sing)
-print(degree(reduce(Y22*Y31))-16) -- subtract 16 for the images of 4-torsion points
+print(degree(reduce(Y22*Y31)-reduce(pi4(fourtorsion))) - 1) -- sub 1 bc pi4(identity) DNE
 
--- use the plane H_0 = {13x+9y+7z+11w=0} (meets E transversely) to define another map (P^3)*->P^2
+-- use a plane H_0 that meets E transversely to define another map (P^3)*->P^2
 use S
-pi1111 = multirationalMap {rationalMap {X+Y-2*W, Y+5*Z-4*W, Z+2*X-3*W}}
+pi1111 = multirationalMap {rationalMap {X+2*Y-3*Z+4*W, 7*X+5*Y-11*Z+9*W, 13*X+14*Y-15*Z+17*W}}
 Z22 = pi1111(X22) -- deg 8, 24 nodes
 Z31 = pi1111(X31) -- deg 12, 16 cusps (corresponding to 4-torsion), 38 nodes
 sing = singularLocus(Z31)
 --print doublefibers((multirationalMap{pi1111})|X31, sing)
-print(degree(reduce(Z22*Z31))-16)
+print(degree(reduce(Z22*Z31)-reduce(pi1111(fourtorsion))))
 
 -- use the plane H_0 = {-2/3*x+5*y+w=0} (meets E at 2 distinct tangent points)
 use S
@@ -87,7 +90,7 @@ W22 = pi22(X22)
 W31 = pi22(X31) -- cusps are: TODO
 sing = singularLocus(W31)
 --print doublefibers((multirationalMap{pi22})|X31, sing)
-print(degree(reduce(W22*W31))-16)
+print(degree(reduce(W22*W31)-reduce(pi22(fourtorsion))))
 
 -- use the plane H_0 = {27x-6y+8sqrt(10)*z-38w=0} (meets E in (2,1,1))
 use S
@@ -96,7 +99,7 @@ J22 = pi211(X22)
 J31 = pi211(X31)
 sing = singularLocus(J31)
 --print doublefibers((multirationalMap{pi211})|X31, sing)
-print(degree(reduce(J22*J31))-16)
+print(degree(reduce(J22*J31)-reduce(pi211(fourtorsion))))
 
 -- use the plane H_0 = {-6451/7264*x+45/454*y+30*sqrt(10)/227*z+w=0} (meets E at a,b, one with order 3)
 use S
@@ -105,4 +108,4 @@ K22 = pi31(X22)
 K31 = pi31(X31)
 sing = singularLocus(K31)
 --print doublefibers((multirationalMap{pi31})|X31, sing)
-print(degree(reduce(K22*K31))-16)
+print(degree(reduce(K22*K31)-reduce(pi31(fourtorsion))))
