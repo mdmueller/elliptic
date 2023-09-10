@@ -24,7 +24,7 @@
 \documentclass[11pt]{article}           % 11pt article
 \makeatletter                   % Make '@' accessible.
 \pagestyle{myheadings}              % We do our own page headers.
-\newcommand{\thishw}{\bf Elliptic curve question in deg 4}
+\newcommand{\thishw}{\bf Elliptic curve question}
 \def\@oddhead{\bf \thishw \hfill \yourname}
 \oddsidemargin=0in              % Left margin minus 1 inch.
 \evensidemargin=0in             % Same for even-numbered pages.
@@ -144,13 +144,21 @@
 \begin{document}
 \centerline{\LARGE\thishw}
 \begin{prob}
-  Let $(E,p_1,\dots,p_n)$ be a genus 1 curve with distinct marked points $p_1,\dots,p_n$. Let $\mu_0,\mu_1,\dots,\mu_{n+2}$ be partitions of an integer $d$ with $|\mu_0|=n$.
+  Let $(E,p_1,\dots,p_n)$ be a genus 1 curve with distinct marked points $p_1,\dots,p_n$. Let $\mu_0,\mu_1,\dots,\mu_k$ be partitions of an integer $d$ with $|\mu_0|=n$.
 
   How many maps $f:(E,p_1,\dots,p_n)\to (\P^1,0)$ are there (up to isomorphism) such that $f$ has ramification profile $\mu_0$ over $0$ corresponding to the
-  points $p_1,\dots,p_n$ and ramification profiles $\mu_1,\dots,\mu_{n+2}$ over $n+2$ other unspecified points of $\P^1$? Let $X$ be the set of maps $E\to \mathbb P^1$ of this form;
+  points $p_1,\dots,p_n$ and ramification profiles $\mu_1,\dots,\mu_k$ over $k$ other unspecified points of $\P^1$? Let $X$ be the set of maps $E\to \mathbb P^1$ of this form;
   we will be interested in studying the numbers
-  \[N_{\mu_0,\mu_1,\dots,\mu_{n+2}}=\#\frac{X}{\Aut(\P^1,0),\Aut(E,p_1,\dots,p_n)}\]
+  \[N_{\mu_0,\mu_1,\dots,\mu_{k}}=\#\frac{X}{\Aut(\P^1,0),\Aut(E,p_1,\dots,p_n)}\]
   where this is an orbifold count. (We require that $\mu_i\neq (1,1,\dots,1)$ for $i>0$; TODO why?)
+
+  Note: in order for this count to be a nonzero finite number, there will be a condition imposed by dimensional considerations.
+  Let $\mathcal X$ be the set of maps from a genus 1 curve to $\P^1$ which have ramification profiles $\mu_0,\mu_1,\dots,\mu_k$.
+  There is a map $\mathcal X\to\overline{\mathcal M_{0,k+1}}$ sending each map to the target with branch points, and by a Hurwitz count, this is
+  a finite map. Therefore, $\dim(\mathcal X)=\dim(\overline{\mathcal M_{0,k+1}})=k-2$. There is another map $\mathcal X\to\overline{\mathcal M_{1,n}}$ sending each map to the domain with points in the $\mu_0$ ramification cluster marked, and we want this to be finite as well (our goal will be to compute the size of a general fiber). Therefore
+  \[
+  \dim(\mathcal X)=k-2=\dim(\overline{\mathcal M_{1,n}})=n.
+  \]
 \end{prob}
 
 \begin{eg}
