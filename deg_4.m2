@@ -1,6 +1,22 @@
 load "four_curves_linear.m2"
 load "osculating.m2"
 
+-- get tangent line to C at p
+tangentLine = (C, p) -> (
+    R := ring(ideal(C));
+    M := sub(jacobian(ideal(C)), p);
+    projectiveVariety(ideal(matrix{gens(R)} * M)))
+
+-- get tangent cone to C at the point [1:0:0:0]
+tCone = C -> (
+    R := ring(ideal(C));
+    X := (gens(R))_0;
+    Q := k[Y,Z,W];
+    phi := map(Q, R, {1,Y,Z,W});
+    phi2 := map(R, Q);
+    I := phi ideal C;
+    reduce projectiveVariety homogenize(phi2 tangentCone I, X))
+
 -- takes projective 0-dim ideal I, returns lengths of points
 getLengths = I -> (
     K := primaryDecomposition(I);
@@ -30,18 +46,18 @@ getcusps = C -> (
     cusps := projectiveVariety(homogenize(ideal(f,lin1,lin2,delta), t_2)))
 
 -- take reduction of variety
-reduce = variety -> projectiveVariety(radical(ideal(variety)))
+reduce = V -> projectiveVariety(radical(ideal(V)))
 
--- given a map P and a dim 0 subvariety V, find the # of points in V with fiber having at least 2 points
-doublefibers := (P,V) -> (
+-- given a map P and a dim 0 subvariety V, find the # of points in V with fiber (excluding H0) having at least 2 points
+doublefibers = (P,V) -> (
     U := reduce V;
     L := minimalPrimes ideal U;
+    H0 := baseLocus(P);
     result := 0;
     for i from 1 to #L do (
-	p := L_(i-1); -- point(s) of V
-	len := degree(projectiveVariety(p));
-	pre := reduce(P ^* (projectiveVariety(p)));
-	--print(len); print(degree(pre));
+	p := projectiveVariety(L_(i-1)); -- point(s) of V
+	len := degree(p);
+	pre := reduce(P ^* p); -- fiber of p
 	if degree(pre) > len then result = result+len;
 	);
     result)
@@ -64,6 +80,12 @@ X31 = import X31
 pi4 = multirationalMap {rationalMap {Y,Z,W}} -- project from H_0 = {x=0}
 Y22 = pi4(X22) -- three conics and a line
 Y31 = pi4(X31) -- deg 10 curve with 15 cusps, 20 nodes
+use S
+
+print "(4)"
+P = {X=>1, Y=>0, Z=>0, W=>0}
+Q31 = pi4(tCone(X31))
+Q22 = pi4(tangentLine(X22, P)) -- we see Q22==Q31
 fourtorsion = reduce((pi4 ^* (getcusps(Y31)))*X31) -- 4-torsion points
 -- n + c = length(reduced singular locus)
 -- n + 2c = length(singular locus)
@@ -71,41 +93,47 @@ fourtorsion = reduce((pi4 ^* (getcusps(Y31)))*X31) -- 4-torsion points
 -- n = length(reduced singular locus) - c = 2*length(reduced singular locus) - length(singular locus)
 sing = singularLocus(Y31)
 --print(2*degree(reduce(sing)) - degree(sing))
---print doublefibers((multirationalMap{pi4})|X31, sing)
-print(degree(reduce(Y22*Y31)-reduce(pi4(fourtorsion))) - 1) -- sub 1 bc pi4(identity) DNE
+print doublefibers(pi4|X31, sing)
+print(degree(reduce(Y22*Y31)-reduce(pi4(fourtorsion))-Q22))
 
 -- use a plane H_0 that meets E transversely to define another map (P^3)*->P^2
+print "(1,1,1,1)"
 use S
 pi1111 = multirationalMap {rationalMap {X+2*Y-3*Z+4*W, 7*X+5*Y-11*Z+9*W, 13*X+14*Y-15*Z+17*W}}
 Z22 = pi1111(X22) -- deg 8, 24 nodes
 Z31 = pi1111(X31) -- deg 12, 16 cusps (corresponding to 4-torsion), 38 nodes
 sing = singularLocus(Z31)
---print doublefibers((multirationalMap{pi1111})|X31, sing)
+print doublefibers(pi1111|X31, sing)
 print(degree(reduce(Z22*Z31)-reduce(pi1111(fourtorsion))))
 
--- use the plane H_0 = {-2/3*x+5*y+w=0} (meets E at 2 distinct tangent points)
+-- use the plane H_0 = {2265*x+2398*y-2709*z+w=0} (meets E at 2 distinct tangent points)
+-- (random point in X22 obtained through four_curves_linear.m2)
+print "(2,2)"
 use S
-pi22 = multirationalMap {rationalMap {X+2/3*W, Y-5*W, Z}}
+pi22 = multirationalMap {rationalMap {X-2265*W, Y-2398*W, Z+2709*W}}
 W22 = pi22(X22)
 W31 = pi22(X31) -- cusps are: TODO
 sing = singularLocus(W31)
---print doublefibers((multirationalMap{pi22})|X31, sing)
+print doublefibers(pi22|X31, sing)
 print(degree(reduce(W22*W31)-reduce(pi22(fourtorsion))))
 
 -- use the plane H_0 = {27x-6y+8sqrt(10)*z-38w=0} (meets E in (2,1,1))
+print "(2,1,1)"
 use S
 pi211 = multirationalMap {rationalMap {X+27/38*W, Y-6/38*W, Z+8*sqrt10/38*W}}
 J22 = pi211(X22)
 J31 = pi211(X31)
 sing = singularLocus(J31)
---print doublefibers((multirationalMap{pi211})|X31, sing)
+print doublefibers(pi211|X31, sing)
 print(degree(reduce(J22*J31)-reduce(pi211(fourtorsion))))
 
--- use the plane H_0 = {-6451/7264*x+45/454*y+30*sqrt(10)/227*z+w=0} (meets E at a,b, one with order 3)
+-- use the plane H_0 = {-1134*x-2478*y-2455*z+w=0} (meets E at a,b, one with order 3)
+-- obtained from osculating.m2
+print "(3,1)"
 use S
-pi31 = multirationalMap {rationalMap {X+6451/7264*W, Y-45/454*W, Z-30*sqrt10/(227)*W}}
+pi31 = multirationalMap {rationalMap {X+1134*W, Y+2478*W, Z+2455*W}}
 K22 = pi31(X22)
 K31 = pi31(X31)
 sing = singularLocus(K31)
---print doublefibers((multirationalMap{pi31})|X31, sing)
+print doublefibers(pi31|X31, sing)
 print(degree(reduce(K22*K31)-reduce(pi31(fourtorsion))))

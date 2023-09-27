@@ -51,3 +51,11 @@ P := rationalMap { u*fx - v*gx, u*fy - v*gy, u*fz - v*gz, u*fw - v*gw }
 S := QQ[X,Y,Z,W]
 H := multirationalMap { sub(P,R,S) }
 X31 = H(E)
+
+-- pick a random point on X31 (defined over a finite field)
+I = ideal(X31)
+k = ZZ/6151
+R = k[x,y,z,w]
+phi = map(R,ring(I),{x,y,z,w})
+p = point(projectiveVariety(phi(I)))
+print(ideal(p))

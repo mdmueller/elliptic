@@ -59,3 +59,12 @@ C2 = projectiveVariety(F B2)
 C3 = projectiveVariety(F B3)
 C4 = projectiveVariety(F B4)
 X22 = C1+C2+C3+C4
+
+-- pick a random point on X22 (defined over a finite field)
+I = ideal(X22)
+k = ZZ/6151
+R = k[x,y,z,w]
+phi = map(R,ring(I),{x,y,z,w})
+p = point(projectiveVariety(phi(I)))
+print(ideal(p))
+
