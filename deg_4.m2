@@ -1,6 +1,12 @@
 load "four_curves_linear.m2"
 load "osculating.m2"
 
+-- get point from ideal in R
+getPoint = I -> (
+    use R;
+    J := sub(I,{w=>1});
+    {lift(x%J,k), lift(y%J,k), lift(z%J,k), 1_k})
+
 -- get tangent line to C at p
 tangentLine = (C, p) -> (
     R := ring(ideal(C));
@@ -71,74 +77,52 @@ G = 3*x^2-10*x*y-5*x*w+4*y^2+z^2+6*y*w+2*w^2
 E = projectiveVariety(ideal(F,G))
 
 S = k[X,Y,Z,W] -- (P^3)*
+T = k[x,y,z,w,X,Y,Z,W,Degrees=>{4:{1,0},4:{0,1}}] -- P^3 * (P^3)*
+phiR = map(T,R)
+phiS = map(T,S)
+use S
 
 -- import loci into (P^3)*
 import = locus -> projectiveVariety((map(S, ring(ideal(locus)), {X,Y,Z,W})) ideal(locus))
 X22 = import X22
 X31 = import X31
 
-pi4 = multirationalMap {rationalMap {Y,Z,W}} -- project from H_0 = {x=0}
-Y22 = pi4(X22) -- three conics and a line
-Y31 = pi4(X31) -- deg 10 curve with 15 cusps, 20 nodes
-use S
+labels = {"(4)", "(2,2)", "(3,1)", "(2,1,1)", "(1,1,1,1)"}
+-- planes H_0
+planes = {{Y,Z,W}, {X-2265*W, Y-2398*W, Z+2709*W}, {X+1134*W, Y+2478*W, Z+2455*W},
+    {X+27/38*W, Y-6/38*W, Z+8*sqrt10/38*W}, {X+2*Y-3*Z+4*W, 7*X+5*Y-11*Z+9*W, 13*X+14*Y-15*Z+17*W}}
+maps = {}
 
-print "(4)"
-H0 = {X=>1, Y=>0, Z=>0, W=>0}
--- H0 \cap E = {[0:-1:0:1]}
-bad = pi4(projectiveVariety(ideal(-Y+W))) -- undefined maps
-Q31 = pi4(tCone(X31))
-Q22 = pi4(tangentLine(X22, H0)) -- we see Q22==Q31
-fourtorsion = reduce((pi4 ^* (getcusps(Y31)))*X31) -- 4-torsion points
-sing = singularLocus(Y31)
-print doublefibers(pi4|X31, sing-bad)
-print(degree(reduce(Y22*Y31)-reduce(pi4(fourtorsion))-Q22-reduce(bad)))
+for i from 0 to 4 do (
+    H0 = planes_i;
+    use T;
+    << "First partition: " << labels_i << endl;
+    -- find pairs (H0, p) where p in E\cap H0
+    A = projectiveVariety(phiR(ideal(F,G))) * projectiveVariety(phiS(ideal(H0))) * projectiveVariety(ideal(X*x+Y*y+Z*z+W*w));
+    points = minimalPrimes(preimage(phiR, ideal(A))); -- points of E\cap H0
+    piH0 = multirationalMap {rationalMap H0};
+    maps = append(maps, piH0);
+    bad = projectiveVariety(ideal(1_S));
+    if i < 4 then (
+    	for j from 0 to (#points - 1) do (
+	    P = getPoint(points_j);
+	    use S;
+	    bad = bad + projectiveVariety(ideal(P_0*X+P_1*Y+P_2*Z+P_3*W));
+	    );
+	);
+    bad = reduce(piH0(bad));
+    Y22 = piH0(X22);
+    Y31 = piH0(X31);
 
--- use a plane H_0 that meets E transversely to define another map (P^3)*->P^2
-print "(1,1,1,1)"
-use S
-pi1111 = multirationalMap {rationalMap {X+2*Y-3*Z+4*W, 7*X+5*Y-11*Z+9*W, 13*X+14*Y-15*Z+17*W}}
-Z22 = pi1111(X22) -- deg 8, 24 nodes
-Z31 = pi1111(X31) -- deg 12, 16 cusps (corresponding to 4-torsion), 38 nodes
-sing = singularLocus(Z31)
-print doublefibers(pi1111|X31, sing)
-print(degree(reduce(Z22*Z31)-reduce(pi1111(fourtorsion))))
-
--- use the plane H_0 = {2265*x+2398*y-2709*z+w=0} (meets E at two distinct tangent points)
--- (random point in X22 obtained through four_curves_linear.m2)
--- H_0\cap E = {[1044:302:316:1], [-1609:2738:2829:1]}
-print "(2,2)"
-use S
-H0 = {X=>2265, Y=>2398, Z=>-2709, W=>1}
-pi22 = multirationalMap {rationalMap {X-2265*W, Y-2398*W, Z+2709*W}}
-bad = pi22(projectiveVariety(ideal(1044*X+302*Y+316*Z+W)) + projectiveVariety(ideal(-1609*X+2738*Y+2829*Z+W))) -- undefined maps
-W22 = pi22(X22)
-Q22 = pi22(tangentLine(X22, H0))
-W31 = pi22(X31) -- cusps are: TODO
-sing = singularLocus(W31)
-print doublefibers(pi22|X31, sing-bad)
-print(degree(reduce(W22*W31)-reduce(pi22(fourtorsion))-reduce(bad)))
-
--- use the plane H_0 = {27x-6y+8sqrt(10)*z-38w=0} (meets E in (2,1,1))
--- H_0\cap E = {[1937:-2587:604:1], [2267:324:3016:1], [1904:-2229:-627:1]}
-print "(2,1,1)"
-use S
-pi211 = multirationalMap {rationalMap {X+27/38*W, Y-6/38*W, Z+8*sqrt10/38*W}}
-bad = pi211(projectiveVariety(ideal(1937*X-2587*Y+604*Z+W))+projectiveVariety(ideal(2267*X+324*Y+3016*Z+W))+projectiveVariety(ideal(1904*X-2229*Y-627*Z+W)))
-J22 = pi211(X22)
-J31 = pi211(X31)
-sing = singularLocus(J31)
-print doublefibers(pi211|X31, sing-bad)
-print(degree(reduce(J22*J31)-reduce(pi211(fourtorsion))-reduce(bad)))
-
--- use the plane H_0 = {-1134*x-2478*y-2455*z+w=0} (meets E at a,b, one with order 3)
--- obtained from osculating.m2
--- H_0\cap E = {[-1737:327:2394:1], [2391:-2088:-1104:1]}
-print "(3,1)"
-use S
-pi31 = multirationalMap {rationalMap {X+1134*W, Y+2478*W, Z+2455*W}}
-bad = pi31(projectiveVariety(ideal(-1737*X+327*Y+2394*Z+W))+projectiveVariety(ideal(2391*X-2088*Y-1104*Z+W)))
-K22 = pi31(X22)
-K31 = pi31(X31)
-sing = singularLocus(K31)
-print doublefibers(pi31|X31, sing-bad)
-print(degree(reduce(K22*K31)-reduce(pi31(fourtorsion))-reduce(bad)))
+    if i==0 then (
+	fourtorsion = reduce((piH0 ^* (getcusps(Y31)))*X31); -- 4-torsion points
+	Q31 = piH0(tCone(X31));
+	use S;
+	Q22 = piH0(tangentLine(X22, {X=>1, Y=>0, Z=>0, W=>0}));
+	assert(Q31 == Q22);
+	bad = bad+Q22; -- throw out this image of tangent lines at H_0
+	);
+    << "(3,1),(3,1): " << doublefibers(piH0|X31, singularLocus(Y31)-bad) << endl;
+--    << "(2,2),(2,2): " << doublefibers(piH0|X22, singularLocus(Y22)-bad) << endl; --TODO: why doesn't this work?
+    << "(3,1),(2,2): " << degree(reduce(Y22*Y31)-bad-piH0(fourtorsion)) << endl;
+    )

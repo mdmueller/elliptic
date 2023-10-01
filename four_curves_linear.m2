@@ -66,5 +66,5 @@ k = ZZ/6151
 R = k[x,y,z,w]
 phi = map(R,ring(I),{x,y,z,w})
 p = point(projectiveVariety(phi(I)))
-print(ideal(p))
+--print(ideal(p))
 
