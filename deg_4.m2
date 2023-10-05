@@ -122,7 +122,7 @@ for i from 0 to 4 do (
 	assert(Q31 == Q22);
 	bad = bad+Q22; -- throw out this image of tangent lines at H_0
 	);
-    << "(3,1),(3,1): " << doublefibers(piH0|X31, singularLocus(Y31)-bad) << endl;
---    << "(2,2),(2,2): " << doublefibers(piH0|X22, singularLocus(Y22)-bad) << endl; --TODO: why doesn't this work?
+    << "(3,1),(3,1): " << doublefibers(piH0|X31, reduce(singularLocus(Y31))-bad) << endl;
     << "(3,1),(2,2): " << degree(reduce(Y22*Y31)-bad-piH0(fourtorsion)) << endl;
+    << "(2,2),(2,2): " << doublefibers(piH0|X22, reduce(singularLocus(Y22))-bad) << endl;
     )
