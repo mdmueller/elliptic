@@ -1,6 +1,7 @@
 # Enumerate possible graphs
 
 import networkx as nx
+import copy
 from matplotlib import pyplot as plt
 
 def partitions(n, m):
@@ -21,11 +22,14 @@ def bipartite_tree_helper(G, i, mu1, mu2):
 
     L = []
     for part in partitions(mu1[i], len(mu2)):
-        H = G.copy()
+        #H = G.copy()
+        H = copy.deepcopy(G)
         # part lists the edge weights coming from the ith left vertex
         for w, j in enumerate(part):
             if j!=0: # ignore edges with weight 0
                 H.add_edge('l{0}'.format(i), 'r{0}'.format(w), weight=j)
+                H.nodes['l{0}'.format(i)]['R'] -= (j-1)
+                H.nodes['r{0}'.format(w)]['R'] -= (j-1)
         # keep going unless H has a cycle
         try:
             nx.find_cycle(H)
@@ -57,26 +61,28 @@ def bipartite_trees(mu1, mu2):
         G.nodes['l{0}'.format(i)]['degree'] = mu1[i]
         # 2g - 2 = (-2)d + R => R = 2d + 2g - 2
         G.nodes['l{0}'.format(i)]['R'] = 2*mu1[i]-2 if i!=0 else 2*mu1[i]
-        G.nodes['l{0}'.format(i)]['ramif'] = []
+        G.nodes['l{0}'.format(i)]['ramif'] = [[],[],[]]
     for i in range(len(mu2)):
         G.add_node('r{0}'.format(i), bipartite=1)
         G.nodes['r{0}'.format(i)]['degree'] = mu2[i]
         G.nodes['r{0}'.format(i)]['R'] = 2*mu2[i]-2
-        G.nodes['r{0}'.format(i)]['ramif'] = []
+        G.nodes['r{0}'.format(i)]['ramif'] = [[],[],[]]
     
     trees = bipartite_tree_helper(G, 0, mu1, mu2)
-    return [T for T in trees if weights_add_up(T, mu1, mu2)]
+    return [T for T in trees if weights_add_up(T, mu1, mu2) and all([T.nodes[node]['R']>=0 for node in T.nodes()])]
 
 def display_bipartite(G, mu1, mu2):
     # draw the bipartite weighted graph G
-    L, R = nx.bipartite.sets(G)
+    L = [node for node in G.nodes() if 'l' in node]
+    R = [node for node in G.nodes() if 'r' in node]
+    #L, R = nx.bipartite.sets(G)
     pos = {}
     pos.update((node, (1, index)) for index, node in enumerate(L))
     pos.update((node, (2, index)) for index, node in enumerate(R))
-    nx.draw_networkx_nodes(G, pos, node_size=1000)
+    nx.draw_networkx_nodes(G, pos, node_size=4000, node_color='tab:red')
     nx.draw_networkx_edges(G, pos)
-    labels1 = {'l{0}'.format(i): mu1[i] for i in range(len(mu1))}
-    labels2 = {'r{0}'.format(i): mu2[i] for i in range(len(mu2))}
+    labels1 = {'l{0}'.format(i): 'g={0},d={1}'.format(1 if i==0 else 0, mu1[i]) for i in range(len(mu1))}
+    labels2 = {'r{0}'.format(i): 'g=0,d={0}'.format(mu2[i]) for i in range(len(mu2))}
     nx.draw_networkx_labels(G, pos, labels=labels1|labels2)
     edge_labels = nx.get_edge_attributes(G, 'weight')
     nx.draw_networkx_edge_labels(G, pos, edge_labels, label_pos=0.2)
@@ -102,24 +108,38 @@ def Part(n):
         L.extend(part(n, k))
     return L
 
-def place_ramification_helper(T, sigma, side):
+def place_ramification_helper(T, sigma, sigmacount, side):
     # side = 'r' or 'l'
+    # sigmacount = 0, 1, or 2 depending which sigma this is
     # return all placements of sigma ramification on the given side of T
-    return 1
+    if len(sigma)==0:
+        return [T]
+    ram = sigma[0]
+    L = []
+    for node in T.nodes():
+        if side not in node or T.nodes[node]['R'] < ram-1 or sum(T.nodes[node]['ramif'][sigmacount])+ram>T.nodes[node]['degree']:
+            continue
+        # try putting ram at this node
+        T2 = copy.deepcopy(T)#T.copy()
+        T2.nodes[node]['R'] -= (ram-1)
+        T2.nodes[node]['ramif'][sigmacount].append(ram)
+        T2.add_edge(node, node, weight=ram)
+        L.extend(place_ramification_helper(T2, sigma[1:], sigmacount, side))
+    return L
 
 def place_ramification(T, sigma0, sigma1, sigma2):
     # T is a weighted bipartite tree
     # sigma_i are partitions; we want these ramification to appear in T
     # Our goal is to allocate ramification across all vertices in T
     L = [T]
-    for sigma in sigma0, sigma1, sigma2:
+    for i, sigma in enumerate([sigma0, sigma1, sigma2]):
+        L2 = []
         for side in ['l', 'r']:
-            L2 = []
             for T2 in L:
-                L2.extend(place_ramification_helper(T2, sigma, side))
-    for node in T.nodes():
-        deg = T.nodes[node]['degree']
-        
+                L2.extend(place_ramification_helper(T2, sigma, i, side))
+        L = L2
+
+    return {tuple([tuple([tuple(t) for t in G.nodes[node]['ramif']]) for node in G.nodes()]):G for G in L}.values()
 
 def possible_graphs(sigma0, sigma1, sigma2):
     # consider possible graphs with ramification sigma0, sigma1, sigma2
@@ -132,12 +152,21 @@ def possible_graphs(sigma0, sigma1, sigma2):
             # TODO: check if the sigmas are possible just from mu1 and mu2?
             trees = bipartite_trees(mu1, mu2)
             for T in trees:
-                place_ramification(T, sigma0, sigma1, sigma2)
+                print('new tree!')
+                for T2 in place_ramification(T, sigma0, sigma1, sigma2):
+                    for i in range(len(mu1)):
+                        label = 'l{}'.format(i)
+                        print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
+                    for i in range(len(mu2)):
+                        label = 'r{}'.format(i)
+                        print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
+                    display_bipartite(T2, mu1, mu2)
+                    print('-'*10)
                 
 
-T = bipartite_trees([3,2],[3,1,1])
-G = T[2]
-display_bipartite(G, [3,2],[3,1,1])
+#T = bipartite_trees([3,2],[3,1,1])
+#G = T[2]
+#display_bipartite(G, [3,2],[3,1,1])
 
-#possible_graphs([4],[4],[4])
+possible_graphs([2,2],[3,1],[3,1])
 
