@@ -141,32 +141,50 @@ def place_ramification(T, sigma0, sigma1, sigma2):
 
     return {tuple([tuple([tuple(t) for t in G.nodes[node]['ramif']]) for node in G.nodes()]):G for G in L}.values()
 
+def stabilization(T):
+    # produce the stabilization of this graph
+    for node in T.nodes():
+        if node=='l0':
+            continue # genus 1
+        
+        
+
+def stabilizes(T, sigma):
+    # for now, sigma=(a,b) and we want TODO
+    return True
+    
+
 def possible_graphs(sigma0, sigma1, sigma2):
     # consider possible graphs with ramification sigma0, sigma1, sigma2
-    # this does not consider whether the graph stabilizes appropriately
     d = sum(sigma0)
     assert(d == sum(sigma1) and d == sum(sigma2))
+    TOTAL = 0
     
     for mu1 in Part(d):
+        if mu1[0]==1:
+            continue # genus 1 component can't be degree 1
         for mu2 in Part(d):
             # TODO: check if the sigmas are possible just from mu1 and mu2?
             trees = bipartite_trees(mu1, mu2)
             for T in trees:
-                print('new tree!')
                 for T2 in place_ramification(T, sigma0, sigma1, sigma2):
+                    if not stabilizes(T2, sigma0):
+                        continue
+                    TOTAL += 1
                     for i in range(len(mu1)):
                         label = 'l{}'.format(i)
                         print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
                     for i in range(len(mu2)):
                         label = 'r{}'.format(i)
                         print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
-                    display_bipartite(T2, mu1, mu2)
+                    #display_bipartite(T2, mu1, mu2)
                     print('-'*10)
-                
+                    # TODO: display the ramification as legs or loops on the graph...
+    return TOTAL
 
 #T = bipartite_trees([3,2],[3,1,1])
 #G = T[2]
 #display_bipartite(G, [3,2],[3,1,1])
 
-possible_graphs([2,2],[3,1],[3,1])
-
+#possible_graphs([2,2],[3,1],[3,1])
+print(possible_graphs([4,1],[4,1],[3,1,1]))
