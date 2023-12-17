@@ -159,6 +159,11 @@
   \[
   \dim(\mathcal X)=k-2=\dim(\overline{\mathcal M_{1,n}})=n.
   \]
+  For notational convenience, if $\ell<n+2$, then let
+  \[
+  N_{\mu_0,\mu_1,\dots,\mu_{\ell}}=N_{\mu_0,\mu_1,\dots,\mu_{\ell},(2,1,\dots,1),\dots,(2,1,\dots,1)}.
+  \]
+  (TODO: why is it always that $\mu_2=\dots=(2,1,\dots)$?)
 \end{prob}
 
 \begin{eg}
@@ -171,7 +176,7 @@
   \]
 \end{eg}
 \begin{eg}
-  See ``gw\_orbifold.pdf'' for a proof that $N_{(2k),(2)^k,(2)^k,(2,1,1,\dots,1)}=\frac 32$ for $k>1$.
+  See ``gw\_orbifold.pdf'' for a proof that $N_{(2k),(2)^k,(2)^k}=\frac 32$ for $k>1$.
   \end{eg}
 
 Let $d>2$. Up to automorphisms of $\P^1$, a degree $d$ map $f:E\to\P^1$ corresponds to a degree $d$ line bundle $\mathcal L$ and a basepoint-free two-dimensional subspace $V\subset H^0(\mathcal L)$. By Riemann-Roch, $\mathcal L$ gives an embedding $E\hookrightarrow\P(H^0(\mathcal L))\cong\P^{d-1}$, and a basepoint-free two-dimensional subspace $V\subset H^0(\mathcal L)$ corresponds to a well-defined composition
@@ -184,24 +189,24 @@ $\P(V\oplus V^{\perp})\dashrightarrow\P(V)$ is a hyperplane containing $\P(V^{\p
 Note that if $\P(V^{\perp})$ is such a codimension 2 subspace corresponding to a map $f$, then $-\P(V^{\perp})$ (applying the involution on $E$, which extends to an automorphism of $\P(H^0(\mathcal L))$) is as well and corresponds to $x\mapsto f(-x)$.
 
 \begin{eg}
-  Let's compute $N_{(3),(3),(2,1),(2,1)}$. Embedding $E\hookrightarrow\P^2$ via $\mathcal L=\mathcal O(3p)$, we want to count the points $q\notin E$ such that
+  Let's compute $N_{(3),(3)}$. Embedding $E\hookrightarrow\P^2$ via $\mathcal L=\mathcal O(3p)$, we want to count the points $q\notin E$ such that
   $q\in\ell_0$ (the line at infinity) and $q\in\ell_1$, where $\ell_1\cap E=3r$ for some $r\neq p$ (we don't need to worry about the simple ramification, which
   is guaranteed). Since $q=\ell_0\cap\ell_1$ we just need to count lines $\ell_1$ with $\ell_1\cap E=3r$ for $r\neq p$; these are flex lines corresponding to nontrivial 3-torsion points, of which there are $3^2-1=8$. Precomposition with the involution of $E$ corresponds to replacing $q$ with $-q$, which corresponds to replacing the 3-torsion point with its inverse. Therefore,
   \[
-  N_{(3),(3),(2,1),(2,1)}=\frac{8}{2}=4.
+  N_{(3),(3)}=\frac{8}{2}=4.
   \]
 \end{eg}
 \begin{eg}
-  Let's compute $N_{(2,1),(3),(2,1),(2,1),(2,1)}$. If $\mathcal O(2p_1+p_2)=\mathcal O(3p_{\infty})$, then we can embed $E$ in $\P^2$ with $p_{\infty}$ as the point at infinity
-  and let $\ell_0$ be a line such that $\ell_0\cap E=2p_1+p_2$. We want to count points $q\notin E$ with $q\in \ell_0$ and $q\in \ell_1$, where $\ell_1$ is a flex line. This again amounts to counting flex lines, so $N_{(2,1),(3),(2,1),(2,1),(2,1)}=3^2=9$.
+  Let's compute $N_{(2,1),(3)}$. If $\mathcal O(2p_1+p_2)=\mathcal O(3p_{\infty})$, then we can embed $E$ in $\P^2$ with $p_{\infty}$ as the point at infinity
+  and let $\ell_0$ be a line such that $\ell_0\cap E=2p_1+p_2$. We want to count points $q\notin E$ with $q\in \ell_0$ and $q\in \ell_1$, where $\ell_1$ is a flex line. This again amounts to counting flex lines, so $N_{(2,1),(3)}=3^2=9$.
 
-  For similar reasons, $N_{(1,1,1),(3),(2,1),(2,1),(2,1),(2,1)}=9$.
+  For similar reasons, $N_{(1,1,1),(3)}=9$.
 \end{eg}
 
 Another way to count $N_{\mu_0,\dots,\mu_{n+2}}$: note that $\{H:\P(V^{\perp})\subset H\}$ is a line in $\P(H^0(\mathcal L))^*$.
 Let $X_{\mu}=\{H\in\P(H^0(\mathcal L))^*:H\cap E\text{ has shape }\mu\}$.
 Counting the number of possibilities $\P(V^{\perp})$ amounts to counting lines $\ell\subset\P(H^0(\mathcal L))^*$ such that $H_0\in\ell$, $H_1,\dots,H_{n+2}\in\ell$ for distinct points $H_i\in X_{\mu_i}$, and $\P(V^{\perp})\cap E=H_0\cap H_1\cap E=\emptyset$.
-Letting $\pi:\P^{d-1}\dashrightarrow \{\text{lines in $\P^{d-1}$ through $H_0$}\}=\P^{d-2}$ send $x$ to the line through $x$ and $H_0$, the idea is to count points in $\P^{d-2}$ whose fiber contains distinct points $H_i\in X_{\mu_i}$.
+Letting $\pi:\P^{d-1}\dashrightarrow \{\text{lines in $\P^{d-1}$ through $H_0$}\}=\P^{d-2}$ send $x$ to the line through $x$ and $H_0$, the idea is to count points in $\P^{d-2}$ whose fiber contains distinct points $H_i\in X_{\mu_i}$. (TODO: ensure $\ell$ isn't contained in $\{H:p\in H\}$, a plane in $(\P^3)^*$)
 
 Now we move on to $d=4$, and embed $E$ in $\P^3$ via
 $\mathcal L=\mathcal O(4p)$. We have a stratification of $(\P^3)^*$:
@@ -225,16 +230,16 @@ Note that $f_i$ is 2-to-1 ($x$ and $t_i-x$ are in the same fiber), so $C_i\cong 
 See ``Documents/four\_curves\_linear.m2'' for the computation in M2 to compute $X_{(2,2)}$; it turns out that each $C_i$ is a plane conic. By counting points of
 intersection of the images of $C_i$ under $\pi:(\P^3)^*\dashrightarrow\P^2$, we find that
 \[
-N_{(4),(2,2),(2,2),(2,1,1)}=\frac 32
+N_{(4),(2,2),(2,2)}=\frac 32
 \]
 as expected from the Hurwitz calculation. By changing $\pi$ (and therefore $H_0$), we can also find
 \[
-N_{(3,1),(2,2),(2,2),(2,1,1),(2,1,1)}=N_{(2,2),(2,2),(2,2),(2,1,1),(2,1,1)}=6,\]\[ N_{(2,1,1),(2,2),(2,2),(2,1,1),(2,1,1),(2,1,1)}=12,\ N_{(1,1,1,1),(2,2),(2,2),(2,1,1),(2,1,1),(2,1,1),(2,1,1)}=24
+N_{(3,1),(2,2),(2,2)}=N_{(2,2),(2,2),(2,2)}=6,\]\[ N_{(2,1,1),(2,2),(2,2)}=12,\ N_{(1,1,1,1),(2,2),(2,2)}=24
 \]
 
 Next we consider $X_{(3,1)}$ (calculated in ``osculating.m2''). There is a map $g:E\to(\P^3)^*$ sending $q\mapsto H$ where $H$ is the {\it osculating plane} to $E$ at $q$, i.e.\ $H$ intersects $E$ at
 $q$ with multiplicity at least 3. This $H$ can be defined as the limit of planes containing $q,r,s\in E$ as $r,s\to q$, or equivalently as the limit of planes containing
-$T_qE$ and $r$ as $r\to q$.
+$T_qE$ and $r$ as $r\to q$. (TODO: re-work the osculating plane stuff using that it's generated by $v(0),v'(0),v''(0)$.)
 
 Let $E=\{F=G=0\}\subset\P^3$. We know that \[T_qE=\{x:\nabla_qF\cdot x=\nabla_qG\cdot x=0\}\]
 A plane containing this tangent line must be of the form \[H=\{x:(a\nabla_qF+b\nabla_qG)\cdot x=0\}\]
@@ -280,10 +285,10 @@ It turns out $[D_1,-D_2,D_3,-D_4]$ works where $D_i$ is the determinant of the m
 
 After doing this it turns out that $X_{(1,3)}$ is a degree 12 curve, with singularities (cusps? TODO) at the planes $H$ with $H\cap E=4q$ for some $q$ (corresponding to the 4-torsion points). There are $4^2=16$ of these singularities.
 
-To compute $N_{(4),(3,1),(3,1),(2,1,1)}$, we take the image $Y_{(1,3)}$ under projection from $H_0$. It turns out that $Y_{(1,3)}$ is a degree 10
+To compute $N_{(4),(3,1),(3,1)}$, we take the image $Y_{(1,3)}$ under projection from $H_0$. It turns out that $Y_{(1,3)}$ is a degree 10
 curve with cusps at the images of 4-torsion points (except for the image of $H_0$, which is a smooth point) and $20$ nodes, so
 \[
-N_{(4),(3,1),(3,1),(2,1,1)}=\frac{20}{2}=10
+N_{(4),(3,1),(3,1)}=\frac{20}{2}=10
 \]
 
 

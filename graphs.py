@@ -123,7 +123,7 @@ def place_ramification_helper(T, sigma, sigmacount, side):
         T2 = copy.deepcopy(T)#T.copy()
         T2.nodes[node]['R'] -= (ram-1)
         T2.nodes[node]['ramif'][sigmacount].append(ram)
-        T2.add_edge(node, node, weight=ram)
+        #T2.add_edge(node, node, weight=ram)
         L.extend(place_ramification_helper(T2, sigma[1:], sigmacount, side))
     return L
 
@@ -143,19 +143,38 @@ def place_ramification(T, sigma0, sigma1, sigma2):
 
 def stabilization(T):
     # produce the stabilization of this graph
-    for node in T.nodes():
-        if node=='l0':
-            continue # genus 1
-        
-        
+    # TODO: adapt this for graphs which have double edges
+    T = copy.deepcopy(T)
+    while True:
+        for node in T.nodes():
+            if node=='l0':
+                continue # genus 1
+            marked_pts = T.nodes[node]['ramif'][0]
+            N = list(T.neighbors(node))
+            if len(N) == 1 and len(marked_pts)<=1: # delete node, put its marked points on the neighbor
+                neighbor = N[0]
+                T.nodes[neighbor]['ramif'][0].extend(T.nodes[node]['ramif'][0])
+                T.remove_node(node)
+                break
+            elif len(N) == 2 and len(marked_pts)==0: # delete node, connect neighbors
+                T.add_edge(N[0], N[1])
+                T.remove_node(node)
+                break
+        else:
+            break
+    return T
 
-def stabilizes(T, sigma):
-    # for now, sigma=(a,b) and we want TODO
-    return True
+def stabilizes(T, G):
+    # check if stabilization of T looks like G
+    T2 = stabilization(T)
+    def matching(n1, n2): # TODO: also check genus matches up?
+        return n1['ramif'][0] == n2['ramif'][0]
+    return nx.is_isomorphic(T2, G, node_match=matching)
     
 
-def possible_graphs(sigma0, sigma1, sigma2):
+def possible_graphs(sigma0, sigma1, sigma2, G):
     # consider possible graphs with ramification sigma0, sigma1, sigma2
+    # stabilization should look like G
     d = sum(sigma0)
     assert(d == sum(sigma1) and d == sum(sigma2))
     TOTAL = 0
@@ -168,7 +187,7 @@ def possible_graphs(sigma0, sigma1, sigma2):
             trees = bipartite_trees(mu1, mu2)
             for T in trees:
                 for T2 in place_ramification(T, sigma0, sigma1, sigma2):
-                    if not stabilizes(T2, sigma0):
+                    if not stabilizes(T2, G):
                         continue
                     TOTAL += 1
                     for i in range(len(mu1)):
@@ -177,14 +196,21 @@ def possible_graphs(sigma0, sigma1, sigma2):
                     for i in range(len(mu2)):
                         label = 'r{}'.format(i)
                         print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
-                    #display_bipartite(T2, mu1, mu2)
+                    display_bipartite(T2, mu1, mu2)
                     print('-'*10)
                     # TODO: display the ramification as legs or loops on the graph...
     return TOTAL
 
-#T = bipartite_trees([3,2],[3,1,1])
-#G = T[2]
-#display_bipartite(G, [3,2],[3,1,1])
+'''
+G = nx.Graph()
+G.add_edge('l0','r0')
+G.nodes['l0']['ramif']=[[1],[],[]]
+G.nodes['r0']['ramif']=[[2,1],[],[]]
+possible_graphs([2,1,1],[3,1],[2,2], G)
+'''
 
-#possible_graphs([2,2],[3,1],[3,1])
-print(possible_graphs([4,1],[4,1],[3,1,1]))
+G = nx.Graph()
+G.add_edge('l0','r0')
+G.nodes['l0']['ramif']=[[],[],[]]
+G.nodes['r0']['ramif']=[[3,2],[],[]]
+possible_graphs([3,2],[3,1,1],[4,1], G)
