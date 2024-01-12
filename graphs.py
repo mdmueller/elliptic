@@ -22,7 +22,6 @@ def bipartite_tree_helper(G, i, mu1, mu2):
 
     L = []
     for part in partitions(mu1[i], len(mu2)):
-        #H = G.copy()
         H = copy.deepcopy(G)
         # part lists the edge weights coming from the ith left vertex
         for w, j in enumerate(part):
@@ -44,6 +43,7 @@ def weights_add_up(G, mu1, mu2):
         weight_from_v = 0 # v is the jth vertex on the right
         for i in range(len(mu1)):
             try:
+                #weight_from_v += sum([x['weight'] for x in G['l{0}'.format(i)]['r{0}'.format(j)].values()]) #for multigraph...
                 weight_from_v += G['l{0}'.format(i)]['r{0}'.format(j)]['weight']
             except KeyError:
                 continue
@@ -62,12 +62,14 @@ def bipartite_trees(mu1, mu2):
         # 2g - 2 = (-2)d + R => R = 2d + 2g - 2
         G.nodes['l{0}'.format(i)]['R'] = 2*mu1[i]-2 if i!=0 else 2*mu1[i]
         G.nodes['l{0}'.format(i)]['ramif'] = [[],[],[]]
+        G.nodes['l{0}'.format(i)]['genus'] = 1 if i==0 else 0
     for i in range(len(mu2)):
         G.add_node('r{0}'.format(i), bipartite=1)
         G.nodes['r{0}'.format(i)]['degree'] = mu2[i]
         G.nodes['r{0}'.format(i)]['R'] = 2*mu2[i]-2
         G.nodes['r{0}'.format(i)]['ramif'] = [[],[],[]]
-    
+        G.nodes['r{0}'.format(i)]['genus'] = 0
+
     trees = bipartite_tree_helper(G, 0, mu1, mu2)
     return [T for T in trees if weights_add_up(T, mu1, mu2) and all([T.nodes[node]['R']>=0 for node in T.nodes()])]
 
@@ -110,7 +112,7 @@ def Part(n):
 
 def place_ramification_helper(T, sigma, sigmacount, side):
     # side = 'r' or 'l'
-    # sigmacount = 0, 1, or 2 depending which sigma this is
+    # sigmacount = i if this is sigma_i
     # return all placements of sigma ramification on the given side of T
     if len(sigma)==0:
         return [T]
@@ -127,12 +129,12 @@ def place_ramification_helper(T, sigma, sigmacount, side):
         L.extend(place_ramification_helper(T2, sigma[1:], sigmacount, side))
     return L
 
-def place_ramification(T, sigma0, sigma1, sigma2):
+def place_ramification(T, sigmas):
     # T is a weighted bipartite tree
     # sigma_i are partitions; we want these ramification to appear in T
     # Our goal is to allocate ramification across all vertices in T
     L = [T]
-    for i, sigma in enumerate([sigma0, sigma1, sigma2]):
+    for i, sigma in enumerate(sigmas):
         L2 = []
         for side in ['l', 'r']:
             for T2 in L:
@@ -147,8 +149,8 @@ def stabilization(T):
     T = copy.deepcopy(T)
     while True:
         for node in T.nodes():
-            if node=='l0':
-                continue # genus 1
+            if T.nodes[node]['genus']==1:
+                continue
             marked_pts = T.nodes[node]['ramif'][0]
             N = list(T.neighbors(node))
             if len(N) == 1 and len(marked_pts)<=1: # delete node, put its marked points on the neighbor
@@ -164,20 +166,23 @@ def stabilization(T):
             break
     return T
 
-def stabilizes(T, G):
-    # check if stabilization of T looks like G
-    T2 = stabilization(T)
+def isomorphic(T, G, all_markings=True):
+    # check if T looks like G
+    # if all_markings, look at all ramification points; otherwise just mu_0
     def matching(n1, n2): # TODO: also check genus matches up?
-        return n1['ramif'][0] == n2['ramif'][0]
-    return nx.is_isomorphic(T2, G, node_match=matching)
+        return all([n1['ramif'][i] == n2['ramif'][i] for i in range(3 if all_markings else 1)]) and n1['genus'] == n2['genus']
+    return nx.is_isomorphic(T, G, node_match=matching)
     
 
-def possible_graphs(sigma0, sigma1, sigma2, G):
-    # consider possible graphs with ramification sigma0, sigma1, sigma2
+def possible_graphs(sigmas, G):
+    # consider possible graphs with ramification sigma_0, sigma_1, sigma_2, ...
     # stabilization should look like G
-    d = sum(sigma0)
-    assert(d == sum(sigma1) and d == sum(sigma2))
+    d = sum(sigmas[0])
+    #n = sum([len(x) for x in sigmas]) # number of marked points
+    assert(all([d == sum(sigma) for sigma in sigmas]))
+    #assert(sum([sum([x-1 for x in sigma]) for sigma in sigmas])==2*d) # all ramification included
     TOTAL = 0
+    seen_graphs = []
     
     for mu1 in Part(d):
         if mu1[0]==1:
@@ -186,10 +191,13 @@ def possible_graphs(sigma0, sigma1, sigma2, G):
             # TODO: check if the sigmas are possible just from mu1 and mu2?
             trees = bipartite_trees(mu1, mu2)
             for T in trees:
-                for T2 in place_ramification(T, sigma0, sigma1, sigma2):
-                    if not stabilizes(T2, G):
+                for T2 in place_ramification(T, sigmas):
+                    if not isomorphic(stabilization(T2), G, all_markings=False):
+                        continue
+                    elif any([isomorphic(T2, Q) for Q in seen_graphs]):
                         continue
                     TOTAL += 1
+                    seen_graphs.append(T2)
                     for i in range(len(mu1)):
                         label = 'l{}'.format(i)
                         print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
@@ -201,16 +209,11 @@ def possible_graphs(sigma0, sigma1, sigma2, G):
                     # TODO: display the ramification as legs or loops on the graph...
     return TOTAL
 
-'''
-G = nx.Graph()
-G.add_edge('l0','r0')
-G.nodes['l0']['ramif']=[[1],[],[]]
-G.nodes['r0']['ramif']=[[2,1],[],[]]
-possible_graphs([2,1,1],[3,1],[2,2], G)
-'''
-
-G = nx.Graph()
-G.add_edge('l0','r0')
-G.nodes['l0']['ramif']=[[],[],[]]
-G.nodes['r0']['ramif']=[[3,2],[],[]]
-possible_graphs([3,2],[3,1,1],[4,1], G)
+if __name__ == '__main__':
+    G = nx.Graph()
+    G.add_edge('l0','r0')
+    G.nodes['l0']['ramif']=[[2,1],[],[]]
+    G.nodes['l0']['genus']=1
+    G.nodes['r0']['ramif']=[[1,1],[],[]]
+    G.nodes['r0']['genus']=0
+    possible_graphs([[2,1,1,1],[4,1],[3,1,1]], G)
