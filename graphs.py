@@ -51,8 +51,8 @@ def weights_add_up(G, mu1, mu2):
             return False
     return True
 
-def bipartite_trees(mu1, mu2):
-    # given partitions mu1 and mu2 of d, list potential bipartite weighted trees
+def bipartite_trees(mu1, mu2, genus):
+    # given partitions mu1 and mu2 of d, list potential bipartite weighted trees of given genus
     d = sum(mu1)
     assert(d == sum(mu2))
     G = nx.Graph()
@@ -60,9 +60,9 @@ def bipartite_trees(mu1, mu2):
         G.add_node('l{0}'.format(i), bipartite=0)
         G.nodes['l{0}'.format(i)]['degree'] = mu1[i]
         # 2g - 2 = (-2)d + R => R = 2d + 2g - 2
-        G.nodes['l{0}'.format(i)]['R'] = 2*mu1[i]-2 if i!=0 else 2*mu1[i]
+        G.nodes['l{0}'.format(i)]['R'] = 2*mu1[i]-2 if (i!=0 or genus==0) else 2*mu1[i]
         G.nodes['l{0}'.format(i)]['ramif'] = [[],[],[]]
-        G.nodes['l{0}'.format(i)]['genus'] = 1 if i==0 else 0
+        G.nodes['l{0}'.format(i)]['genus'] = genus if i==0 else 0
     for i in range(len(mu2)):
         G.add_node('r{0}'.format(i), bipartite=1)
         G.nodes['r{0}'.format(i)]['degree'] = mu2[i]
@@ -73,7 +73,7 @@ def bipartite_trees(mu1, mu2):
     trees = bipartite_tree_helper(G, 0, mu1, mu2)
     return [T for T in trees if weights_add_up(T, mu1, mu2) and all([T.nodes[node]['R']>=0 for node in T.nodes()])]
 
-def display_bipartite(G, mu1, mu2):
+def display_bipartite(G, mu1, mu2, genus):
     # draw the bipartite weighted graph G
     L = [node for node in G.nodes() if 'l' in node]
     R = [node for node in G.nodes() if 'r' in node]
@@ -83,7 +83,7 @@ def display_bipartite(G, mu1, mu2):
     pos.update((node, (2, index)) for index, node in enumerate(R))
     nx.draw_networkx_nodes(G, pos, node_size=4000, node_color='tab:red')
     nx.draw_networkx_edges(G, pos)
-    labels1 = {'l{0}'.format(i): 'g={0},d={1}'.format(1 if i==0 else 0, mu1[i]) for i in range(len(mu1))}
+    labels1 = {'l{0}'.format(i): 'g={0},d={1}'.format(genus if i==0 else 0, mu1[i]) for i in range(len(mu1))}
     labels2 = {'r{0}'.format(i): 'g=0,d={0}'.format(mu2[i]) for i in range(len(mu2))}
     nx.draw_networkx_labels(G, pos, labels=labels1|labels2)
     edge_labels = nx.get_edge_attributes(G, 'weight')
@@ -122,7 +122,7 @@ def place_ramification_helper(T, sigma, sigmacount, side):
         if side not in node or T.nodes[node]['R'] < ram-1 or sum(T.nodes[node]['ramif'][sigmacount])+ram>T.nodes[node]['degree']:
             continue
         # try putting ram at this node
-        T2 = copy.deepcopy(T)#T.copy()
+        T2 = copy.deepcopy(T)
         T2.nodes[node]['R'] -= (ram-1)
         T2.nodes[node]['ramif'][sigmacount].append(ram)
         #T2.add_edge(node, node, weight=ram)
@@ -169,12 +169,12 @@ def stabilization(T):
 def isomorphic(T, G, all_markings=True):
     # check if T looks like G
     # if all_markings, look at all ramification points; otherwise just mu_0
-    def matching(n1, n2): # TODO: also check genus matches up?
+    def matching(n1, n2):
         return all([n1['ramif'][i] == n2['ramif'][i] for i in range(3 if all_markings else 1)]) and n1['genus'] == n2['genus']
     return nx.is_isomorphic(T, G, node_match=matching)
     
 
-def possible_graphs(sigmas, G):
+def possible_graphs(sigmas, G, genus=1):
     # consider possible graphs with ramification sigma_0, sigma_1, sigma_2, ...
     # stabilization should look like G
     d = sum(sigmas[0])
@@ -185,11 +185,11 @@ def possible_graphs(sigmas, G):
     seen_graphs = []
     
     for mu1 in Part(d):
-        if mu1[0]==1:
-            continue # genus 1 component can't be degree 1
+        if mu1[0]==1 and genus>0:
+            continue # positive genus component can't be degree 1
         for mu2 in Part(d):
             # TODO: check if the sigmas are possible just from mu1 and mu2?
-            trees = bipartite_trees(mu1, mu2)
+            trees = bipartite_trees(mu1, mu2, genus)
             for T in trees:
                 for T2 in place_ramification(T, sigmas):
                     if not isomorphic(stabilization(T2), G, all_markings=False):
@@ -204,7 +204,7 @@ def possible_graphs(sigmas, G):
                     for i in range(len(mu2)):
                         label = 'r{}'.format(i)
                         print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
-                    display_bipartite(T2, mu1, mu2)
+                    display_bipartite(T2, mu1, mu2, genus)
                     print('-'*10)
                     # TODO: display the ramification as legs or loops on the graph...
     return TOTAL
@@ -212,8 +212,8 @@ def possible_graphs(sigmas, G):
 if __name__ == '__main__':
     G = nx.Graph()
     G.add_edge('l0','r0')
-    G.nodes['l0']['ramif']=[[2,1],[],[]]
-    G.nodes['l0']['genus']=1
+    G.nodes['l0']['ramif']=[[1,1],[],[]]
+    G.nodes['l0']['genus']=0
     G.nodes['r0']['ramif']=[[1,1],[],[]]
     G.nodes['r0']['genus']=0
-    possible_graphs([[2,1,1,1],[4,1],[3,1,1]], G)
+    possible_graphs([[1,1,1,1],[4],[3,1]], G, genus=0)
