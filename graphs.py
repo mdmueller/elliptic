@@ -62,6 +62,7 @@ def bipartite_trees(mu1, mu2, genus):
         # 2g - 2 = (-2)d + R => R = 2d + 2g - 2
         G.nodes['l{0}'.format(i)]['R'] = 2*mu1[i]-2 if (i!=0 or genus==0) else 2*mu1[i]
         G.nodes['l{0}'.format(i)]['ramif'] = [[],[],[]]
+        # Each list in ...['ramif'] contains tuples (i,r) where i is the index of the point and r is its assigned ramification
         G.nodes['l{0}'.format(i)]['genus'] = genus if i==0 else 0
     for i in range(len(mu2)):
         G.add_node('r{0}'.format(i), bipartite=1)
@@ -110,23 +111,24 @@ def Part(n):
         L.extend(part(n, k))
     return L
 
-def place_ramification_helper(T, sigma, sigmacount, side):
+def place_ramification_helper(T, sigma, sigmacount, pointcount, side):
     # side = 'r' or 'l'
     # sigmacount = i if this is sigma_i
+    # pointcount = j if this is the jth point
     # return all placements of sigma ramification on the given side of T
     if len(sigma)==0:
         return [T]
     ram = sigma[0]
     L = []
     for node in T.nodes():
-        if side not in node or T.nodes[node]['R'] < ram-1 or sum(T.nodes[node]['ramif'][sigmacount])+ram>T.nodes[node]['degree']:
+        if side not in node or T.nodes[node]['R'] < ram-1 or sum([t[1] for t in T.nodes[node]['ramif'][sigmacount]])+ram>T.nodes[node]['degree']:
             continue
         # try putting ram at this node
         T2 = copy.deepcopy(T)
         T2.nodes[node]['R'] -= (ram-1)
-        T2.nodes[node]['ramif'][sigmacount].append(ram)
+        T2.nodes[node]['ramif'][sigmacount].append((pointcount, ram))
         #T2.add_edge(node, node, weight=ram)
-        L.extend(place_ramification_helper(T2, sigma[1:], sigmacount, side))
+        L.extend(place_ramification_helper(T2, sigma[1:], sigmacount, pointcount+1, side))
     return L
 
 def place_ramification(T, sigmas):
@@ -134,16 +136,18 @@ def place_ramification(T, sigmas):
     # sigma_i are partitions; we want these ramification to appear in T
     # Our goal is to allocate ramification across all vertices in T
     L = [T]
+    pointcount = 1
     for i, sigma in enumerate(sigmas):
         L2 = []
         for side in ['l', 'r']:
             for T2 in L:
-                L2.extend(place_ramification_helper(T2, sigma, i, side))
+                L2.extend(place_ramification_helper(T2, sigma, i, pointcount, side))
         L = L2
+        pointcount += len(sigma)
 
-    return {tuple([tuple([tuple(t) for t in G.nodes[node]['ramif']]) for node in G.nodes()]):G for G in L}.values()
+    return {tuple([tuple([tuple(t) for t in G.nodes[node]['ramif']]) for node in G.nodes()]):G for G in L}.values() #TODO what??
 
-def stabilization(T):
+def stabilization(T, num_fixed):
     # produce the stabilization of this graph
     # TODO: adapt this for graphs which have double edges
     T = copy.deepcopy(T)
@@ -151,14 +155,14 @@ def stabilization(T):
         for node in T.nodes():
             if T.nodes[node]['genus']==1:
                 continue
-            marked_pts = T.nodes[node]['ramif'][0]
+            marked_pts = sum([len([x for x in L if x[0]<=num_fixed]) for L in T.nodes[node]['ramif']]) # marked points on this node
             N = list(T.neighbors(node))
-            if len(N) == 1 and len(marked_pts)<=1: # delete node, put its marked points on the neighbor
+            if len(N) == 1 and marked_pts<=1: # delete node, put its marked points on the neighbor
                 neighbor = N[0]
                 T.nodes[neighbor]['ramif'][0].extend(T.nodes[node]['ramif'][0])
                 T.remove_node(node)
                 break
-            elif len(N) == 2 and len(marked_pts)==0: # delete node, connect neighbors
+            elif len(N) == 2 and marked_pts==0: # delete node, connect neighbors
                 T.add_edge(N[0], N[1])
                 T.remove_node(node)
                 break
@@ -166,21 +170,27 @@ def stabilization(T):
             break
     return T
 
-def isomorphic(T, G, all_markings=True):
+def isomorphic(T, G, num_fixed, all_markings=True):
     # check if T looks like G
-    # if all_markings, look at all ramification points; otherwise just mu_0
+    # if all_markings, look at all ramification points; otherwise just the fixed ones
     def matching(n1, n2):
-        return all([n1['ramif'][i] == n2['ramif'][i] for i in range(3 if all_markings else 1)]) and n1['genus'] == n2['genus']
+        def same_markings(L1, L2):
+            return [x for x in L1 if all_markings or x[0]<=num_fixed] == [x for x in L2 if all_markings or x[0]<=num_fixed]
+        return all([same_markings(L1,L2) for L1,L2 in zip(n1['ramif'],n2['ramif'])]) and n1['genus'] == n2['genus']
+        #return all([n1['ramif'][i] == n2['ramif'][i] for i in range(3 if all_markings else 1)]) and n1['genus'] == n2['genus']
     return nx.is_isomorphic(T, G, node_match=matching)
     
 
-def possible_graphs(sigmas, G, genus=1):
+def possible_graphs(sigmas, G, num_fixed='auto', genus=1):
     # consider possible graphs with ramification sigma_0, sigma_1, sigma_2, ...
     # stabilization should look like G
+    # num_fixed is the # of fixed points, 'auto' means |sigma_0|
     d = sum(sigmas[0])
     #n = sum([len(x) for x in sigmas]) # number of marked points
     assert(all([d == sum(sigma) for sigma in sigmas]))
     #assert(sum([sum([x-1 for x in sigma]) for sigma in sigmas])==2*d) # all ramification included
+    if num_fixed == 'auto':
+        num_fixed = len(sigmas[0])
     TOTAL = 0
     seen_graphs = []
     
@@ -192,9 +202,9 @@ def possible_graphs(sigmas, G, genus=1):
             trees = bipartite_trees(mu1, mu2, genus)
             for T in trees:
                 for T2 in place_ramification(T, sigmas):
-                    if not isomorphic(stabilization(T2), G, all_markings=False):
+                    if not isomorphic(stabilization(T2, num_fixed), G, num_fixed, all_markings=False):
                         continue
-                    elif any([isomorphic(T2, Q) for Q in seen_graphs]):
+                    elif any([isomorphic(T2, Q, num_fixed) for Q in seen_graphs]):
                         continue
                     TOTAL += 1
                     seen_graphs.append(T2)
@@ -212,8 +222,8 @@ def possible_graphs(sigmas, G, genus=1):
 if __name__ == '__main__':
     G = nx.Graph()
     G.add_edge('l0','r0')
-    G.nodes['l0']['ramif']=[[1,1],[],[]]
+    G.nodes['l0']['ramif']=[[(1,4),(2,1)],[],[]]
     G.nodes['l0']['genus']=0
-    G.nodes['r0']['ramif']=[[1,1],[],[]]
+    G.nodes['r0']['ramif']=[[],[(3,3),(4,1),(5,1)],[]]
     G.nodes['r0']['genus']=0
-    possible_graphs([[1,1,1,1],[4],[3,1]], G, genus=0)
+    possible_graphs([[4,1],[3,1,1],[3,1,1]], G, num_fixed=4, genus=0)
