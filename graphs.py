@@ -61,14 +61,14 @@ def bipartite_trees(mu1, mu2, genus):
         G.nodes['l{0}'.format(i)]['degree'] = mu1[i]
         # 2g - 2 = (-2)d + R => R = 2d + 2g - 2
         G.nodes['l{0}'.format(i)]['R'] = 2*mu1[i]-2 if (i!=0 or genus==0) else 2*mu1[i]
-        G.nodes['l{0}'.format(i)]['ramif'] = [[],[],[]]
+        G.nodes['l{0}'.format(i)]['ramif'] = [[],[],[],[],[]]
         # Each list in ...['ramif'] contains tuples (i,r) where i is the index of the point and r is its assigned ramification
         G.nodes['l{0}'.format(i)]['genus'] = genus if i==0 else 0
     for i in range(len(mu2)):
         G.add_node('r{0}'.format(i), bipartite=1)
         G.nodes['r{0}'.format(i)]['degree'] = mu2[i]
         G.nodes['r{0}'.format(i)]['R'] = 2*mu2[i]-2
-        G.nodes['r{0}'.format(i)]['ramif'] = [[],[],[]]
+        G.nodes['r{0}'.format(i)]['ramif'] = [[],[],[],[],[]]
         G.nodes['r{0}'.format(i)]['genus'] = 0
 
     trees = bipartite_tree_helper(G, 0, mu1, mu2)
@@ -181,12 +181,11 @@ def isomorphic(T, G, num_fixed, all_markings=True):
     return nx.is_isomorphic(T, G, node_match=matching)
     
 
-def possible_graphs(sigmas, G, num_fixed='auto', genus=1):
+def possible_graphs_old(sigmas, G, num_fixed='auto', genus=1):
     # consider possible graphs with ramification sigma_0, sigma_1, sigma_2, ...
     # stabilization should look like G
     # num_fixed is the # of fixed points, 'auto' means |sigma_0|
     d = sum(sigmas[0])
-    #n = sum([len(x) for x in sigmas]) # number of marked points
     assert(all([d == sum(sigma) for sigma in sigmas]))
     #assert(sum([sum([x-1 for x in sigma]) for sigma in sigmas])==2*d) # all ramification included
     if num_fixed == 'auto':
@@ -219,11 +218,39 @@ def possible_graphs(sigmas, G, num_fixed='auto', genus=1):
                     # TODO: display the ramification as legs or loops on the graph...
     return TOTAL
 
+def possible_graphs(sigmas, G, num_fixed='auto', genus=1):
+    # consider possible graphs with ramification sigma_0, sigma_1, sigma_2, ...
+    # stabilization should look like G
+    # num_fixed is the # of fixed points, 'auto' means |sigma_0|
+    d = sum(sigmas[0])
+    assert(all([d == sum(sigma) for sigma in sigmas]))
+    #assert(sum([sum([x-1 for x in sigma]) for sigma in sigmas])==2*d) # all ramification included
+    if num_fixed == 'auto':
+        num_fixed = len(sigmas[0])
+    TOTAL = 0
+    seen_graphs = []
+    
+    for mu1 in Part(d):
+        if mu1[0]==1 and genus>0:
+            continue # positive genus component can't be degree 1
+        for mu2 in Part(d):
+            # TODO: check if the sigmas are possible just from mu1 and mu2?
+            trees = bipartite_trees(mu1, mu2, genus)
+            for T in trees:
+                for T2 in place_ramification(T, sigmas):
+                    if not isomorphic(stabilization(T2, num_fixed), G, num_fixed, all_markings=False):
+                        continue
+                    elif any([isomorphic(T2, Q, num_fixed) for Q in seen_graphs]):
+                        continue
+                    TOTAL += 1
+                    seen_graphs.append(T2)
+                    yield T2
+
 if __name__ == '__main__':
     G = nx.Graph()
     G.add_edge('l0','r0')
-    G.nodes['l0']['ramif']=[[(1,4),(2,1)],[],[]]
+    G.nodes['l0']['ramif']=[[(1,4),(2,1)],[],[],[],[]]
     G.nodes['l0']['genus']=0
-    G.nodes['r0']['ramif']=[[],[(3,3),(4,1),(5,1)],[]]
+    G.nodes['r0']['ramif']=[[],[(3,2),(4,1)],[],[],[]]
     G.nodes['r0']['genus']=0
-    possible_graphs([[4,1],[3,1,1],[3,1,1]], G, num_fixed=4, genus=0)
+    possible_graphs_old([[4,1],[2,1,1,1],[3,1,1],[2,1,1,1],[2,1,1,1]], G, num_fixed=4, genus=0)

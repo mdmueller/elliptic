@@ -1,3 +1,5 @@
+from sage.all import SymmetricGroup
+
 def hurwitz_helper(perms, d, G, result, perms_so_far, connected):
     # count lists of permutations in G whose product is result
     if len(perms) == 0:
@@ -25,18 +27,33 @@ def hurwitz_count(perms, d, connected=True):
     perms = [sorted(x)[::-1] for x in perms]
     G = SymmetricGroup(d)
     total, nonorbifold = hurwitz_helper(perms, d, G, G.identity(), [], connected)
-    return (total/factorial(d), nonorbifold/factorial(d))
+    return (total/fact(d), nonorbifold/fact(d))
 
-first=[int(x) for x in input('mu1? ').split(',')]
-second=[int(x) for x in input('mu2? ').split(',')]
-third=[int(x) for x in input('mu3? ').split(',')]
-deg = sum(first)
-assert(deg==sum(second))
-assert(deg==sum(third))
-print(hurwitz_count([first,second,third],deg))
-'''
-for d in [4,5,6]:
-    for a in range(1,int((d-1)/2)+1):
-        b = (d-1)-a
-        print((a,b,hurwitz_count([[d],[a,b,1],[3]+[1]*(d-3)],d)))
-'''
+def fact(n):
+    result = 1
+    for i in range(2,n+1):
+        result *= i
+    return result
+
+def auts(perm):
+    # return number of automorphisms of permutation
+    factor = 1
+    for x in set(perm):
+        factor *= fact(perm.count(x))
+    return factor
+
+def marked_hurwitz(perms, d):
+    # return marked orbifold count
+    x = hurwitz_count(perms, d)[0]
+    for perm in perms:
+        x *= auts(perm)
+    return x
+
+if __name__ == '__main__':
+    first=[int(x) for x in input('mu1? ').split(',')]
+    second=[int(x) for x in input('mu2? ').split(',')]
+    third=[int(x) for x in input('mu3? ').split(',')]
+    deg = sum(first)
+    assert(deg==sum(second))
+    assert(deg==sum(third))
+    print(hurwitz_count([first,second,third],deg))
