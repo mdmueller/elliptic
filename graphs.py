@@ -251,6 +251,6 @@ if __name__ == '__main__':
     G.add_edge('l0','r0')
     G.nodes['l0']['ramif']=[[(1,4),(2,1)],[],[],[],[]]
     G.nodes['l0']['genus']=0
-    G.nodes['r0']['ramif']=[[],[(3,2),(4,1)],[],[],[]]
+    G.nodes['r0']['ramif']=[[],[(3,3),(4,1)],[],[],[]]
     G.nodes['r0']['genus']=0
-    possible_graphs_old([[4,1],[2,1,1,1],[3,1,1],[2,1,1,1],[2,1,1,1]], G, num_fixed=4, genus=0)
+    possible_graphs_old([[4,1],[3,1,1],[3,1,1],[2,1,1,1]], G, num_fixed=4, genus=0)

@@ -15,6 +15,7 @@ def W(mu):
     r = len(mu)
     if r < 2:
         raise WException('r must be at least 2')
+    assert(r <= 4) # TODO: handle r>4 by making sure fixed points are handled properly...
     sum_of_lengths = sum([len(x) for x in mu])
     if sum_of_lengths != d*(r-2)+2:
         raise WException('Ramification fails to match Riemann-Hurwitz: '+str(mu))
@@ -37,7 +38,7 @@ def W(mu):
     TOTAL = 0
     for graph in possible_graphs(mu, G, num_fixed=r, genus=0):
         factor = 1
-        # take product of W's for each node, divided by automorphisms of the graph
+        # take product of W's for each node (automorphisms should already be dealt with...)
         # TODO: incorporate the node itself as a fixed point
         for node in graph.nodes():
             ramifs = [[t[1] for t in x] for x in graph.nodes[node]['ramif'] if x] # remove empty ramification profiles
@@ -49,8 +50,9 @@ def W(mu):
         print(factor)
         TOTAL += factor
     return TOTAL
-        
+
+def N(mu):
+    pass #TODO
 
 if __name__ == '__main__':
-    #print(W([[4,1],[2,1,1,1],[4,1],[2,1,1,1]]))
-    print(W([[4,1],[3,1,1],[3,1,1],[2,1,1,1]]))
+    print(W([[2,1],[1,1,1],[3],[2,1]]))
