@@ -14,24 +14,38 @@ def partitions(n, m):
             l.append([i]+P)
     return l
 
-def bipartite_tree_helper(G, i, mu1, mu2):
+def bipartite_tree_helper(G, i, mu1, mu2, double=False):
     # G is a partially constructed bipartite tree, after i left vertices have been dealt with
     # return all possible weighted bipartite tree completions of G
+    # if double=True, then give l_0 a double edge with r_0
     if i==len(mu1):
         return [G] if nx.is_connected(G) else []
 
     L = []
-    for part in partitions(mu1[i], len(mu2)):
+    for part in partitions(mu1[i], len(mu2)+1 if double else len(mu2)):
         H = copy.deepcopy(G)
+        if double:
+            if part[0]==0 or part[1]==0:
+                continue # double edges should not have weight 0
+            H.add_edge('l{0}'.format(i), 'r0', weight=part[0])
+            H.add_edge('l{0}'.format(i), 'r0', weight=part[1])
+            H.nodes['l{0}'.format(i)]['R'] -= (part[0]+part[1]-2)
+            H.nodes['r0']['R'] -= (part[0]+part[1]-2)
         # part lists the edge weights coming from the ith left vertex
         for w, j in enumerate(part):
+            if double and w<2: # already dealt with
+                continue
             if j!=0: # ignore edges with weight 0
-                H.add_edge('l{0}'.format(i), 'r{0}'.format(w), weight=j)
+                H.add_edge('l{0}'.format(i), 'r{0}'.format(w-1 if double else w), weight=j)
                 H.nodes['l{0}'.format(i)]['R'] -= (j-1)
-                H.nodes['r{0}'.format(w)]['R'] -= (j-1)
-        # keep going unless H has a cycle
+                H.nodes['r{0}'.format(w-1 if double else w)]['R'] -= (j-1)
+        # keep going unless H has a cycle (other than possible double edge)
         try:
-            nx.find_cycle(H)
+            H2 = copy.deepcopy(H)
+            if double:
+                H2.remove_edge('l0','r0')
+                H2.remove_edge('l0','r0')
+            nx.find_cycle(H2)
             continue
         except nx.exception.NetworkXNoCycle:
             L.extend(bipartite_tree_helper(H, i+1, mu1, mu2))
@@ -43,19 +57,20 @@ def weights_add_up(G, mu1, mu2):
         weight_from_v = 0 # v is the jth vertex on the right
         for i in range(len(mu1)):
             try:
-                #weight_from_v += sum([x['weight'] for x in G['l{0}'.format(i)]['r{0}'.format(j)].values()]) #for multigraph...
-                weight_from_v += G['l{0}'.format(i)]['r{0}'.format(j)]['weight']
+                weight_from_v += sum([x['weight'] for x in G['l{0}'.format(i)]['r{0}'.format(j)].values()]) #for multigraph...
+                #weight_from_v += G['l{0}'.format(i)]['r{0}'.format(j)]['weight']
             except KeyError:
                 continue
         if weight_from_v != mu2[j]:
             return False
     return True
 
-def bipartite_trees(mu1, mu2, genus):
+def bipartite_trees(mu1, mu2, genus, double=False):
     # given partitions mu1 and mu2 of d, list potential bipartite weighted trees of given genus
+    # if double=True, then l0 has a double edge
     d = sum(mu1)
     assert(d == sum(mu2))
-    G = nx.Graph()
+    G = nx.MultiGraph()
     for i in range(len(mu1)):
         G.add_node('l{0}'.format(i), bipartite=0)
         G.nodes['l{0}'.format(i)]['degree'] = mu1[i]
@@ -71,7 +86,7 @@ def bipartite_trees(mu1, mu2, genus):
         G.nodes['r{0}'.format(i)]['ramif'] = [[],[],[],[],[]]
         G.nodes['r{0}'.format(i)]['genus'] = 0
 
-    trees = bipartite_tree_helper(G, 0, mu1, mu2)
+    trees = bipartite_tree_helper(G, 0, mu1, mu2, double=double)
     return [T for T in trees if weights_add_up(T, mu1, mu2) and all([T.nodes[node]['R']>=0 for node in T.nodes()])]
 
 def display_bipartite(G, mu1, mu2, genus):
@@ -88,7 +103,15 @@ def display_bipartite(G, mu1, mu2, genus):
     labels2 = {'r{0}'.format(i): 'g=0,d={0}'.format(mu2[i]) for i in range(len(mu2))}
     nx.draw_networkx_labels(G, pos, labels=labels1|labels2)
     edge_labels = nx.get_edge_attributes(G, 'weight')
-    nx.draw_networkx_edge_labels(G, pos, edge_labels, label_pos=0.2)
+    # deal with multiple edges
+    new_labels = {}
+    for a,b,c in edge_labels:
+        if (a,b) not in new_labels:
+            new_labels[(a,b)]=str(edge_labels[a,b,c])
+        else:
+            new_labels[(a,b)]+=(','+str(edge_labels[a,b,c]))
+
+    nx.draw_networkx_edge_labels(G, pos, new_labels, label_pos=0.2)
     plt.show()
 
 def part(n, k):
@@ -149,20 +172,23 @@ def place_ramification(T, sigmas):
 
 def stabilization(T, num_fixed):
     # produce the stabilization of this graph
-    # TODO: adapt this for graphs which have double edges
     T = copy.deepcopy(T)
     while True:
         for node in T.nodes():
-            if T.nodes[node]['genus']==1:
+            if T.nodes[node]['genus']>0:
                 continue
             marked_pts = sum([len([x for x in L if x[0]<=num_fixed]) for L in T.nodes[node]['ramif']]) # marked points on this node
+            n_edges = len(T.edges(node))
             N = list(T.neighbors(node))
-            if len(N) == 1 and marked_pts<=1: # delete node, put its marked points on the neighbor
+
+            if n_edges == 1 and N!=[node] and marked_pts<=1: # delete node, put its marked points on the neighbor
                 neighbor = N[0]
                 T.nodes[neighbor]['ramif'][0].extend(T.nodes[node]['ramif'][0])
                 T.remove_node(node)
                 break
-            elif len(N) == 2 and marked_pts==0: # delete node, connect neighbors
+            elif n_edges == 2 and marked_pts==0: # delete node, connect neighbors
+                if len(N)==1: # double edge
+                    N.append(N[0])
                 T.add_edge(N[0], N[1])
                 T.remove_node(node)
                 break
@@ -177,51 +203,18 @@ def isomorphic(T, G, num_fixed, all_markings=True):
         def same_markings(L1, L2):
             return [x for x in L1 if all_markings or x[0]<=num_fixed] == [x for x in L2 if all_markings or x[0]<=num_fixed]
         return all([same_markings(L1,L2) for L1,L2 in zip(n1['ramif'],n2['ramif'])]) and n1['genus'] == n2['genus']
-        #return all([n1['ramif'][i] == n2['ramif'][i] for i in range(3 if all_markings else 1)]) and n1['genus'] == n2['genus']
     return nx.is_isomorphic(T, G, node_match=matching)
     
 
-def possible_graphs_old(sigmas, G, num_fixed='auto', genus=1):
-    # consider possible graphs with ramification sigma_0, sigma_1, sigma_2, ...
-    # stabilization should look like G
-    # num_fixed is the # of fixed points, 'auto' means |sigma_0|
-    d = sum(sigmas[0])
-    assert(all([d == sum(sigma) for sigma in sigmas]))
-    #assert(sum([sum([x-1 for x in sigma]) for sigma in sigmas])==2*d) # all ramification included
-    if num_fixed == 'auto':
-        num_fixed = len(sigmas[0])
-    TOTAL = 0
-    seen_graphs = []
-    
-    for mu1 in Part(d):
-        if mu1[0]==1 and genus>0:
-            continue # positive genus component can't be degree 1
-        for mu2 in Part(d):
-            # TODO: check if the sigmas are possible just from mu1 and mu2?
-            trees = bipartite_trees(mu1, mu2, genus)
-            for T in trees:
-                for T2 in place_ramification(T, sigmas):
-                    if not isomorphic(stabilization(T2, num_fixed), G, num_fixed, all_markings=False):
-                        continue
-                    elif any([isomorphic(T2, Q, num_fixed) for Q in seen_graphs]):
-                        continue
-                    TOTAL += 1
-                    seen_graphs.append(T2)
-                    for i in range(len(mu1)):
-                        label = 'l{}'.format(i)
-                        print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
-                    for i in range(len(mu2)):
-                        label = 'r{}'.format(i)
-                        print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
-                    display_bipartite(T2, mu1, mu2, genus)
-                    print('-'*10)
-                    # TODO: display the ramification as legs or loops on the graph...
-    return TOTAL
+def possible_graphs_old(sigmas, G, num_fixed='auto', genus=1, double=False, ignore_labels=False): #TODO: remove
+    list(possible_graphs(sigmas, G, num_fixed, genus, double, ignore_labels, display=True))
 
-def possible_graphs(sigmas, G, num_fixed='auto', genus=1):
+def possible_graphs(sigmas, G, num_fixed='auto', genus=1, double=False, ignore_labels=False, display=False):
     # consider possible graphs with ramification sigma_0, sigma_1, sigma_2, ...
     # stabilization should look like G
     # num_fixed is the # of fixed points, 'auto' means |sigma_0|
+    # double=True means include a double edge (genus 0)
+    # ignore_labels=True means don't label the ramification points
     d = sum(sigmas[0])
     assert(all([d == sum(sigma) for sigma in sigmas]))
     #assert(sum([sum([x-1 for x in sigma]) for sigma in sigmas])==2*d) # all ramification included
@@ -235,22 +228,39 @@ def possible_graphs(sigmas, G, num_fixed='auto', genus=1):
             continue # positive genus component can't be degree 1
         for mu2 in Part(d):
             # TODO: check if the sigmas are possible just from mu1 and mu2?
-            trees = bipartite_trees(mu1, mu2, genus)
+            trees = bipartite_trees(mu1, mu2, genus, double=double)
             for T in trees:
                 for T2 in place_ramification(T, sigmas):
                     if not isomorphic(stabilization(T2, num_fixed), G, num_fixed, all_markings=False):
                         continue
-                    elif any([isomorphic(T2, Q, num_fixed) for Q in seen_graphs]):
+                    elif any([isomorphic(T2, Q, num_fixed, all_markings=not ignore_labels) for Q in seen_graphs]):
                         continue
                     TOTAL += 1
                     seen_graphs.append(T2)
+                    if display:
+                        for i in range(len(mu1)):
+                            label = 'l{}'.format(i)
+                            print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
+                        for i in range(len(mu2)):
+                            label = 'r{}'.format(i)
+                            print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
+                        display_bipartite(T2, mu1, mu2, genus)
+                        print('-'*10)
+
                     yield T2
 
 if __name__ == '__main__':
     G = nx.Graph()
     G.add_edge('l0','r0')
+    G.nodes['l0']['ramif']=[[(1,2)],[],[],[],[]]
+    G.nodes['l0']['genus']=1
+    G.nodes['r0']['ramif']=[[(2,2),(3,1)],[],[],[],[]]
+    G.nodes['r0']['genus']=0
+    possible_graphs_old([[2,2,1],[3,1,1],[3,1,1],[3,1,1]], G, ignore_labels=True)
+    '''
+    G = nx.MultiGraph()
+    G.add_edge('l0','l0')
     G.nodes['l0']['ramif']=[[(1,4),(2,1)],[],[],[],[]]
     G.nodes['l0']['genus']=0
-    G.nodes['r0']['ramif']=[[],[(3,3),(4,1)],[],[],[]]
-    G.nodes['r0']['genus']=0
-    possible_graphs_old([[4,1],[3,1,1],[3,1,1],[2,1,1,1]], G, num_fixed=4, genus=0)
+    possible_graphs_old([[4,1],[4,1],[3,1,1],[2,1,1,1],[2,1,1,1]], G, double=True, genus=0) #TODO: why no (2,2) edge?
+    '''

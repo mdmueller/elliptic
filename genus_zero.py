@@ -42,17 +42,21 @@ def W(mu):
         # TODO: incorporate the node itself as a fixed point
         for node in graph.nodes():
             ramifs = [[t[1] for t in x] for x in graph.nodes[node]['ramif'] if x] # remove empty ramification profiles
-            ramifs.append([graph[node][y]['weight'] for y in graph[node]]) # add ramif for weights over neighbors y
+            ramifs.append([sum([z['weight'] for z in graph[node][y].values()]) for y in graph[node]]) # add ramif for weights over neighbors y
             try:
                 factor *= W(ramifs) #TODO: ensure fixed points are dealt with properly
             except WException:
                 pass
-        print(factor)
+        #print(factor)
         TOTAL += factor
     return TOTAL
 
 def N(mu):
     pass #TODO
 
+def W1(mu): # genus 1 invariant
+    assert(len(mu)>0)
+    marked = len(mu[0])
+
 if __name__ == '__main__':
-    print(W([[2,1],[1,1,1],[3],[2,1]]))
+    print(W([[4,1],[1,1,1,1,1],[4,1],[3,1,1]]))
