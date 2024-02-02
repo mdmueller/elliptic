@@ -76,14 +76,14 @@ def bipartite_trees(mu1, mu2, genus, double=False):
         G.nodes['l{0}'.format(i)]['degree'] = mu1[i]
         # 2g - 2 = (-2)d + R => R = 2d + 2g - 2
         G.nodes['l{0}'.format(i)]['R'] = 2*mu1[i]-2 if (i!=0 or genus==0) else 2*mu1[i]
-        G.nodes['l{0}'.format(i)]['ramif'] = [[],[],[],[],[]]
+        G.nodes['l{0}'.format(i)]['ramif'] = [[],[],[],[],[],[],[],[],[],[],[],[],[]] #TODO...
         # Each list in ...['ramif'] contains tuples (i,r) where i is the index of the point and r is its assigned ramification
         G.nodes['l{0}'.format(i)]['genus'] = genus if i==0 else 0
     for i in range(len(mu2)):
         G.add_node('r{0}'.format(i), bipartite=1)
         G.nodes['r{0}'.format(i)]['degree'] = mu2[i]
         G.nodes['r{0}'.format(i)]['R'] = 2*mu2[i]-2
-        G.nodes['r{0}'.format(i)]['ramif'] = [[],[],[],[],[]]
+        G.nodes['r{0}'.format(i)]['ramif'] = [[],[],[],[],[],[],[],[],[],[],[],[],[]]
         G.nodes['r{0}'.format(i)]['genus'] = 0
 
     trees = bipartite_tree_helper(G, 0, mu1, mu2, double=double)
@@ -170,31 +170,60 @@ def place_ramification(T, sigmas):
 
     return {tuple([tuple([tuple(t) for t in G.nodes[node]['ramif']]) for node in G.nodes()]):G for G in L}.values() #TODO what??
 
-def stabilization(T, num_fixed):
-    # produce the stabilization of this graph
-    T = copy.deepcopy(T)
-    while True:
-        for node in T.nodes():
-            if T.nodes[node]['genus']>0:
-                continue
-            marked_pts = sum([len([x for x in L if x[0]<=num_fixed]) for L in T.nodes[node]['ramif']]) # marked points on this node
-            n_edges = len(T.edges(node))
-            N = list(T.neighbors(node))
+def stabilizations(T, num_fixed):
+    # produce (stabilization of T, all lists [e0, e1, ...] of edges to contract to stabilize T)
+    L = []
+    stable = True # T is already stable
 
-            if n_edges == 1 and N!=[node] and marked_pts<=1: # delete node, put its marked points on the neighbor
-                neighbor = N[0]
-                T.nodes[neighbor]['ramif'][0].extend(T.nodes[node]['ramif'][0])
-                T.remove_node(node)
-                break
-            elif n_edges == 2 and marked_pts==0: # delete node, connect neighbors
-                if len(N)==1: # double edge
-                    N.append(N[0])
-                T.add_edge(N[0], N[1])
-                T.remove_node(node)
-                break
-        else:
-            break
-    return T
+    for node in T.nodes():
+        if T.nodes[node]['genus']>0:
+            continue
+        marked_pts = sum([len([x for x in L if x[0]<=num_fixed]) for L in T.nodes[node]['ramif']]) # marked points on this node
+        edges = [e for e in T.edges if node in e]
+        N = list(T.neighbors(node))
+
+        if len(edges) == 1 and N!=[node] and marked_pts<=1: # delete node, put its marked points on the neighbor
+            stable = False
+            neighbor = N[0]
+            T2 = copy.deepcopy(T)
+            T2.nodes[neighbor]['ramif'][0].extend(T.nodes[node]['ramif'][0])
+            T2.remove_node(node)
+            G, L2 = stabilizations(T2, num_fixed)
+            L.extend([[T.edges[edges[0]]['ID']]+x for x in L2])
+        elif len(edges) == 2 and marked_pts==0:
+            stable = False
+            # delete either edge
+            for j,edge in enumerate(edges):
+                n1, n2, _ = edge
+                neighbor = n1 if n2==node else n2
+                T2 = copy.deepcopy(T)
+                T2.nodes[neighbor]['ramif'][0].extend(T.nodes[node]['ramif'][0]) # put marked pts on neighbor, delete node
+                T2.remove_node(node)
+                other_edge = edges[j-1]
+                m1, m2, _ = other_edge
+                other_neighbor = m1 if m2==node else m2
+                T2.add_edge(other_neighbor, neighbor, weight=T.edges[other_edge]['weight'], ID=T.edges[other_edge]['ID'])
+                G, L2 = stabilizations(T2, num_fixed)
+                L.extend([[T.edges[edge]['ID']]+x for x in L2])
+
+    if stable:
+        return (T, [[]])
+    return (G, L)
+
+def stabilization(T, num_fixed):
+    # produce the stabilization of this graph and the weights of contracted edges
+    #TODO: make weights part work for graphs with double edges...
+    T = copy.deepcopy(T)
+    for i,edge in enumerate(T.edges):
+        T.edges[edge]['ID'] = i
+    T2, L = stabilizations(T, num_fixed)
+    mult = 0
+    for choices in set([frozenset(x) for x in L]):
+        factor = 1
+        for edge_ID in choices:
+            factor *= sum([x['weight'] for x in T.edges.values() if x['ID'] == edge_ID])
+        mult += factor
+    return (T2, mult)
 
 def isomorphic(T, G, num_fixed, all_markings=True):
     # check if T looks like G
@@ -231,7 +260,7 @@ def possible_graphs(sigmas, G, num_fixed='auto', genus=1, double=False, ignore_l
             trees = bipartite_trees(mu1, mu2, genus, double=double)
             for T in trees:
                 for T2 in place_ramification(T, sigmas):
-                    if not isomorphic(stabilization(T2, num_fixed), G, num_fixed, all_markings=False):
+                    if not isomorphic(stabilization(T2, num_fixed)[0], G, num_fixed, all_markings=False):
                         continue
                     elif any([isomorphic(T2, Q, num_fixed, all_markings=not ignore_labels) for Q in seen_graphs]):
                         continue

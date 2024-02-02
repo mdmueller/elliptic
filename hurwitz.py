@@ -24,6 +24,8 @@ def hurwitz_count(perms, d, connected=True):
     # weighted count of x_1,...,x_n in S_d such that x_1*...*x_n=1 and x_i has cycle type sigma_i
     # if connected=True, only count connected covers
     # return (total, nonorbifold)
+    if d==1:
+        return (1,1)
     perms = [sorted(x)[::-1] for x in perms]
     G = SymmetricGroup(d)
     total, nonorbifold = hurwitz_helper(perms, d, G, G.identity(), [], connected)
