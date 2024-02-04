@@ -1,9 +1,10 @@
 # calculate genus 0 invariant W_{mu_1,...,mu_r}
-from hurwitz import marked_hurwitz, auts
+from hurwitz import marked_hurwitz, auts, fact
 from graphs import possible_graphs, stabilization
 import copy
 import networkx as nx
 import functools
+import cProfile
 
 KNOWN = {} # known values of W1
 
@@ -75,15 +76,19 @@ def load_known():
 
 
 def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
+    global KNOWN
     printL = lambda x: print(x) if log else None
     # num_fixed is the number of points in mu[1] which are fixed
     if num_fixed>0:
         if num_fixed==len(mu[1]):
             return 0
+        elif sorted(mu[1])==[1]*(len(mu[1])-1)+[2]:
+            return 0
         elif num_fixed==1 and all([y==1 for y in mu[1]]):
-            return W1([mu[0]]+mu[2:], log=log)
+            return W1([mu[0]]+mu[2:], log=log)*fact(len(mu[1])-1)
         printL((mu,num_fixed))
-        raise Exception('too many fixed') #TODO
+        import pdb;pdb.set_trace()
+        raise Exception('too many fixed', (mu,num_fixed)) #TODO
     mu = [sorted(x)[::-1] for x in mu if x]
     tuple_version = tuple([tuple(x) for x in mu])
     load_known()
@@ -174,7 +179,7 @@ def N1(mu, log=False, display=False):
 
     while sum([len(x) for x in mu]) > d*(len(mu)-2):
         mu.append([2]+[1]*(d-2))
-    
+
     factor = 1
     for x in mu[1:]:
         factor *= auts(x)
@@ -184,6 +189,15 @@ def N1(mu, log=False, display=False):
     printL('FACTOR: {}'.format(factor))
     return X/factor
 
+def Q():
+    print(N1([[2,2,1],[4,1],[3,1,1]], log=False, display=False))
+    #print(N1([[3,2],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
 if __name__ == '__main__':
     #print(W([[4,1],[1,1,1,1,1],[4,1],[3,1,1]]))
-    print(N1([[4,1],[4,1],[3,1,1]], log=False, display=False))
+    #cProfile.run('Q()', sort='cumtime')
+    print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+    #print(N1([[4,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+    #print(N1([[3,2],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+    #print(N1([[2,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+    #print(N1([[1,1,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+

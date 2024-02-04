@@ -1,7 +1,9 @@
 from sage.all import SymmetricGroup
+import functools
 
 def hurwitz_helper(perms, d, G, result, perms_so_far, connected):
     # count lists of permutations in G whose product is result
+    # perms should be a tuple of tuples
     if len(perms) == 0:
         if result != G.identity():
             return (0,0)
@@ -13,11 +15,17 @@ def hurwitz_helper(perms, d, G, result, perms_so_far, connected):
     count_total = 0
     count_nonorbifold = 0
     for g in G:
-        if g.cycle_type()==sigma:
+        if tuple(g.cycle_type())==sigma:
             t, n = hurwitz_helper(perms[:-1], d, G, result*g.inverse(), perms_so_far+[g], connected)
             count_total += t
             count_nonorbifold += n
     return (count_total, count_nonorbifold)
+
+@functools.cache
+def hurwitz1(perms, d, connected):
+    G = SymmetricGroup(d)
+    total, nonorbifold = hurwitz_helper(perms, d, G, G.identity(), [], connected)
+    return (total/fact(d), nonorbifold/fact(d))
 
 def hurwitz_count(perms, d, connected=True):
     # perms is a list of partitions sigma_1, ..., sigma_n
@@ -26,11 +34,10 @@ def hurwitz_count(perms, d, connected=True):
     # return (total, nonorbifold)
     if d==1:
         return (1,1)
-    perms = [sorted(x)[::-1] for x in perms]
-    G = SymmetricGroup(d)
-    total, nonorbifold = hurwitz_helper(perms, d, G, G.identity(), [], connected)
-    return (total/fact(d), nonorbifold/fact(d))
+    perms = tuple([tuple(sorted(x)[::-1]) for x in perms if len(x)!=sum(x)]) # remove (1,...,1)
+    return hurwitz1(perms, d, connected)
 
+@functools.cache
 def fact(n):
     result = 1
     for i in range(2,n+1):
