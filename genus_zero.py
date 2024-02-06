@@ -1,12 +1,54 @@
 # calculate genus 0 invariant W_{mu_1,...,mu_r}
 from hurwitz import marked_hurwitz, auts, fact
 from graphs import possible_graphs, stabilization
+from pynauty import Graph, autgrp
 import copy
 import networkx as nx
 import functools
 import cProfile
 
 KNOWN = {} # known values of W1
+
+def count_auts(G):
+    #TODO: adapt for graphs with double edges
+    H = Graph(len(G.nodes))
+    coloring = []
+    uncolored = []
+    degrees = set()
+    for i, node in enumerate(G.nodes):
+        H.connect_vertex(i, [j for j, node2 in enumerate(G.nodes) if node2 in G.neighbors(node)])
+        if i==0 or any([any([x[0]<100 for x in ramif]) for ramif in G.nodes[node]['ramif']]):
+            # node has some marked point or is genus 1
+            coloring.append(set([i]))
+        else:
+            uncolored.append((i, node))
+            degrees.add(G.nodes[node]['degree'])
+    # now color all genus 0 unmarked nodes by degree
+    for d in degrees:
+        coloring.append({i for i, node in uncolored if G.nodes[node]['degree'] == d})
+    #TODO: color edges by degree too...
+    H.set_vertex_coloring(coloring)
+
+    _, num_auts, _, _, _ = autgrp(H)
+    return num_auts
+
+def options_helper(unmarked):
+    # unmarked is a list of unmarked ramification, one list for each node
+    all_unmarked = []
+    for L in unmarked:
+        all_unmarked.extend(L)
+    options = 1
+    for val in set(all_unmarked):
+        options *= fact(all_unmarked.count(val))
+        for L in unmarked:
+            options /= fact(L.count(val))
+    return options
+    
+def count_options(ramifs):
+    options = 1
+    for ramif in ramifs:
+        options *= options_helper([[t[1] for t in x if t[0]==100] for x in ramif])
+    return options
 
 class WException(Exception):
     pass
@@ -78,14 +120,25 @@ def load_known():
 def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
     global KNOWN
     printL = lambda x: print(x) if log else None
+
+    for i in range(1, len(mu)):
+        if i==1 and num_fixed>0:
+            continue
+        if all([x==1 for x in mu[i]]):
+            return fact(len(mu[i]))*W1(mu[:i]+mu[i+1:], num_fixed, log, display)
+    
     # num_fixed is the number of points in mu[1] which are fixed
     if num_fixed>0:
         if num_fixed==len(mu[1]):
             return 0
-        elif sorted(mu[1])==[1]*(len(mu[1])-1)+[2]:
+        elif mu[1][0]==1 and sorted(mu[1])==[1]*(len(mu[1])-1)+[2]:
+            return 0
+        elif num_fixed==1 and mu[1]==[2,1] and mu[0] in [[3],[2,1]] and all([x==[2,1] for x in mu[2:]]):
+            return fact(len(mu[2:]))
+        elif num_fixed==1 and mu[1]==[2,1] and mu[0] in [[3],[2,1]] and len([y for y in mu[2:] if y==[3]])>0:
             return 0
         elif num_fixed==1 and all([y==1 for y in mu[1]]):
-            return W1([mu[0]]+mu[2:], log=log)*fact(len(mu[1])-1)
+            return W1([mu[0]]+mu[2:], log=log, display=display)*fact(len(mu[1])-1)
         printL((mu,num_fixed))
         import pdb;pdb.set_trace()
         raise Exception('too many fixed', (mu,num_fixed)) #TODO
@@ -160,11 +213,18 @@ def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
             except WException as e:
                 printL(e)
                 factor = 0
-                pass
+            if factor == 0:
+                break
 
         T, mult = stabilization(graph, len(mu[0]))
         printL('mult: {}'.format(mult))
         factor *= mult
+        possibilities = count_options([[graph.nodes[node]['ramif'][i] for node in graph.nodes] for i in range(10)]) # TODO: change "10"
+        printL('possibilities: {}'.format(possibilities))
+        factor *= possibilities
+        auts = count_auts(graph)
+        printL('automorphisms: {}'.format(auts))
+        factor /= auts
         printL('ADDING FACTOR: {}'.format(factor))
         TOTAL += factor
 
@@ -194,10 +254,11 @@ def Q():
     #print(N1([[3,2],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
 if __name__ == '__main__':
     #print(W([[4,1],[1,1,1,1,1],[4,1],[3,1,1]]))
-    #cProfile.run('Q()', sort='cumtime')
-    print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
-    #print(N1([[4,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
-    #print(N1([[3,2],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
-    #print(N1([[2,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
-    #print(N1([[1,1,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
-
+    cProfile.run('Q()', sort='cumtime')
+    #print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=True, display=False))
+    #print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+    #print(N1([[2,2,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+    '''
+    print(N1([[2,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+    print(N1([[1,1,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+    '''

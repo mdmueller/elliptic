@@ -134,7 +134,7 @@ def Part(n):
         L.extend(part(n, k))
     return L
 
-def place_ramification_helper(T, sigma, sigmacount, pointcount, side):
+def place_ramification_helper(T, sigma, sigmacount, pointcount, side, num_fixed):
     # side = 'r' or 'l'
     # sigmacount = i if this is sigma_i
     # pointcount = j if this is the jth point
@@ -149,12 +149,15 @@ def place_ramification_helper(T, sigma, sigmacount, pointcount, side):
         # try putting ram at this node
         T2 = copy.deepcopy(T)
         T2.nodes[node]['R'] -= (ram-1)
-        T2.nodes[node]['ramif'][sigmacount].append((pointcount, ram))
+        if pointcount <= num_fixed:
+            T2.nodes[node]['ramif'][sigmacount].append((pointcount, ram))
+        else:
+            T2.nodes[node]['ramif'][sigmacount].append((100, ram))
         #T2.add_edge(node, node, weight=ram)
-        L.extend(place_ramification_helper(T2, sigma[1:], sigmacount, pointcount+1, side))
+        L.extend(place_ramification_helper(T2, sigma[1:], sigmacount, pointcount+1, side, num_fixed))
     return L
 
-def place_ramification(T, sigmas):
+def place_ramification(T, sigmas, num_fixed):
     # T is a weighted bipartite tree
     # sigma_i are partitions; we want these ramification to appear in T
     # Our goal is to allocate ramification across all vertices in T
@@ -164,7 +167,7 @@ def place_ramification(T, sigmas):
         L2 = []
         for side in ['l', 'r']:
             for T2 in L:
-                L2.extend(place_ramification_helper(T2, sigma, i, pointcount, side))
+                L2.extend(place_ramification_helper(T2, sigma, i, pointcount, side, num_fixed))
         L = L2
         pointcount += len(sigma)
 
@@ -228,9 +231,10 @@ def stabilization(T, num_fixed):
 def isomorphic(T, G, num_fixed, all_markings=True):
     # check if T looks like G
     # if all_markings, look at all ramification points; otherwise just the fixed ones
+    #TODO: make an option to ignore order of identifical ramifications; i.e. [[3],[],[]],[[1],[],[]] identical to [[],[3],[]],[[],[1],[]]
     def matching(n1, n2):
         def same_markings(L1, L2):
-            return [x for x in L1 if all_markings or x[0]<=num_fixed] == [x for x in L2 if all_markings or x[0]<=num_fixed]
+            return {x for x in L1 if all_markings or x[0]<=num_fixed} == {x for x in L2 if all_markings or x[0]<=num_fixed}
         return all([same_markings(L1,L2) for L1,L2 in zip(n1['ramif'],n2['ramif'])]) and n1['genus'] == n2['genus']
     return nx.is_isomorphic(T, G, node_match=matching)
     
@@ -259,7 +263,7 @@ def possible_graphs(sigmas, G, num_fixed='auto', genus=1, double=False, ignore_l
             # TODO: check if the sigmas are possible just from mu1 and mu2?
             trees = bipartite_trees(mu1, mu2, genus, double=double)
             for T in trees:
-                for T2 in place_ramification(T, sigmas):
+                for T2 in place_ramification(T, sigmas, num_fixed):
                     if not isomorphic(stabilization(T2, num_fixed)[0], G, num_fixed, all_markings=False):
                         continue
                     elif any([isomorphic(T2, Q, num_fixed, all_markings=not ignore_labels) for Q in seen_graphs]):
