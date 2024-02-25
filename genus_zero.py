@@ -219,7 +219,7 @@ def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
         T, mult = stabilization(graph, len(mu[0]))
         printL('mult: {}'.format(mult))
         factor *= mult
-        possibilities = count_options([[graph.nodes[node]['ramif'][i] for node in graph.nodes] for i in range(10)]) # TODO: change "10"
+        possibilities = count_options([[graph.nodes[node]['ramif'][i] for node in graph.nodes] for i in range(len(mu))])
         printL('possibilities: {}'.format(possibilities))
         factor *= possibilities
         auts = count_auts(graph)

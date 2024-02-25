@@ -65,25 +65,30 @@ def weights_add_up(G, mu1, mu2):
             return False
     return True
 
-def bipartite_trees(mu1, mu2, genus, double=False):
+def bipartite_trees(mu1, mu2, genus, double=False, num_ramif=10):
     # given partitions mu1 and mu2 of d, list potential bipartite weighted trees of given genus
     # if double=True, then l0 has a double edge
     d = sum(mu1)
     assert(d == sum(mu2))
     G = nx.MultiGraph()
+    L = []
+    L2 = []
+    for i in range(num_ramif):
+        L.append([])
+        L2.append([])
     for i in range(len(mu1)):
         G.add_node('l{0}'.format(i), bipartite=0)
         G.nodes['l{0}'.format(i)]['degree'] = mu1[i]
         # 2g - 2 = (-2)d + R => R = 2d + 2g - 2
         G.nodes['l{0}'.format(i)]['R'] = 2*mu1[i]-2 if (i!=0 or genus==0) else 2*mu1[i]
-        G.nodes['l{0}'.format(i)]['ramif'] = [[],[],[],[],[],[],[],[],[],[],[],[],[]] #TODO...
+        G.nodes['l{0}'.format(i)]['ramif'] = tuple(L)
         # Each list in ...['ramif'] contains tuples (i,r) where i is the index of the point and r is its assigned ramification
         G.nodes['l{0}'.format(i)]['genus'] = genus if i==0 else 0
     for i in range(len(mu2)):
         G.add_node('r{0}'.format(i), bipartite=1)
         G.nodes['r{0}'.format(i)]['degree'] = mu2[i]
         G.nodes['r{0}'.format(i)]['R'] = 2*mu2[i]-2
-        G.nodes['r{0}'.format(i)]['ramif'] = [[],[],[],[],[],[],[],[],[],[],[],[],[]]
+        G.nodes['r{0}'.format(i)]['ramif'] = tuple(L2)
         G.nodes['r{0}'.format(i)]['genus'] = 0
 
     trees = bipartite_tree_helper(G, 0, mu1, mu2, double=double)
@@ -149,7 +154,7 @@ def place_ramification_helper(T, node_dict, sigma, sigmacount, pointcount, side,
         if side not in node or node_dict[node]['R'] < ram-1 or sum([t[1] for t in node_dict[node]['ramif'][sigmacount]])+ram>node_dict[node]['degree']:
             continue
         # try putting ram at this node
-        node_dict2 = copy.deepcopy(node_dict) # copy
+        node_dict2 = {x: {y: copy.deepcopy(z) if y=='ramif' else z for y,z in node_dict[x].items()} for x in node_dict}
         node_dict2[node]['R'] -= (ram-1)
         if pointcount <= num_fixed:
             node_dict2[node]['ramif'][sigmacount].append((pointcount, ram))
@@ -271,13 +276,27 @@ def possible_graphs(sigmas, G, num_fixed='auto', genus=1, double=False, ignore_l
     for mu1 in Part(d):
         if mu1[0]==1 and genus>0:
             continue # positive genus component can't be degree 1
+
         for mu2 in Part(d):
             # skip if any ramification # is larger than all degrees
             max_deg = max((max(mu1), max(mu2)))
             if max([max(sigma) for sigma in sigmas])>max_deg:
                 continue
-            # TODO: check if the sigmas are possible just from mu1 and mu2?
-            trees = bipartite_trees(mu1, mu2, genus, double=double)
+
+            smaller_side = min((max(mu1), max(mu2)))
+            ramif_one_side = 0 # sum of all ramif that must go on the "larger" side
+            for sigma in sigmas:
+                if max(sigma)>smaller_side: # must go on the "larger" side
+                    ramif_one_side += (sum(sigma)-len(sigma))
+
+            Rright = 2*(1-len(mu2))-2+2*d
+            Rleft = 2*(2-len(mu1))-2+2*d
+            if smaller_side == max(mu1) and ramif_one_side > Rright: # doesn't fit on "larger" right side
+                continue
+            elif smaller_side == max(mu2) and ramif_one_side > Rleft: # doesn't fit on "larger" left side
+                continue
+            
+            trees = bipartite_trees(mu1, mu2, genus, double=double, num_ramif=len(sigmas))
             for T in trees:
                 for T2 in place_ramification(T, sigmas, num_fixed):
                     if not isomorphic(stabilization(T2, num_fixed)[0], G, num_fixed, all_markings=False):
