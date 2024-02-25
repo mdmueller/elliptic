@@ -272,6 +272,10 @@ def possible_graphs(sigmas, G, num_fixed='auto', genus=1, double=False, ignore_l
         if mu1[0]==1 and genus>0:
             continue # positive genus component can't be degree 1
         for mu2 in Part(d):
+            # skip if any ramification # is larger than all degrees
+            max_deg = max((max(mu1), max(mu2)))
+            if max([max(sigma) for sigma in sigmas])>max_deg:
+                continue
             # TODO: check if the sigmas are possible just from mu1 and mu2?
             trees = bipartite_trees(mu1, mu2, genus, double=double)
             for T in trees:
