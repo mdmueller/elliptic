@@ -250,15 +250,15 @@ def N1(mu, log=False, display=False):
     return X/factor
 
 def Q():
-    print(N1([[2,2,1],[4,1],[3,1,1]], log=False, display=False))
-    #print(N1([[3,2],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+    print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+
 if __name__ == '__main__':
     #print(W([[4,1],[1,1,1,1,1],[4,1],[3,1,1]]))
     cProfile.run('Q()', sort='cumtime')
     #print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=True, display=False))
     #print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
     #print(N1([[2,2,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
-    '''
-    print(N1([[2,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
-    print(N1([[1,1,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
-    '''
+
+    #print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=True, display=False))
+
+

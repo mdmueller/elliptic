@@ -134,44 +134,56 @@ def Part(n):
         L.extend(part(n, k))
     return L
 
-def place_ramification_helper(T, sigma, sigmacount, pointcount, side, num_fixed):
+def place_ramification_helper(T, node_dict, sigma, sigmacount, pointcount, side, num_fixed):
+    # node_dict is a replacement for T.nodes
     # side = 'r' or 'l'
     # sigmacount = i if this is sigma_i
     # pointcount = j if this is the jth point
     # return all placements of sigma ramification on the given side of T
     if len(sigma)==0:
-        return [T]
+        return [node_dict]
+        #return [{node: tuple([tuple(t) for t in node_dict[node]['ramif']]) for node in node_dict}]
     ram = sigma[0]
     L = []
     for node in T.nodes():
-        if side not in node or T.nodes[node]['R'] < ram-1 or sum([t[1] for t in T.nodes[node]['ramif'][sigmacount]])+ram>T.nodes[node]['degree']:
+        if side not in node or node_dict[node]['R'] < ram-1 or sum([t[1] for t in node_dict[node]['ramif'][sigmacount]])+ram>node_dict[node]['degree']:
             continue
         # try putting ram at this node
-        T2 = copy.deepcopy(T)
-        T2.nodes[node]['R'] -= (ram-1)
+        node_dict2 = copy.deepcopy(node_dict) # copy
+        node_dict2[node]['R'] -= (ram-1)
         if pointcount <= num_fixed:
-            T2.nodes[node]['ramif'][sigmacount].append((pointcount, ram))
+            node_dict2[node]['ramif'][sigmacount].append((pointcount, ram))
         else:
-            T2.nodes[node]['ramif'][sigmacount].append((100, ram))
-        #T2.add_edge(node, node, weight=ram)
-        L.extend(place_ramification_helper(T2, sigma[1:], sigmacount, pointcount+1, side, num_fixed))
+            node_dict2[node]['ramif'][sigmacount].append((100, ram))
+        L.extend(place_ramification_helper(T, node_dict2, sigma[1:], sigmacount, pointcount+1, side, num_fixed))
+        
     return L
 
 def place_ramification(T, sigmas, num_fixed):
     # T is a weighted bipartite tree
     # sigma_i are partitions; we want these ramification to appear in T
     # Our goal is to allocate ramification across all vertices in T
-    L = [T]
+    L = [copy.deepcopy(T.nodes)]
     pointcount = 1
     for i, sigma in enumerate(sigmas):
         L2 = []
-        for side in ['l', 'r']:
-            for T2 in L:
-                L2.extend(place_ramification_helper(T2, sigma, i, pointcount, side, num_fixed))
+        for side in ('l', 'r'):
+            for node_dict in L:
+                L2.extend(place_ramification_helper(T, node_dict, sigma, i, pointcount, side, num_fixed))
         L = L2
         pointcount += len(sigma)
 
-    return {tuple([tuple([tuple(t) for t in G.nodes[node]['ramif']]) for node in G.nodes()]):G for G in L}.values() #TODO what??
+    # keep only node dicts with distinct node ramification profiles
+    node_dicts = {tuple([tuple([tuple(t) for t in node_dict[node]['ramif']]) for node in node_dict]):node_dict for node_dict in L}.values()
+
+    trees = []
+    for d in node_dicts:
+        T2 = copy.deepcopy(T)
+        for node in d:
+            for attrib in d[node]:
+                T2.nodes[node][attrib] = d[node][attrib]
+        trees.append(T2)
+    return trees
 
 def stabilizations(T, num_fixed):
     # produce (stabilization of T, all lists [e0, e1, ...] of edges to contract to stabilize T)
