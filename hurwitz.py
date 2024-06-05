@@ -1,6 +1,17 @@
 from sage.all import SymmetricGroup
 import functools
 
+def transitive(elts, d):
+    # return True if elts generate a transitive subgroup of S(d) (acting on {1,...,d})
+    orbit = set([1]) # orbit containing 1; build it iteratively
+    while True:
+        old_orbit = set(orbit)
+        for g in elts:
+            orbit |= {g(x) for x in orbit}
+        if len(orbit) == len(old_orbit):
+            break
+    return True if len(orbit)==d else False
+
 def hurwitz_helper(perms, d, G, result, perms_so_far, connected):
     # count lists of permutations in G whose product is result
     # perms should be a tuple of tuples
@@ -9,7 +20,7 @@ def hurwitz_helper(perms, d, G, result, perms_so_far, connected):
             return (0,0)
         auts = len([h for h in G if all([h*g*h.inverse()==g for g in perms_so_far])])
         if connected:
-            return (1,auts) if all([any([g(n)!=n for g in perms_so_far]) for n in range(1,d+1)]) else (0,0)
+            return (1,auts) if transitive(perms_so_far, d) else (0,0) # all([any([g(n)!=n for g in perms_so_far]) for n in range(1,d+1)]) else (0,0)
         return (1,auts)
     sigma = perms[-1]
     count_total = 0

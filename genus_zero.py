@@ -1,6 +1,6 @@
 # calculate genus 0 invariant W_{mu_1,...,mu_r}
 from hurwitz import marked_hurwitz, auts, fact
-from graphs import possible_graphs, stabilization
+from graphs import possible_graphs, stabilization, display_graph
 from pynauty import Graph, autgrp
 import copy
 import networkx as nx
@@ -101,6 +101,10 @@ def W(mu):
 def N(mu):
     pass #TODO
 
+def standardize(mus):
+    # standardize the tuples mus
+    return (mus[0],)+tuple(sorted(mus[1:]))
+
 @functools.cache
 def load_known():
     global KNOWN
@@ -114,18 +118,32 @@ def load_known():
         L, R = tuple(line.split(' -> '))
         # L = "4 3,1 3,1 2,1,1" for instance
         mus = [tuple([int(x) for x in mu.split(',')]) for mu in L.split(' ')]
-        KNOWN[tuple(mus)] = int(R)
+        mus = standardize(tuple(mus))
+        KNOWN[mus] = int(R)
 
 
 def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
     global KNOWN
-    printL = lambda x: print(x) if log else None
+
+    printL = (lambda x: print(x)) if log else (lambda x: None)
+
+    if any([any([t<=0 for t in x]) for x in mu]):
+        raise WException('Only positive ramification allowed')
+    d = sum(mu[0])
+    if not all([d == sum(x) for x in mu]):
+        raise WException('Partitions should have the same length: '+str(mu))
+    r = len(mu)
+    if r < 2:
+        raise WException('r must be at least 2')
+    sum_of_lengths = sum([len(x) for x in mu])
+    if sum_of_lengths != d*(r-2):
+        raise WException('Ramification fails to match Riemann-Hurwitz: '+str(mu))
 
     for i in range(1, len(mu)):
         if i==1 and num_fixed>0:
             continue
         if all([x==1 for x in mu[i]]):
-            return fact(len(mu[i]))*W1(mu[:i]+mu[i+1:], num_fixed, log, display)
+            return fact(len(mu[i]))*W1(mu[:i]+mu[i+1:], num_fixed, log=log, display=display)
     
     # num_fixed is the number of points in mu[1] which are fixed
     if num_fixed>0:
@@ -139,29 +157,30 @@ def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
             return 0
         elif num_fixed==1 and all([y==1 for y in mu[1]]):
             return W1([mu[0]]+mu[2:], log=log, display=display)*fact(len(mu[1])-1)
+        elif mu[1]!=[1]*len(mu[1]) and sum([d-1-len(x) for x in mu[1:] if x!=[1]*d]) >= d-2: # invariant is finite without fixing another ramif point
+            return 0
+        elif num_fixed==len(mu[1])-1 and mu[1][-1]==1:
+            # last point is determined by the previous ones
+            m = len([y for y in mu[2:] if sum(y)-len(y)==1])
+            if m<len(mu[2:]): # can't have extra ramification
+                return 0
+            return fact(d-2)**m * fact(m) # (2,1^{d-2})^m
         printL((mu,num_fixed))
+        #return 1 #TODO
         import pdb;pdb.set_trace()
         raise Exception('too many fixed', (mu,num_fixed)) #TODO
+
     mu = [sorted(x)[::-1] for x in mu if x]
-    tuple_version = tuple([tuple(x) for x in mu])
+    tuple_version = standardize(tuple([tuple(x) for x in mu]))
     load_known()
     if tuple_version in KNOWN:
         return KNOWN[tuple_version]
-    if any([any([t<=0 for t in x]) for x in mu]):
-        raise WException('Only positive ramification allowed')
-    d = sum(mu[0])
-    if not all([d == sum(x) for x in mu]):
-        raise WException('Partitions should have the same length: '+str(mu))
-    r = len(mu)
-    if r < 2:
-        raise WException('r must be at least 2')
-    sum_of_lengths = sum([len(x) for x in mu])
-    if sum_of_lengths != d*(r-2):
-        raise WException('Ramification fails to match Riemann-Hurwitz: '+str(mu))
+    
     if sum([d-1-len(x) for x in mu[1:] if x!=[2]+[1]*(d-2)]) != d-2:
         raise WException('Dimension is nonzero: '+str(mu))
     if len(mu[0])<=1:
-        raise WException('Base case not known: '+str(mu))
+        raise Exception('Base case not known: '+str(mu)) #todo: wexception?
+
     printL('computing W1('+str(mu)+', num_fixed='+str(num_fixed)+')')
 
     G = nx.MultiGraph()
@@ -172,7 +191,7 @@ def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
     G.nodes['r0']['genus']=0
 
     TOTAL = 0
-    for graph in possible_graphs(mu, G, genus=1, display=display):
+    for graph in possible_graphs(mu, G, genus=1, display=False):
         factor = 1
         for node in graph.nodes():
             ramifs = [[t[1] for t in x] for x in graph.nodes[node]['ramif']]
@@ -226,6 +245,9 @@ def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
         printL('automorphisms: {}'.format(auts))
         factor /= auts
         printL('ADDING FACTOR: {}'.format(factor))
+
+        if factor!=0 and display:
+            display_graph(graph, graph.graph['mu1'], graph.graph['mu2'], 1)
         TOTAL += factor
 
     KNOWN[tuple_version] = TOTAL # cache result
@@ -250,15 +272,18 @@ def N1(mu, log=False, display=False):
     return X/factor
 
 def Q():
-    print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+    print(N1([[1,1,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=True, display=False))
 
 if __name__ == '__main__':
     #print(W([[4,1],[1,1,1,1,1],[4,1],[3,1,1]]))
-    cProfile.run('Q()', sort='cumtime')
-    #print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=True, display=False))
-    #print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
-    #print(N1([[2,2,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
-
-    #print(N1([[3,1,1],[3,1,1],[3,1,1],[3,1,1]], log=True, display=False))
+    #cProfile.run('Q()', sort='cumtime')
+    #print(N1([[4,2],[2,2,2],[2,2,2]], log=True, display=True))
 
 
+#    print(N1([[5,1],[4,1,1],[4,1,1]], log=True, display=False))
+#    print('-'*10)
+#    print(N1([[3,3],[4,1,1],[4,1,1]], log=True, display=False))
+#    print('-'*10)
+    print(N1([[6,1,1],[2,2,2,2],[3,1,1,1,1,1],[3,1,1,1,1,1],[3,1,1,1,1,1]], log=True, display=True))
+    #print(N1([[4,2],[2,2,1,1],[2,2,1,1],[2,2,1,1],[2,2,1,1]], log=True, display=False))
+    #print(N1([[4,1,1],[2,2,1,1],[2,2,1,1],[2,2,1,1],[2,2,1,1]], log=True, display=True))

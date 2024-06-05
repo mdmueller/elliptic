@@ -86,6 +86,7 @@ use S
 import = locus -> projectiveVariety((map(S, ring(ideal(locus)), {X,Y,Z,W})) ideal(locus))
 X22 = import X22
 X31 = import X31
+X211 = projectiveVariety(ideal(7*X+9*Y-47*Z-2*W, 2*X+Y-3*Z+4*W))
 
 labels = {"(4)", "(2,2)", "(3,1)", "(2,1,1)", "(1,1,1,1)"}
 -- planes H_0
@@ -113,6 +114,7 @@ for i from 0 to 4 do (
     bad = reduce(piH0(bad));
     Y22 = piH0(X22);
     Y31 = piH0(X31);
+    Y211 = piH0(X211);
 
     if i==0 then (
 	fourtorsion = reduce((piH0 ^* (getcusps(Y31)))*X31); -- 4-torsion points
@@ -125,4 +127,5 @@ for i from 0 to 4 do (
     << "(3,1),(3,1): " << doublefibers(piH0|X31, reduce(singularLocus(Y31))-bad) << endl;
     << "(3,1),(2,2): " << degree(reduce(Y22*Y31)-bad-piH0(fourtorsion)) << endl;
     << "(2,2),(2,2): " << doublefibers(piH0|X22, reduce(singularLocus(Y22))-bad) << endl;
+    << "(2,1,1)fixed,(3,1): " << degree(reduce(Y31*Y211)-bad-piH0(fourtorsion))<<endl;
     )
