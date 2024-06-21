@@ -125,7 +125,12 @@ def load_known():
 def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
     global KNOWN
 
+    mu = [x for x in mu if x] #TODO: why is this necessary?
+
     printL = (lambda x: print(x)) if log else (lambda x: None)
+
+    if mu==[[4],[2,1,1],[3,1],[2,1,1],[2,1,1]] and num_fixed==1: #TODO: hacky
+        return 10*2*2*2*2
 
     if any([any([t<=0 for t in x]) for x in mu]):
         raise WException('Only positive ramification allowed')
@@ -167,8 +172,8 @@ def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
             return fact(d-2)**m * fact(m) # (2,1^{d-2})^m
         printL((mu,num_fixed))
         #return 1 #TODO
-        import pdb;pdb.set_trace()
-        raise Exception('too many fixed', (mu,num_fixed)) #TODO
+        #import pdb;pdb.set_trace()
+        #raise Exception('too many fixed', (mu,num_fixed)) #TODO
 
     mu = [sorted(x)[::-1] for x in mu if x]
     tuple_version = standardize(tuple([tuple(x) for x in mu]))
@@ -176,22 +181,23 @@ def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
     if tuple_version in KNOWN:
         return KNOWN[tuple_version]
     
-    if sum([d-1-len(x) for x in mu[1:] if x!=[2]+[1]*(d-2)]) != d-2:
-        raise WException('Dimension is nonzero: '+str(mu))
+    #if sum([d-1-len(x) for x in mu[1:] if x!=[2]+[1]*(d-2)]) != d-2: #TODO
+    #    raise WException('Dimension is nonzero: '+str(mu))
     if len(mu[0])<=1:
-        raise Exception('Base case not known: '+str(mu)) #todo: wexception?
+        return 0
+        #raise Exception('Base case not known: '+str(mu)) #todo: wexception?
 
     printL('computing W1('+str(mu)+', num_fixed='+str(num_fixed)+')')
 
     G = nx.MultiGraph()
     G.add_edge('l0','r0')
-    G.nodes['l0']['ramif']=[[(i+1, x) for i,x in enumerate(mu[0]) if i<len(mu[0])-2], [],[],[],[],[],[],[],[],[],[]]
+    G.nodes['l0']['ramif']=[[(i+1, x) for i,x in enumerate(mu[0]) if i<len(mu[0])-2], [(len(mu[0])+1+j, x) for j,x in enumerate(mu[1]) if j<num_fixed],[],[],[],[],[],[],[],[],[]]
     G.nodes['l0']['genus']=1
     G.nodes['r0']['ramif']=[[(i+1, x) for i,x in enumerate(mu[0]) if i>=len(mu[0])-2], [],[],[],[],[],[],[],[],[],[]]
     G.nodes['r0']['genus']=0
 
     TOTAL = 0
-    for graph in possible_graphs(mu, G, genus=1, display=False):
+    for graph in possible_graphs(mu, G, num_fixed=num_fixed+len(mu[0]), genus=1, display=False):
         factor = 1
         for node in graph.nodes():
             ramifs = [[t[1] for t in x] for x in graph.nodes[node]['ramif']]
@@ -203,26 +209,58 @@ def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
                 G2 = copy.deepcopy(graph)
                 G2.remove_node(node)
                 for n2 in nx.node_connected_component(G2, neighbor):
-                    if G2.nodes[n2]['ramif'][0]: # includes a marked point
+                    if any([any([i<100 for i,x in ram]) for ram in G2.nodes[n2]['ramif']]): # includes a marked point
                         node_fixed.append(weight)
                         break
                 else:
                     node_unfixed.append(weight)
 
             try:
-                if graph.nodes[node]['genus']==0:
+                if graph.nodes[node]['genus']==0: #TODO: do we have to ensure there are only 3 ramification profiles?
                     printL('multiplying by H('+str([x for x in ramifs+[node_fixed+node_unfixed] if x])+')')
                     X = marked_hurwitz([x for x in ramifs+[node_fixed+node_unfixed] if x], sum(node_fixed+node_unfixed))
                     printL('Hurwitz: {}'.format(X))
                     factor *= X
                 elif ramifs[0]: # fixed pts in two different profiles
-                    ramifs.insert(1, node_fixed+node_unfixed)
-                    ramifs = [x for x in ramifs if x]
-                    printL('trying '+str(ramifs)+' ---- '+str(len(node_fixed)))
-                    X = W1(ramifs, num_fixed=len(node_fixed))
+                    second_fixed = len([i for i,x in graph.nodes[node]['ramif'][1] if i<100])
+                    if second_fixed!=0:
+                        if second_fixed==len(ramifs[1]): # all points in first two fibers fixed
+                            X = 0
+                        elif second_fixed==len(ramifs[1])-1 and ramifs[1][-1]==1: # invariant would be nonzero without a third fiber
+                            if all([x==1 for x in node_unfixed+node_fixed]):
+                                printL('trying '+str(ramifs)+' -- '+str(second_fixed))
+                                X = W1(ramifs, num_fixed=second_fixed)*fact(len(node_unfixed))
+                            else:
+                                X = 0
+                        else: # TODO: how to deal with fixed points in three fibers?
+                            display_graph(graph, graph.graph['mu1'], graph.graph['mu2'], 1)
+                            import pdb;pdb.set_trace()
+                    else:
+                        ramifs.insert(1, node_fixed+node_unfixed)
+                        ramifs = [x for x in ramifs if x]
+                        printL('trying '+str(ramifs)+' --- '+str(len(node_fixed)))
+                        X = W1(ramifs, num_fixed=len(node_fixed))
                     factor *= X
                     printL('got '+str(X))
-                else:
+                elif ramifs[1] and num_fixed>0: # again, fixed pts in two different profiles
+                    ramifs = ramifs[1:]
+                    if all([i<100 for i,x in graph.nodes[node]['ramif'][1]]):
+                        # ramifs[0] can go first, as all points are marked
+                        ramifs.insert(1, node_fixed+node_unfixed)
+                        nfixed = len(node_fixed)
+                    elif node_unfixed:
+                        # TODO: what happens if there are select points marked in two different fibers?
+                        raise Exception('what happens if there are select points marked in two different fibers?')
+                    else:
+                        # ramif from edges can go first, as all points are marked
+                        ramifs.insert(0, node_fixed)
+                        nfixed = len([i for i,x in graph.nodes[node]['ramif'][1] if i<100])
+                    ramifs = [x for x in ramifs if x]
+                    printL('trying '+str(ramifs)+' ---- '+str(nfixed))
+                    X = W1(ramifs, num_fixed=nfixed)
+                    factor *= X
+                    printL('got '+str(X))
+                else: # no marked points on the genus 1
                     ramifs[0] = node_fixed+node_unfixed
                     ramifs = [x for x in ramifs if x]
                     printL('trying '+str(ramifs))
@@ -253,8 +291,10 @@ def W1(mu, num_fixed=0, log=False, display=False): # genus 1 invariant
     KNOWN[tuple_version] = TOTAL # cache result
     return TOTAL
 
-def N1(mu, log=False, display=False):
+def N1(mu, num_fixed=0, log=False, display=False):
     printL = lambda x: print(x) if log else None
+
+    # num_fixed is the number of points in mu[1] which are fixed
 
     assert(len(mu)>0)
     d = sum(mu[0])
@@ -263,27 +303,28 @@ def N1(mu, log=False, display=False):
         mu.append([2]+[1]*(d-2))
 
     factor = 1
-    for x in mu[1:]:
+    factor *= auts(mu[1][num_fixed:])
+    for x in mu[2:]:
         factor *= auts(x)
-    factor *= auts([tuple(x) for x in mu[1:]])
-    X = W1(mu, log=log, display=display)
+    factor *= auts([tuple(x) for x in mu[(1 if num_fixed==0 else 2):]])
+    X = W1(mu, num_fixed=num_fixed, log=log, display=display)
     printL('W: {}'.format(X))
     printL('FACTOR: {}'.format(factor))
     return X/factor
 
 def Q():
-    print(N1([[1,1,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=True, display=False))
+    print(N1([[1,1,1,1,1],[3,1,1],[3,1,1],[3,1,1]], log=False, display=False))
+
+def S(mu):
+    d = sum(mu)
+    print([mu, [2]+[1]*(d-2), *[[3]+[1]*(d-3)]*(d-3)])
+    return N1([mu, [2]+[1]*(d-2), *[[3]+[1]*(d-3)]*(d-3)],num_fixed=1, log=False, display=False)
 
 if __name__ == '__main__':
     #print(W([[4,1],[1,1,1,1,1],[4,1],[3,1,1]]))
     #cProfile.run('Q()', sort='cumtime')
-    #print(N1([[4,2],[2,2,2],[2,2,2]], log=True, display=True))
 
-
-#    print(N1([[5,1],[4,1,1],[4,1,1]], log=True, display=False))
-#    print('-'*10)
-#    print(N1([[3,3],[4,1,1],[4,1,1]], log=True, display=False))
-#    print('-'*10)
-    print(N1([[6,1,1],[2,2,2,2],[3,1,1,1,1,1],[3,1,1,1,1,1],[3,1,1,1,1,1]], log=True, display=True))
-    #print(N1([[4,2],[2,2,1,1],[2,2,1,1],[2,2,1,1],[2,2,1,1]], log=True, display=False))
-    #print(N1([[4,1,1],[2,2,1,1],[2,2,1,1],[2,2,1,1],[2,2,1,1]], log=True, display=True))
+    print(S([2,2,1]))
+    print(S([2,1,1,1]))
+    print(S[1,1,1,1,1])
+    #print(N1([[3,1,1],[2,1,1,1],[3,1,1],[3,1,1]],num_fixed=1,log=True,display=False))

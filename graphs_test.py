@@ -91,8 +91,10 @@ class TestGraphs(unittest.TestCase):
 
     def test_N1(self):
         self.assertEqual(N1([[4],[4]]), 15)
+        self.assertEqual(N1([[4],[2,2],[2,2]]), 3)
         for mu in [[3,1],[2,2],[2,1,1],[1,1,1,1]]:
             self.assertEqual(N1([mu,[4]]), 16)
+            self.assertEqual(N1([mu,[2,2],[2,2]]), 3*2**(len(mu)-1), msg='failed when mu={}'.format(str(mu)))
 
 if __name__ == '__main__':
     unittest.main()

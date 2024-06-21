@@ -134,6 +134,8 @@ def part(n, k):
     return _part(n, k, n)
 
 def Part(n):
+    if n==0:
+        return [[]]
     L = []
     for k in range(1, n+1):
         L.extend(part(n, k))
@@ -255,6 +257,15 @@ def isomorphic(T, G, num_fixed, all_markings=True):
         return all([same_markings(L1,L2) for L1,L2 in zip(n1['ramif'],n2['ramif'])]) and n1['genus'] == n2['genus']
     return nx.is_isomorphic(T, G, node_match=matching)
     
+def display_graph(T2, mu1, mu2, genus):
+    for i in range(len(mu1)):
+        label = 'l{}'.format(i)
+        print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
+    for i in range(len(mu2)):
+        label = 'r{}'.format(i)
+        print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
+    display_bipartite(T2, mu1, mu2, genus)
+    print('-'*10)
 
 def possible_graphs_old(sigmas, G, num_fixed='auto', genus=1, double=False, ignore_labels=False): #TODO: remove
     list(possible_graphs(sigmas, G, num_fixed, genus, double, ignore_labels, display=True))
@@ -272,8 +283,8 @@ def possible_graphs(sigmas, G, num_fixed='auto', genus=1, double=False, ignore_l
         num_fixed = len(sigmas[0])
     TOTAL = 0
     seen_graphs = []
-    
-    for mu1 in Part(d):
+
+    for mu1 in Part(d):#[[a]+y for a in range(1,d+1) for y in Part(d-a)]:
         if mu1[0]==1 and genus>0:
             continue # positive genus component can't be degree 1
 
@@ -291,14 +302,18 @@ def possible_graphs(sigmas, G, num_fixed='auto', genus=1, double=False, ignore_l
 
             Rright = 2*(1-len(mu2))-2+2*d
             Rleft = 2*(2-len(mu1))-2+2*d
+
             if smaller_side == max(mu1) and ramif_one_side > Rright: # doesn't fit on "larger" right side
                 continue
             elif smaller_side == max(mu2) and ramif_one_side > Rleft: # doesn't fit on "larger" left side
                 continue
-            
+
             trees = bipartite_trees(mu1, mu2, genus, double=double, num_ramif=len(sigmas))
+
             for T in trees:
                 for T2 in place_ramification(T, sigmas, num_fixed):
+                    T2.graph['mu1'] = mu1
+                    T2.graph['mu2'] = mu2
                     if not isomorphic(stabilization(T2, num_fixed)[0], G, num_fixed, all_markings=False):
                         continue
                     elif any([isomorphic(T2, Q, num_fixed, all_markings=not ignore_labels) for Q in seen_graphs]):
@@ -306,14 +321,7 @@ def possible_graphs(sigmas, G, num_fixed='auto', genus=1, double=False, ignore_l
                     TOTAL += 1
                     seen_graphs.append(T2)
                     if display:
-                        for i in range(len(mu1)):
-                            label = 'l{}'.format(i)
-                            print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
-                        for i in range(len(mu2)):
-                            label = 'r{}'.format(i)
-                            print(label, T2.nodes[label]['degree'], T2.nodes[label]['ramif'])
-                        display_bipartite(T2, mu1, mu2, genus)
-                        print('-'*10)
+                        display_graph(T2, mu1, mu2, genus)
 
                     yield T2
 
