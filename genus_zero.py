@@ -324,7 +324,5 @@ if __name__ == '__main__':
     #print(W([[4,1],[1,1,1,1,1],[4,1],[3,1,1]]))
     #cProfile.run('Q()', sort='cumtime')
 
-    print(S([2,2,1]))
-    print(S([2,1,1,1]))
-    print(S[1,1,1,1,1])
-    #print(N1([[3,1,1],[2,1,1,1],[3,1,1],[3,1,1]],num_fixed=1,log=True,display=False))
+    #print(S([2,2,1]))
+    print(N1([[1,1,1,1],[2,1,1],[3,1]],num_fixed=1,log=True,display=True))

@@ -1,5 +1,6 @@
 from sage.all import SymmetricGroup
 import functools
+import pickle
 
 def transitive(elts, d):
     # return True if elts generate a transitive subgroup of S(d) (acting on {1,...,d})
@@ -35,8 +36,18 @@ def hurwitz_helper(perms, d, G, result, perms_so_far, connected):
 @functools.cache
 def hurwitz1(perms, d, connected):
     G = SymmetricGroup(d)
+    with open('hurwitzknown.pickle', 'rb') as f:
+        known = pickle.load(f)
+    if (perms, d, connected) in known:
+        return known[(perms, d, connected)]
     total, nonorbifold = hurwitz_helper(perms, d, G, G.identity(), [], connected)
-    return (total/fact(d), nonorbifold/fact(d))
+    x = fact(d)
+    total /= x
+    nonorbifold /= x
+    known[(perms, d, connected)] = (total, nonorbifold)
+    with open('hurwitzknown.pickle', 'wb') as f:
+        pickle.dump(known, f, pickle.HIGHEST_PROTOCOL)
+    return (total, nonorbifold)
 
 def hurwitz_count(perms, d, connected=True):
     # perms is a list of partitions sigma_1, ..., sigma_n
@@ -45,7 +56,7 @@ def hurwitz_count(perms, d, connected=True):
     # return (total, nonorbifold)
     if d==1:
         return (1,1)
-    perms = tuple([tuple(sorted(x)[::-1]) for x in perms if len(x)!=sum(x)]) # remove (1,...,1)
+    perms = tuple([tuple(sorted(x)[::-1]) for x in sorted(perms) if len(x)!=sum(x)]) # remove (1,...,1)
     return hurwitz1(perms, d, connected)
 
 @functools.cache

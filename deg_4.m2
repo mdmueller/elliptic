@@ -77,7 +77,7 @@ G = 3*x^2-10*x*y-5*x*w+4*y^2+z^2+6*y*w+2*w^2
 E = projectiveVariety(ideal(F,G))
 
 S = k[X,Y,Z,W] -- (P^3)*
-T = k[x,y,z,w,X,Y,Z,W,Degrees=>{4:{1,0},4:{0,1}}] -- P^3 * (P^3)*
+T = k[x,y,z,w,X,Y,Z,W,Degrees=>{4:{1,0},4:{0,1}}] -- P^3 x (P^3)*
 phiR = map(T,R)
 phiS = map(T,S)
 use S
@@ -86,7 +86,12 @@ use S
 import = locus -> projectiveVariety((map(S, ring(ideal(locus)), {X,Y,Z,W})) ideal(locus))
 X22 = import X22
 X31 = import X31
-X211 = projectiveVariety(ideal(7*X+9*Y-47*Z-2*W, 2*X+Y-3*Z+4*W))
+-- using tangentLine(E,{x=>-2726, y=>-47, z=>453, w=>1})
+-- which contains {x=>1162, y=>-1578, z=>2, w=>1}
+X211 = projectiveVariety(ideal(-2726*X-47*Y+453*Z+W, 1162*X-1578*Y+2*Z+W))
+-- using tangentLine(E,{x=>-347, y=>-1991, z=>-2918, w=>1})
+-- which contains {x=>294, y=>1278, z=>5, w=>3}
+X211p = projectiveVariety(ideal(-347*X-1991*Y-2918*Z+W, 294*X+1278*Y+5*Z+3*W))
 
 labels = {"(4)", "(2,2)", "(3,1)", "(2,1,1)", "(1,1,1,1)"}
 -- planes H_0
@@ -115,6 +120,7 @@ for i from 0 to 4 do (
     Y22 = piH0(X22);
     Y31 = piH0(X31);
     Y211 = piH0(X211);
+    Y211p = piH0(X211p);
 
     if i==0 then (
 	fourtorsion = reduce((piH0 ^* (getcusps(Y31)))*X31); -- 4-torsion points
@@ -127,5 +133,6 @@ for i from 0 to 4 do (
     << "(3,1),(3,1): " << doublefibers(piH0|X31, reduce(singularLocus(Y31))-bad) << endl;
     << "(3,1),(2,2): " << degree(reduce(Y22*Y31)-bad-piH0(fourtorsion)) << endl;
     << "(2,2),(2,2): " << doublefibers(piH0|X22, reduce(singularLocus(Y22))-bad) << endl;
-    << "(2,1,1)fixed,(3,1): " << degree(reduce(Y31*Y211)-bad-piH0(fourtorsion))<<endl;
+    << "(2,1,1)fixed,(3,1): " << degree(reduce(Y31*Y211)-bad-piH0(reduce(X211*X31)))<<endl;
+    << "(2,1,1)fixed,(2,1,1)fixed: " << degree(reduce(Y211*Y211p)-bad-piH0(reduce(X211*X211p)))<<endl;	       
     )
