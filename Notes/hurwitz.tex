@@ -1,0 +1,222 @@
+% This is a Homework Template for CS 1010.  
+% It was modified by  Michael Carl Tschantz (mtschant) 
+% who provided the ``useful infomation on latex''.
+
+% THE ONLY THING YOU NEED TO DO IN THIS PART IS 
+% TO FILL IN THE HOMEWORK NUMBER, YOUR NAME AND LOG IN BELOW
+% REPLACE ``X'' WITH THE HW NUMBER, ``Your Name'' WITH YOUR NAME,
+% AND ``your login'' WITH YOUR LOGIN.
+
+\newcommand{\hwnumber}{12}
+\newcommand{\yourname}{Michael Mueller}
+
+% NOW YOU MAY SKIP DOWN TO THE PART CALLED ``YOUR DOCUMENT''.
+
+%==============================================================================
+% Formatting parameters (how the page is set up)
+%==============================================================================
+\newcommand{\yourcourse}{Math 695}
+\newcommand{\chapter}{0}
+\newcommand{\mgn}{\mathcal M_{g,n}}
+\newcommand{\mgnb}{\overline{\mathcal M_{g,n}}}
+\newcommand{\mgb}[1]{\overline{\mathcal M_{g,#1}}}
+
+\documentclass[11pt]{article}           % 11pt article
+\makeatletter                   % Make '@' accessible.
+\pagestyle{myheadings}              % We do our own page headers.
+\newcommand{\thishw}{\bf Hurwitz numbers}
+\def\@oddhead{\bf \thishw \hfill \yourname}
+\oddsidemargin=0in              % Left margin minus 1 inch.
+\evensidemargin=0in             % Same for even-numbered pages.
+\textwidth=6.5in                % Text width (8.5in - margins).
+\topmargin=0in                  % Top margin minus 1 inch.
+\headsep=0.2in                  % Distance from header to body.
+\textheight=8in                 % Body height (incl. footnotes)
+\skip\footins=4ex               % Space above first footnote.
+\hbadness=10000                 % No "underfull hbox" messages.
+\makeatother                    % Make '@' special again.
+
+%==============================================================================
+% Packages used (packages add more commands)
+%==============================================================================
+
+\usepackage{amsmath}                % give more fonts and symbols
+\usepackage{amsfonts}               % want AMS fonts
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{tikz-cd}
+\usepackage{bbm}                % given mathbbm fonts
+\usepackage[shortlabels]{enumitem}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\makeatletter
+\newcommand*{\relrelbarsep}{.386ex}
+\newcommand*{\relrelbar}{%
+  \mathrel{%
+    \mathpalette\@relrelbar\relrelbarsep
+  }%
+}
+\newcommand*{\@relrelbar}[2]{%
+  \raise#2\hbox to 0pt{$\m@th#1\relbar$\hss}%
+  \lower#2\hbox{$\m@th#1\relbar$}%
+}
+\providecommand*{\rightrightarrowsfill@}{%
+  \arrowfill@\relrelbar\relrelbar\rightrightarrows
+}
+\providecommand*{\leftleftarrowsfill@}{%
+  \arrowfill@\leftleftarrows\relrelbar\relrelbar
+}
+\providecommand*{\xrightrightarrows}[2][]{%
+  \ext@arrow 0359\rightrightarrowsfill@{#1}{#2}%
+}
+\providecommand*{\xleftleftarrows}[2][]{%
+  \ext@arrow 3095\leftleftarrowsfill@{#1}{#2}%
+}
+\makeatother
+
+%==============================================================================
+% Macros (make your own commands)
+%==============================================================================
+
+% For problem and part headers
+\newcounter{problemcounter}
+\newcounter{subproblemcounter}
+\newcommand{\problem}{
+    \addtocounter{problemcounter}{1}
+    \bigskip
+    \noindent {\Large Problem \hwnumber .\theproblemcounter}
+    \smallskip
+    \setcounter{subproblemcounter}{0}
+}
+\newcommand{\subproblem}{
+    \addtocounter{subproblemcounter}{1}
+    \smallskip
+    \noindent {\bf \alph{subproblemcounter})} 
+}
+
+% Nice things
+\newcommand{\set}[1]{\{#1\}}            % Set (as in \set{1,2,3})
+\newcommand{\setof}[2]{\{\,{#1}|~{#2}\,\}}  % Set (as in \setof{x}{x > 0})
+
+% Some letter symbols
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+\newcommand{\hTop}{\textbf{hTop}}
+\newtheorem*{Proposition}{Proposition}
+\newtheorem*{Corollary}{Corollary}
+\newcommand{\Tor}{\text{Tor}}
+\newcommand{\Ext}{\text{Ext}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\CP}{\mathbb{CP}}
+\newcommand{\RP}{\mathbb{RP}}
+\newcommand{\Spec}{\text{Spec}}
+\newcommand{\Aut}{\text{Aut}}
+\newcommand{\Proj}{\text{Proj}}
+\newcommand{\Mor}{\text{Mor}}
+\newcommand{\codim}{\text{codim}}
+\newcommand{\exer}[1]{{\bf Exercise #1} \\}
+\newcommand{\Hom}{\text{Hom}}
+\newcommand{\coker}{\text{coker}}
+\newcommand*\simplex{\includegraphics[scale=0.017]{simplex.png}}
+\newcommand{\Sch}{\textbf{Sch}}
+\newcommand{\Set}{\textbf{Set}}
+\renewcommand{\a}{\mathfrak a}
+\renewcommand{\b}{\mathfrak b}
+\renewcommand{\P}{\mathbb P}
+\theoremstyle{definition}
+\newtheorem*{thm}{Theorem}
+\newtheorem*{prob}{Problem}
+\newtheorem*{dfn}{Definition}
+\newtheorem*{claim}{Claim}
+\theoremstyle{definition}
+\newtheorem*{lem}{Lemma}
+\newtheorem*{ex}{Exercise}
+\newtheorem*{eg}{Example}
+\newtheorem*{note}{Note}
+
+\usetikzlibrary{matrix,positioning,quotes}
+
+%==============================================================================
+% YOUR DOCUMENT (start here)
+%==============================================================================
+
+\begin{document}
+\definecolor{myblue}{RGB}{100,180,255}
+\definecolor{mygreen}{RGB}{80,160,80}
+\definecolor{myred}{RGB}{200,120,100}
+\centerline{\LARGE\thishw}
+
+
+\begin{claim}
+For $2\leq a\leq d-1$,
+\[
+H((d),(a,1,\dots,1),(d-a+1,1,\dots,1))=1
+\]
+\end{claim}
+
+\begin{claim}
+  If $a+b-2=d$, $1\leq n\leq d/2$, and $2\leq a\leq d/2+1$ (equivalently $2\leq a\leq b$), then
+\[
+H((d-n,n),(a,1,\dots,1),(b,1,\dots,1))=\begin{cases}
+\frac 12\min(a-1,n)& d=2n \\
+\min(a-1,n)&\text{else}
+\end{cases}
+\]
+\end{claim}
+\begin{proof}
+  We want to count choices of an $a$-cycle and a $b$-cycle which compose to produce cycle type $(d-n,n)$.
+  There are $\binom da$ choices for the points of the $a$-cycle, and the
+  points of the $b$-cycle are determined by the two points $x$,$y$ the cycles have in common, of which there are $\binom a2$
+  choices.
+  Composing these cycles yields cycle type $(n,d-n)$ where $n=n_1+n_2-1$ and
+  \[
+  n_1=\text{dist}_a(y,x),\quad n_2=\text{dist}_b(x,y)
+  \]
+  since $y$ can be traced for $n_1-1$ steps along the $a$-cycle to the predecessor of $x$, which then leads to
+  the successor of $y$ in the $b$-cycle and another $n_2-1$ steps to reach $x$ again.
+
+  If $n_1$ is fixed, there are $\frac{(a-1)!}{a-1}$ orientations of the $a$-cycle with given $\text{dist}_a(y,x)$ and similarly for the $b$-cycle,
+  so our count is
+  \[
+  \binom da\cdot \binom a2\cdot \frac{(a-1)!}{a-1}\cdot\frac{(b-1)!}{b-1}\sum_{n_1+n_2=n+1}1
+  \]
+  This yields $\frac 12d!\cdot\min(a-1,n)$, and if $d\neq 2n$ then we multiply by $2$ to account for the case where $n_1+n_2-1=d-n$ instead of $n$.
+  \end{proof}
+
+\begin{claim}
+  If $a+b-3=d$, $n+m+p=d$, $1\leq n\leq m\leq p$, and $3\leq a\leq \frac{d+3}{2}$ (equivalently $2\leq a\leq b$), then
+\begin{align*}
+  H((n,m,p),&(a,1,\dots,1),(b,1,\dots,1))\\
+  &=\frac 2{|\Aut(n,m,p)|}\cdot \#\{(n_1,m_1):1\leq n_1\leq n,\ \max(1,a-p-n_1)\leq m_1\leq \min(m,a-1-n_1)\}
+\end{align*}
+In particular if $n=m=1$ and $d>3$, the Hurwitz number is $1$.
+\end{claim}
+\begin{proof}
+  We want to count choices of an $a$-cycle and a $b$-cycle which compose to produce cycle type $(n,m,p)$.
+  There are $\binom da$ choices for the points of the $a$-cycle, and the
+  points of the $b$-cycle will be determined by the three points $x,y,z$ the cycles have in common. We have $a$ choices for
+  $x$ (we will need to divide by $3$ later to account for the fact that $x,y,z$ are unordered).
+
+  If the directionality of the $a$-cycle is $x\to y\to z\to x$ (WLOG), then the same directionality in the $b$-cycle would lead to
+  a $d$-cycle, so we will require $x\to z\to y\to x$ in the $b$-cycle to end up with the desired cycle type. In this case
+  we have a composed chain \[x\to\cdots\to \text{pred}_a(y)\to\text{succ}_b(y)\cdots\to x\] of length $n_1+n_2-1$ where $n_1=\text{dist}_a(x,y)$ and $n_2=\text{dist}_b(y,x)$, and similarly a composed chain
+  \[
+  y\to\cdots\to\text{pred}_a(z)\to\text{succ}_b(z)\to\cdots\to y
+  \]
+  of length $m_1+m_2-1$ where $m_1=\text{dist}_a(y,z)$ and $m_2=\text{dist}_b(z,y)$.
+
+  Choose $n_1,n_2,m_1,m_2$ such that $n_1+n_2-1=n$ and $m_1+m_2-1=m$. Then there are $(a-1)!$ orientations of the $a$-cycle, and $y$ and $z$ are determined by $n_1$ and $m_1$. There are then $(b-3)!$ orientations of the $b$-cycle respecting the gaps $n_2$ and $m_2$. Finally, the number of choices we have in choosing $n,m$ this way out of $n,m,p$ is $\frac{3!}{|\Aut(n,m,p)|}$, so
+  \begin{align*}
+    H((n,m,p),(a,1,\dots,1),(b,1,\dots,1))&=\binom da\cdot a\cdot\frac 13\cdot\sum_{n_1,n_2,m_1,m_2}(a-1)!(b-3)!\cdot\frac{3!}{|\Aut(n,m,p)|} \\
+    &=\frac{d!}{a!(d-a)!}\cdot\frac a3\cdot\frac{(a-1)!(d-a)!\cdot 6}{|\Aut(n,m,p)|}\#\{n_1,n_2,m_1,m_2\}
+  \end{align*}
+  yielding the result.
+  
+  \end{proof}
+
+\end{document}

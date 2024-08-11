@@ -125,6 +125,8 @@
 \newcommand*\simplex{\includegraphics[scale=0.017]{simplex.png}}
 \newcommand{\Sch}{\textbf{Sch}}
 \newcommand{\Set}{\textbf{Set}}
+\renewcommand{\a}{\mathfrak a}
+\renewcommand{\b}{\mathfrak b}
 \renewcommand{\P}{\mathbb P}
 \theoremstyle{definition}
 \newtheorem*{thm}{Theorem}
@@ -152,16 +154,28 @@
 
 Let
 \[
-S_{\mathfrak a,\mathfrak b}(\mu)=N_{\mu,(2,1,\dots)^{b_2},(3,1,\dots)^{a_3},(3,1,\dots)^{b_3},\dots}^{\{2^{b_2}3^{b_3}\dots\}}
+S_{\mathfrak a,\mathfrak b}(\mu)=N_{\mu,(2,1,\dots)^{a_2},(2,1,\dots)^{b_2},(3,1,\dots)^{a_3},(3,1,\dots)^{b_3},\dots}^{\{2^{b_2}3^{b_3}\dots\}}
 \]
-Here $a_3,a_4,\dots$ describe unmarked ramification and $b_2,b_3,\dots$ describe marked ramification. For
-simplicity, define $S_{\mathfrak a,\mathfrak b}(\mu)= 0$ if $\mu_i\leq 0$ for any $i$.
+Here $a_2,a_3,\dots$ describe unmarked ramification and $b_2,b_3,\dots$ describe marked ramification. For
+simplicity, assume that all ramification is included and define $S_{\mathfrak a,\mathfrak b}(\mu)= 0$ if $\mu_i\leq 0$ for any $i$.
+
+\begin{lem}
+  If $S_{\mathfrak a,\mathfrak b}(\mu)$ is well-defined, $|\mathfrak a|=|\mu|+2$.
+\end{lem}
+\begin{proof}
+  Let $\mathcal X$ be the moduli space of maps from a genus $1$ curve to $\mathbb P^1$, with ramification as required for $S_{\mathfrak a,\mathfrak b}(\mu)$, and with all relevant points of the genus $1$ curve marked
+  (corresponding to $\mathfrak a$, $\mathfrak b$, and $\mu$). There is a map $\mathcal X\to\overline{\mathcal M}_{1,|\mathfrak b|+|\mu|}$ remembering the genus $1$ curve and the fixed points, which is finite by assumption, so $\dim(\mathcal X)=|\mathfrak b|+|\mu|$. There is also a map $\mathcal X\to\overline{\mathcal M}_{0,|\mathfrak a|+|\mathfrak b|+1}$ remembering the branch points of the target, which is finite by Hurwitz's theorem, and so
+  \[
+  |\mathfrak b|+|\mu|=\dim(\overline{\mathcal M}_{0,|\mathfrak a|+|\mathfrak b|+1})=|\mathfrak a|+|\mathfrak b|-2
+  \]
+  yielding the result.
+\end{proof}
 
 \begin{claim}
   For $n>0$, if $b_y>0$, then
   \begin{align*}
     S_{\mathfrak a,\mathfrak b}(\mu, n) &=H((n),(y,1,\dots),(n-y+1,1,\dots))S_{\mathfrak a,\mathfrak b-\{y\}}(\mu, n-y+1) \\
-    &+\sum_{z\in\mathfrak a+\{2\}}H((y+z-n-2,n),(z,1,\dots),(y,1,\dots))S_{\mathfrak a-\{z\},\mathfrak b-\{y\}+\{y+z-n-2\}}(\mu)
+    &+\sum_{z\in\mathfrak a}H((y+z-n-2,n),(z,1,\dots),(y,1,\dots))S_{\mathfrak a-\{z\},\mathfrak b-\{y\}+\{y+z-n-2\}}(\mu)
   \end{align*}
 \end{claim}
 
@@ -169,6 +183,16 @@ simplicity, define $S_{\mathfrak a,\mathfrak b}(\mu)= 0$ if $\mu_i\leq 0$ for an
   We consider diagrams which stabilize to a genus $1$ curve containing $x_1,\dots,x_k$ and all but one
   of the other fixed points, attached to a genus $0$ tail containing $q$ (with ramification $n$) and $p$
   (with ramification $y$).
+
+  First, note that the total number of branch points for any such map should be $|\mathfrak a|+|\mathfrak b|+1$.
+  Restricting to the genus $1$ component, the moduli space of maps for that component has a finite map to $\overline{\mathcal M}_{1,|\mathfrak b|+k}$ and therefore has dimension $|\mathfrak b|+k$, so the number of branch points is $|\mathfrak b|+k+3$. One
+  of these branch points is the node of the target genus $0$, so discounting this there are $|\mathfrak b|+k+2$ proper branch points.
+  Therefore, the number of branch points outside the genus $1$ component is
+  \[
+  (|\mathfrak a|+|\mathfrak b|+1)-(|\mathfrak b|+k+2)=|\mathfrak a|-k-1=|\mathfrak a|-|(\mu,n)|=2
+  \]
+  by the lemma.
+  
   A diagram with $x_1,\dots,x_k$ on the right side looks like:
 
 \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
@@ -213,48 +237,10 @@ simplicity, define $S_{\mathfrak a,\mathfrak b}(\mu)= 0$ if $\mu_i\leq 0$ for an
 
 \end{tikzpicture}
 
-A priori, $p$ might be on the right or left side. Now if $c_1>1$, the diagram can be amended from the left picture to the right picture without loss of generality:
-
-  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=3.2em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.5cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.2em,nodes={minimum size=1.5cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
-
-  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
-  $0$\\};
-
-  \matrix[amat,right=2cm of mat1,nodes=ssnode] (mat2) {$0$\\};
-  
- \draw  (mat1-1-1) edge["$e$"] (mat2-1-1)
- (mat1-2-1) edge["$c_1$"] (mat2-1-1);
-
-  % draw legs for left side
- \draw (mat1-2-1) -- +(120:1) node[anchor=south] {$c_1-1$ ramification};
-
- % NEW PICTURE
- 
-   \matrix[amat,right=2cm of mat2,nodes=fsnode] (mat3) {$1$\\
-     $0$\\
-     \vdots\\
-   $0$\\};
-
-  \matrix[amat,right=2cm of mat3,nodes=ssnode] (mat4) {$0$\\};
-  
- \draw  (mat3-1-1) edge["$e$"] (mat4-1-1)
- (mat3-2-1) edge["$1$"] (mat4-1-1)
- (mat3-3-1) edge["\vdots"] (mat4-1-1)
- (mat3-4-1) edge["$1$"] (mat4-1-1);
-
- \draw (mat4-1-1) -- +(20:1) node[anchor=west] {$c_1-1$ ramification};
-
-  % ARROW
-% \draw [->] +(90:2) (mat2-1-1) -- (mat3-1-1); 
-
-  \end{tikzpicture}
-
-  This means we can assume that $c_1=\dots=c_r=1$ and $p$ is on the right side:
+There are two branch points outside the genus $1$ component, which must be the images of
+$x_1,\dots,x_k,q$ and of $p$. This means there is no extra ramification on any genus $0$ component, which is why each top right bubble
+connects only to the genus $1$ component. The bottom right bubble must have some ramification beyond what is pictured here, which is necessarily
+$p$. So our diagram looks like:
 
   \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=3.2em,rounded corners,
@@ -304,8 +290,10 @@ A priori, $p$ might be on the right or left side. Now if $c_1>1$, the diagram ca
   corresponding to the removal of $p$, which is $y-1$. So $r=y-1$ and we
   have the first term in the claim.
 
-  Now consider the case where $x_1,\dots,x_k,q$ are on the left side.
-  By converting the left picture to the right we can assume that $x_1,\dots,x_k$ lie on the genus $1$ component:
+  Now consider the case where $x_1,\dots,x_k,q$ are on the left side. In this
+  case, the branch points not coming from the genus $1$ component will be
+  the image of $p$ and the image of another point $p'$ (with ramification index $z\in\mathfrak a$). Consider the possibility that
+  $x_1,\dots,x_k$ are not all on the genus $1$ component:
 
   \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=3.2em,rounded corners,
@@ -315,63 +303,36 @@ A priori, $p$ might be on the right or left side. Now if $c_1>1$, the diagram ca
   ssnode/.style={fill=mygreen}]
 
     \matrix[amat,nodes=fsnode] (mat1) {$0$\\
-      $1$\\
-  $0$\\};
+      $1$\\};
 
-    \matrix[amat,right=2cm of mat1,nodes=ssnode] (mat2) {$0$\\
-      $0$\\};
+    \matrix[amat,right=2cm of mat1,nodes=ssnode] (mat2) {$0$\\};
 
-      \matrix[dmat,left=0.5cm of mat1] (degrees1) {$\mu_1$\\
-    $d-n-\mu_1$\\
-        $n$\\};
+      \matrix[dmat,left=1cm of mat1] (degrees1) {$\mu_1$\\
+    $d-n-\mu_1$\\};
 
-            \matrix[dmat,right=0.5cm of mat2] (degrees2) {$e$\\
-  $f$\\};
+            \matrix[dmat,right=0.5cm of mat2] (degrees2) {$e$\\};
   
  \draw  (mat1-1-1) edge["$\mu_1$"] (mat2-1-1)
- (mat1-2-1) edge["$e-\mu_1$"] (mat2-1-1)
- (mat1-2-1) edge["$f-m$"] (mat2-2-1)
- (mat1-3-1) edge["$m$"] (mat2-2-1);
+ (mat1-2-1) edge["$e-\mu_1$"] (mat2-1-1);
 
   % draw legs for left side
  \draw (mat1-1-1) -- +(120:1) node[anchor=south] {$x_1$}
- (mat1-2-1) -- +(120:1) node[anchor=south] {$x_2,\dots,x_k$}
- (mat1-3-1) -- +(120:1) node[anchor=south] {$q$};
+ (mat1-2-1) -- +(120:1) node[anchor=south] {$x_2,\dots,x_k$};
 
    % draw legs for right side
- \draw (mat2-1-1) -- +(100:1) node[anchor=south] {$e$ ramif}
- (mat2-2-1) -- +(300:1) node[anchor=north] {$f$ ramif};
+ \draw (mat2-1-1) -- +(100:1) node[anchor=south] {$e$ ramif};
 
- % NEW PICTURE
- 
-   \matrix[amat,right=4cm of mat2,nodes=fsnode] (mat3) {$1$\\
-     $0$\\};
-
-   \matrix[amat,right=2cm of mat3,nodes=ssnode] (mat4) {$0$\\};
-
-         \matrix[dmat,left=0.5cm of mat3] (degrees3) {$d-n$\\
-        $n$\\};
-
-            \matrix[dmat,right=0.5cm of mat4] (degrees4) {$e+f$\\};
-
-
- % draw legs for left side
- \draw (mat3-1-1) -- +(120:1) node[anchor=south] {$x_1,\dots,x_k$}
- (mat3-2-1) -- +(120:1) node[anchor=south] {$q$};
- 
- \draw  (mat3-1-1) edge["$e+f-m$"] (mat4-1-1)
- (mat3-2-1) edge["$m$"] (mat4-1-1);
-
- \draw (mat4-1-1) -- +(300:1) node[anchor=north] {$e+f$ ramif};
-
-  % ARROW
-% \draw [->] +(90:2) (mat2-1-1) -- (mat3-1-1); 
 
   \end{tikzpicture}
 
-  By an argument similar to earlier, we can assume the picture looks like:
+  This would require the genus $0$ on the right side to have multiple branch points contributing
+  $e$ ramification,
+  but $p$ cannot live on this component (because of the stabilization condition), a contradiction.
+  Therefore, $x_1,\dots,x_k$ all live on the genus $1$ component.
 
-    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  The points $p$ and $p'$ cannot lie on separate components, because the following diagram cannot be completed:
+
+        \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=3.2em,rounded corners,
   nodes={draw,solid,circle,minimum size=1.5cm}},
   dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
@@ -385,103 +346,27 @@ A priori, $p$ might be on the right or left side. Now if $c_1>1$, the diagram ca
     $n$\\};
 
  \matrix[amat,right=3cm of mat1,nodes=ssnode] (mat2) {$0$\\
-   \vdots\\
-   $0$ \\
-   $0$\\
-   $0$\\
-   \vdots\\
- $0$\\};
- \matrix[dmat,right=1.5cm of mat2] (degrees2) {$1$\\
-   \vdots\\
-   $1$ \\
-   $e+f$\\
-   $1$\\
-   \vdots\\
- $1$\\};
+   $0$\\};
+ \matrix[dmat,right=1.5cm of mat2] (degrees2) {$z$\\
+   $y$\\};
 
- \draw  (mat1-1-1) edge["$1$"] (mat2-1-1)
- (mat1-1-1) edge["$1$"] (mat2-3-1)
- (mat1-1-1) edge["$e$"] (mat2-4-1)
- (mat1-2-1) edge["$f$"] (mat2-4-1)
- (mat1-2-1) edge["$1$"] (mat2-5-1)
- (mat1-2-1) edge["$1$"] (mat2-7-1);
+ \draw  (mat1-2-1) edge["$y$"] (mat2-2-1);
 
   % draw legs for left side
  \draw (mat1-1-1) -- +(115:1) node[anchor=south] {fixed points}
  (mat1-1-1) -- +(260:1) node[anchor=north] {$x_1,\dots,x_k$}
- (mat1-2-1) -- +(140:1) node[anchor=east] {$q$};
-
-
-    \end{tikzpicture}
-
-    The top right edges are all labeled $1$ because if an edge had label $r$, the ramification $r-1$ on its corresponding
-    bubble could be moved to the genus $1$ component and only increase the dimension of the genus $1$.
-
-    There is $n-f$ ramification on the lower left component, which
-    can be moved over to the right side:
-
-    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=3.2em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
-
-  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
-    $0$\\};
-
-  \matrix[dmat,left=.5cm of mat1] (degrees1) {$d-n$\\
-    $n$\\};
-
-  \matrix[amat,right=2cm of mat1,nodes=ssnode] (mat2) {$0$\\
-    $0$\\
-   \vdots\\
-   $0$ \\};
- \matrix[dmat,right=.5cm of mat2] (degrees2) {$e+f$\\
-   $1$\\
-   \vdots\\
-   $1$ \\};
-
- \draw  (mat1-1-1) edge["$e$"] (mat2-1-1)
- (mat1-2-1) edge["$f$"] (mat2-1-1)
- (mat1-2-1) edge["$1$"] (mat2-2-1)
- (mat1-2-1) edge["$1$"] (mat2-4-1);
-
-  % draw legs for left side
- \draw (mat1-1-1) -- +(115:.8) node[anchor=south] {fixed points}
- (mat1-1-1) -- +(260:.8) node[anchor=north] {$x_1,\dots,x_k$}
- (mat1-2-1) -- +(140:.8) node[anchor=east] {$q$}
- (mat1-2-1) -- +(240:.8) node[anchor=north] {$n-f$ ramif};
+ (mat1-2-1) -- +(260:1) node[anchor=east] {$q$};
 
    % draw legs for right side
- \draw (mat2-1-1) -- +(115:.8) node[anchor=south] {$e+f$ ramif};
+ \draw (mat2-1-1) -- +(75:1) node[anchor=south] {$p'$}
+ (mat2-2-1) -- +(265:1) node[anchor=north] {$p$};
 
- % NEW PICTURE
 
-   \matrix[amat,right=4cm of mat2,nodes=fsnode] (mat3) {$1$\\
-    $0$\\};
+ \end{tikzpicture}
 
-  \matrix[dmat,left=.5cm of mat3] (degrees3) {$d-n$\\
-    $n$\\};
-
-  \matrix[amat,right=3cm of mat3,nodes=ssnode] (mat4) {$0$\\};
- \matrix[dmat,right=.5cm of mat4] (degrees4) {$e+n$\\};
-
- \draw  (mat3-1-1) edge["$e$"] (mat4-1-1)
- (mat3-2-1) edge["$n$"] (mat4-1-1);
-
-  % draw legs for left side
- \draw (mat3-1-1) -- +(115:.8) node[anchor=south] {fixed points}
- (mat3-1-1) -- +(260:.8) node[anchor=north] {$x_1,\dots,x_k$}
- (mat3-2-1) -- +(140:.8) node[anchor=east] {$q$};
-
-   % draw legs for right side
- \draw (mat4-1-1) -- +(260:.8) node[anchor=north] {$n-f$ ramif}
- (mat4-1-1) -- +(115:.8) node[anchor=south] {$e+f$ ramif};
-    \end{tikzpicture}
-
-    So we can consider the picture:
-
+  Therefore $p$ and $p'$ lie on the same genus $0$ component, all other genus $0$ components on the right side have degree $1$,
+  and we end up with:
+  
         \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=3.2em,rounded corners,
   nodes={draw,solid,circle,minimum size=1.5cm}},
@@ -516,27 +401,215 @@ A priori, $p$ might be on the right or left side. Now if $c_1>1$, the diagram ca
 
    % draw legs for right side
  \draw (mat2-4-1) -- +(75:1) node[anchor=south] {$p$}
- (mat2-4-1) -- +(265:1) node[anchor=north] {$n+e-y+1$ ramif};
+ (mat2-4-1) -- +(265:1) node[anchor=north] {$p'$};
 
 
- \end{tikzpicture}
+        \end{tikzpicture}
 
-        The codimension of the genus $1$ component has increased by
-        $n+e-y$, since the degree is reduced by $n$ and the fixed point
-        of ramification index $y$ is replaced by a fixed point of ramification
-        index $e$. Either $n+e-y=0$, in which case the bottom right component
-        has only one simple additional ramification (and this suffices), or
-        the bottom right component has ramification $n+e-y+1=z-1$
-        (i.e., $z=n+e-y+2$) and the point of ramification index $z$ balances
-        out the loss of an equivalent $z$ on the genus $1$ component. In this
-        case for arbitrary $z$ (of which the previous is a special case with $z=2$),
-        we have $e=y+z-n-2$.
+        By Riemann-Hurwitz for the bottom-right component, 
+        \[
+        (e+n-2)+(y-1)+(z-1)=2(e+n)-2\implies y+z-2=e+n\implies e=y+z-n-2.
+        \]
         
 \end{proof}
 
-This claim is not quite stated correctly, because there is some subtlety with
-the Hurwitz numbers (I think they should be ``non-orbifold'' Hurwitz counts).
-While I can show that the Hurwitz number in the $z=2$ case is always $1$, I haven't
-yet computed the others.
+
+\begin{claim}
+  For $n>0$,
+  \begin{align*}
+    S_{\mathfrak a,\mathfrak b}(\mu, n, m) &= \sum_{z\in\mathfrak a}\hat H((n,m),(z,1,\dots),(n+m-z+2,1,\dots))S_{\a-\{z\},\b}(\mu,n+m-z+2) \\
+    &+\sum_{z_1,z_2\in\a}H((z_1+z_2-n-m-3,n,m),(z_1,1,\dots),(z_2,1,\dots))S_{\a-\{z_1,z_2\},\b+\{z_1+z_2-n-m-3\}}(\mu)
+  \end{align*}
+\end{claim}
+Here $\hat H$ means ``multiply by $2$ if $n=m$''.
+
+\begin{proof}
+    We consider diagrams which stabilize to a genus $1$ curve containing $x_1,\dots,x_k$ and all 
+  of the other fixed points, attached to a genus $0$ tail containing $q$ (with ramification index $n$) and $r$
+  (with ramification index $m$).
+  
+  By reasoning as in the last claim, the number of branch points not coming from the genus $1$ component is
+  \[
+  (|\mathfrak a|+|\mathfrak b|+1)-(|\b|+k+3)=|\a|-|(\mu,n,m)|=2.
+  \]
+  If $x_1,\dots,x_k,q,r$ are on the right side, then there is one more branch point arising as the image of some $s$ (with
+  ramification index $z$). Suppose $q$ and $r$ are on different components:
+
+  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
+    $0$\\};
+
+ \matrix[amat,right=7cm of mat1,nodes=ssnode] (mat2) {$0$\\
+   \vdots\\
+   $0$ \\
+   $0$\\
+ $0$\\};
+
+ \draw  (mat1-1-1) edge["$\mu_1$"] (mat2-1-1)
+ (mat1-1-1) edge["$\mu_k$"] (mat2-3-1)
+ (mat1-1-1) edge["$c$"] (mat2-4-1)
+ (mat1-2-1) edge["$e$"] (mat2-4-1)
+ (mat1-2-1) edge["$m$"] (mat2-5-1);
+
+  % draw legs for left side
+ \draw (mat1-1-1) -- +(95:1) node[anchor=south] {fixed points};
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$x_1$}
+ (mat2-3-1) -- +(30:1) node[anchor=west] {$x_k$}
+ (mat2-4-1) -- +(30:1) node[anchor=west] {$q$}
+ (mat2-5-1) -- +(30:1) node[anchor=west] {$r$};
+
+  \end{tikzpicture}
+
+  (Without loss of generality, we suppose the component containing $q$ is the one that connects to the genus $1$.)
+  There is extra ramification on both the component containing $q$ and the lower left component, a contradiction. Therefore
+  $q$ and $r$ lie on the same component, and our picture must look like:
+
+    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
+    $0$\\
+    \vdots\\
+    $0$\\};
+
+    \matrix[dmat,left=1cm of mat1] (degrees1) {$d-e$\\
+    $1$\\
+    \vdots \\
+  $1$\\};
+
+
+ \matrix[amat,right=8cm of mat1,nodes=ssnode] (mat2) {$0$\\
+   \vdots\\
+   $0$ \\
+   $0$\\};
+
+     \matrix[dmat,right=1cm of mat2] (degrees2) {$\mu_1$\\
+    \vdots \\
+    $\mu_k$\\
+     $n+m$\\};
+
+ \draw  (mat1-1-1) edge["$\mu_1$"] (mat2-1-1)
+ (mat1-1-1) edge["$\mu_k$"] (mat2-3-1)
+ (mat1-1-1) edge["$n+m-e$"] (mat2-4-1)
+ (mat1-2-1) edge["$1$"] (mat2-4-1)
+ (mat1-4-1) edge["$1$"] (mat2-4-1);
+
+  % draw legs for left side
+ \draw (mat1-1-1) -- +(95:1) node[anchor=south] {fixed points};
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$x_1$}
+ (mat2-3-1) -- +(30:1) node[anchor=west] {$x_k$}
+ (mat2-4-1) -- +(30:1) node[anchor=west] {$q$}
+ (mat2-4-1) -- +(50:1) node[anchor=west] {$r$}
+ (mat2-4-1) -- +(300:1) node[anchor=west] {$s$};
+
+    \end{tikzpicture}
+
+    By Riemann-Hurwitz for the lower right component,
+    \[
+    (n+m-e-1)+(n+m-2)+(z-1)=2(n+m)-2\implies e=z-2
+    \]
+    yielding the first term in the claim.
+
+    If $x_1,\dots,x_k,q,r$ are on the left side, then there are two branch points arising as the images of $s_1$ (with
+    ramification index $z_1$) and $s_2$ (with ramification index $z_2$). By logic similar to the last proof, the
+    $x_1,\dots,x_k$ all lie on the genus $1$ component.
+
+    Consider the possibility that $q$ and $r$ lie on the same component:
+
+      \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
+    $0$\\};
+
+ \matrix[amat,right=7cm of mat1,nodes=ssnode] (mat2) {$0$\\
+   \vdots\\
+   $0$ \\
+ $0$\\};
+
+ \draw  (mat1-1-1) edge["$1$"] (mat2-1-1)
+ (mat1-1-1) edge["$1$"] (mat2-3-1)
+ (mat1-1-1) edge["$c$"] (mat2-4-1)
+ (mat1-2-1) edge["$n+m$"] (mat2-4-1);
+
+  % draw legs for left side
+ \draw (mat1-1-1) -- +(95:1) node[anchor=south] {fixed points}
+ (mat1-1-1) -- +(270:1) node[anchor=north] {$x_1,\dots,x_k$}
+ (mat1-2-1) -- +(270:1) node[anchor=north] {$q$}
+ (mat1-2-1) -- +(255:1) node[anchor=north] {$r$};
+
+      \end{tikzpicture}
+
+      There must be at least one additional branch point from the lower left component and at least two additional branch
+      points from the lower right component, a contradiction. Therefore, $q$ and $r$ lie on separate components:
+
+          \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
+    $0$\\
+    $0$\\};
+
+    \matrix[dmat,left=1cm of mat1] (degrees1) {$d-n-m$\\
+    $n$\\
+  $m$\\};
+
+
+ \matrix[amat,right=4cm of mat1,nodes=ssnode] (mat2) {$0$\\
+   \vdots\\
+   $0$ \\
+   $0$\\};
+
+     \matrix[dmat,right=1cm of mat2] (degrees2) {$1$\\
+    \vdots \\
+    $1$\\
+     $c+n+m$\\};
+
+ \draw  (mat1-1-1) edge["$1$"] (mat2-1-1)
+ (mat1-1-1) edge["$1$"] (mat2-3-1)
+ (mat1-1-1) edge["$c$"] (mat2-4-1)
+ (mat1-2-1) edge["$n$"] (mat2-4-1)
+ (mat1-3-1) edge["$m$"] (mat2-4-1);
+
+  % draw legs for left side
+ \draw (mat1-1-1) -- +(95:1) node[anchor=south] {fixed points}
+ (mat1-1-1) -- +(245:1) node[anchor=north] {$x_1,\dots,x_k$}
+ (mat1-2-1) -- +(245:1) node[anchor=north] {$q$}
+ (mat1-3-1) -- +(245:1) node[anchor=north] {$r$};
+
+ % draw legs for right side
+ \draw  (mat2-4-1) -- +(30:1) node[anchor=west] {$s_1$}
+ (mat2-4-1) -- +(300:1) node[anchor=west] {$s_2$};
+
+          \end{tikzpicture}
+          
+          By Riemann-Hurwitz for the lower-right component,
+          \[
+          (c+n+m-3)+(z_1-1)+(z_2-1)=2(c+n+m)-2\implies c=z_1+z_2-n-m-3
+          \]
+          yielding the second term of the claim.
+  \end{proof}
 
 \end{document}
