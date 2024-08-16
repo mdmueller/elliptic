@@ -171,11 +171,10 @@ simplicity, assume that all ramification is included and define $S_{\mathfrak a,
   yielding the result.
 \end{proof}
 
-\begin{claim}
+\begin{claim}[Claim 1]
   For $n>0$, if $b_y>0$, then
   \begin{align*}
-    S_{\mathfrak a,\mathfrak b}(\mu, n) &=H((n),(y,1,\dots),(n-y+1,1,\dots))S_{\mathfrak a,\mathfrak b-\{y\}}(\mu, n-y+1) \\
-    &+\sum_{z\in\mathfrak a}H((y+z-n-2,n),(z,1,\dots),(y,1,\dots))S_{\mathfrak a-\{z\},\mathfrak b-\{y\}+\{y+z-n-2\}}(\mu)
+    S_{\mathfrak a,\mathfrak b}(\mu, n) &=S_{\mathfrak a,\mathfrak b-\{y\}}(\mu, n-y+1) +\sum_{z\in\mathfrak a}\min(z-1,y-1,n,y+z-n-2)S_{\mathfrak a-\{z\},\mathfrak b-\{y\}+\{y+z-n-2\}}(\mu)
   \end{align*}
 \end{claim}
 
@@ -288,7 +287,7 @@ $p$. So our diagram looks like:
   As there is no extra ramification outside the genus $1$ component,
   the dimension reduction of $r$ should match the codimension reduction
   corresponding to the removal of $p$, which is $y-1$. So $r=y-1$ and we
-  have the first term in the claim.
+  have the first term in the claim, since $H((n),(y,1,\dots),(n-y+1,1,\dots))=1$.
 
   Now consider the case where $x_1,\dots,x_k,q$ are on the left side. In this
   case, the branch points not coming from the genus $1$ component will be
@@ -410,18 +409,21 @@ $p$. So our diagram looks like:
         \[
         (e+n-2)+(y-1)+(z-1)=2(e+n)-2\implies y+z-2=e+n\implies e=y+z-n-2.
         \]
+        By our calculation of $H((y+z-n-2,n),(z,1,\dots),(y,1,\dots))$ (and noting that
+        we should multiply by $2$ if $y+z-n-2=n$, since the corresponding edges should be
+        distinguished), we end up with the term in the claim.
         
 \end{proof}
 
 
-\begin{claim}
+\begin{claim}[Claim 2]
   For $n>0$,
   \begin{align*}
-    S_{\mathfrak a,\mathfrak b}(\mu, n, m) &= \sum_{z\in\mathfrak a}\hat H((n,m),(z,1,\dots),(n+m-z+2,1,\dots))S_{\a-\{z\},\b}(\mu,n+m-z+2) \\
-    &+\sum_{z_1,z_2\in\a}H((z_1+z_2-n-m-3,n,m),(z_1,1,\dots),(z_2,1,\dots))S_{\a-\{z_1,z_2\},\b+\{z_1+z_2-n-m-3\}}(\mu)
+    S_{\mathfrak a,\mathfrak b}(\mu, n, m) &= \sum_{z\in\mathfrak a,\ z\leq n+m}\min(n,m,z-1,n+m-z+1)S_{\a-\{z\},\b}(\mu,n+m-z+2) \\
+    &+\sum_{z_1,z_2\in\a}\hat H((z_1+z_2-n-m-3,n,m),(z_1,1,\dots),(z_2,1,\dots))S_{\a-\{z_1,z_2\},\b+\{z_1+z_2-n-m-3\}}(\mu)
   \end{align*}
 \end{claim}
-Here $\hat H$ means ``multiply by $2$ if $n=m$''.
+Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''.
 
 \begin{proof}
     We consider diagrams which stabilize to a genus $1$ curve containing $x_1,\dots,x_k$ and all 
@@ -522,7 +524,8 @@ Here $\hat H$ means ``multiply by $2$ if $n=m$''.
     \[
     (n+m-e-1)+(n+m-2)+(z-1)=2(n+m)-2\implies e=z-2
     \]
-    yielding the first term in the claim.
+    yielding the first term in the claim using our calculation of Hurwitz numbers to simplify
+    $H((n,m),(z,1,\dots),(n+m-z+2,1,\dots))$.
 
     If $x_1,\dots,x_k,q,r$ are on the left side, then there are two branch points arising as the images of $s_1$ (with
     ramification index $z_1$) and $s_2$ (with ramification index $z_2$). By logic similar to the last proof, the
@@ -609,7 +612,9 @@ Here $\hat H$ means ``multiply by $2$ if $n=m$''.
           \[
           (c+n+m-3)+(z_1-1)+(z_2-1)=2(c+n+m)-2\implies c=z_1+z_2-n-m-3
           \]
-          yielding the second term of the claim.
+          yielding the second term of the claim. The additional factors arise because
+          the edges from the bottom right component should be distinguished, while $s_1$ and
+          $s_2$ should not be distinguished.
   \end{proof}
 
 \end{document}

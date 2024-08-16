@@ -217,6 +217,27 @@ In particular if $n=m=1$ and $d>3$, the Hurwitz number is $1$.
   \end{align*}
   yielding the result.
   
+\end{proof}
+
+\begin{claim}
+  If $1\leq a\leq d$, $2\leq b\leq d-2$, $2\leq c\leq d-2$, and $a+b+c=d+2$, then
+  \[
+  H((d),(a,1,\dots),(b,c,1,\dots))=\frac{a-1}{|\Aut(b,c)|}.
+  \]
+  (By the first claim of this document, the Hurwitz number is $1$ if $b=1$ or $c=1$ but not both, and it is $1/d$ if $b=c=1$.)
+\end{claim}
+\begin{proof}
+  We want to multiply an $a$-cycle by a disjoint $b$-cycle and $c$-cycle to get a $d$-cycle; the only
+  requirement is that the $a$-cycle has a point $x$ contained in the $b$-cycle and a point $y$ contained in the
+  $c$-cycle.
+  The count is
+  \[
+  \binom da\cdot (a-1)!\cdot (a(a-1))\cdot \binom{d-a}{b-1}\cdot (b-1)!\cdot (c-1)!\cdot \frac 1{|\Aut(b,c)|}
+  \]
+  which comes out to
+  \[
+  d!\cdot\frac{a-1}{|\Aut(b,c)|}.
+  \]
   \end{proof}
 
 \end{document}

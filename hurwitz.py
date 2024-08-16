@@ -21,6 +21,8 @@ def hurwitz_helper(perms, d, G, result, perms_so_far, connected):
             return (0,0)
         auts = len([h for h in G if all([h*g*h.inverse()==g for g in perms_so_far])])
         if connected:
+            if transitive(perms_so_far, d):
+                print(perms_so_far)
             return (1,auts) if transitive(perms_so_far, d) else (0,0) # all([any([g(n)!=n for g in perms_so_far]) for n in range(1,d+1)]) else (0,0)
         return (1,auts)
     sigma = perms[-1]
@@ -79,6 +81,49 @@ def marked_hurwitz(perms, d):
     for perm in perms:
         x *= auts(perm)
     return x
+
+def f(a,n,m,d):
+    # return H((n,m,p),(a,1,...),(b,1,...)) where n+m+p=d and a+b-3=d, with a<=b and n<=m<=p
+    assert(3<=a and a<=d)
+    b = d-a+3
+    a,b = min([a,b]),max([a,b])
+    assert(1<=n and 1<=m)
+    p = d-m-n
+    n,m,p = min([n,m,p]),n+m+p-min([n,m,p])-max([n,m,p]),max([n,m,p])
+    X = 2/auts([n,m,p])*len([(n1,m1) for n1 in range(1,n+1) for m1 in range(1,m+1) if a-p-n1<=m1 and m1<=a-1-n1])
+    return X
+
+def S(a1,a2,a3):
+    # return S_{{a1,a2,a3},{}}(d) where d=a1+a2+a3-4
+    A = (a1,a2,a3)
+    d = a1+a2+a3-4
+    val = 0
+    for i,ai in enumerate(A):
+        aj, ak = tuple(A[:i]+A[i+1:])
+        for e in range(1, aj+ak-2):
+            f = aj+ak-2-e # e+f = d-a1+2 = a2+a3-2
+            if e>f:
+                continue
+
+            #Xp = hurwitz_count([[d],[ai]+[1]*(d-ai),[e,f]+[1]*(d-e-f)],d)[0]
+            if [e,f]==[1,1]:
+                X = 1/d
+            elif 1 in [e,f]:
+                X = 1
+            elif e==f:
+                X = (ai-1)/2
+            else:
+                X = ai-1
+            #Y = hurwitz_count([[e,f],[aj]+[1]*(e+f-aj),[ak]+[1]*(e+f-ak)],e+f)[0]
+            Y = min([e,f,aj-1,ak-1])/auts([e,f])
+            '''
+            X = marked_hurwitz([[d],[ai]+[1]*(d-ai),[e,f]+[1]*(d-e-f)],d)
+            Y = marked_hurwitz([[e,f],[aj]+[1]*(e+f-aj),[ak]+[1]*(e+f-ak)],e+f)
+            '''
+            N = (aj+ak-2)*X*Y*fact(d-ai)*auts([e,f]+[1]*(d-e-f))*fact(d-aj)*fact(d-ak)/fact(ai-2)
+            #print(i,e,f,X,Y,N)
+            val += N
+    return val*2/(auts(A)*fact(d-a1)*fact(d-a2)*fact(d-a3))
 
 if __name__ == '__main__':
     first=[int(x) for x in input('mu1? ').split(',')]
