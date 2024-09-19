@@ -1,0 +1,394 @@
+% This is a Homework Template for CS 1010.  
+% It was modified by  Michael Carl Tschantz (mtschant) 
+% who provided the ``useful infomation on latex''.
+
+% THE ONLY THING YOU NEED TO DO IN THIS PART IS 
+% TO FILL IN THE HOMEWORK NUMBER, YOUR NAME AND LOG IN BELOW
+% REPLACE ``X'' WITH THE HW NUMBER, ``Your Name'' WITH YOUR NAME,
+% AND ``your login'' WITH YOUR LOGIN.
+
+\newcommand{\hwnumber}{12}
+\newcommand{\yourname}{Michael Mueller}
+
+% NOW YOU MAY SKIP DOWN TO THE PART CALLED ``YOUR DOCUMENT''.
+
+%==============================================================================
+% Formatting parameters (how the page is set up)
+%==============================================================================
+\newcommand{\yourcourse}{Math 695}
+\newcommand{\chapter}{0}
+\newcommand{\mgn}{\mathcal M_{g,n}}
+\newcommand{\mgnb}{\overline{\mathcal M_{g,n}}}
+\newcommand{\mgb}[1]{\overline{\mathcal M_{g,#1}}}
+
+\documentclass[11pt]{article}           % 11pt article
+\makeatletter                   % Make '@' accessible.
+\pagestyle{myheadings}              % We do our own page headers.
+\newcommand{\thishw}{\bf Thesis}
+\def\@oddhead{\bf \thishw \hfill \yourname}
+\oddsidemargin=0in              % Left margin minus 1 inch.
+\evensidemargin=0in             % Same for even-numbered pages.
+\textwidth=6.5in                % Text width (8.5in - margins).
+\topmargin=0in                  % Top margin minus 1 inch.
+\headsep=0.2in                  % Distance from header to body.
+\textheight=8in                 % Body height (incl. footnotes)
+\skip\footins=4ex               % Space above first footnote.
+\hbadness=10000                 % No "underfull hbox" messages.
+\makeatother                    % Make '@' special again.
+
+%==============================================================================
+% Packages used (packages add more commands)
+%==============================================================================
+
+\usepackage{amsmath}                % give more fonts and symbols
+\usepackage{amsfonts}               % want AMS fonts
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{tikz-cd}
+\usepackage[shortlabels]{enumitem}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\makeatletter
+\newcommand*{\relrelbarsep}{.386ex}
+\newcommand*{\relrelbar}{%
+  \mathrel{%
+    \mathpalette\@relrelbar\relrelbarsep
+  }%
+}
+\newcommand*{\@relrelbar}[2]{%
+  \raise#2\hbox to 0pt{$\m@th#1\relbar$\hss}%
+  \lower#2\hbox{$\m@th#1\relbar$}%
+}
+\providecommand*{\rightrightarrowsfill@}{%
+  \arrowfill@\relrelbar\relrelbar\rightrightarrows
+}
+\providecommand*{\leftleftarrowsfill@}{%
+  \arrowfill@\leftleftarrows\relrelbar\relrelbar
+}
+\providecommand*{\xrightrightarrows}[2][]{%
+  \ext@arrow 0359\rightrightarrowsfill@{#1}{#2}%
+}
+\providecommand*{\xleftleftarrows}[2][]{%
+  \ext@arrow 3095\leftleftarrowsfill@{#1}{#2}%
+}
+\makeatother
+
+%==============================================================================
+% Macros (make your own commands)
+%==============================================================================
+
+% For problem and part headers
+\newcounter{problemcounter}
+\newcounter{subproblemcounter}
+\newcommand{\problem}{
+    \addtocounter{problemcounter}{1}
+    \bigskip
+    \noindent {\Large Problem \hwnumber .\theproblemcounter}
+    \smallskip
+    \setcounter{subproblemcounter}{0}
+}
+\newcommand{\subproblem}{
+    \addtocounter{subproblemcounter}{1}
+    \smallskip
+    \noindent {\bf \alph{subproblemcounter})} 
+}
+
+% Nice things
+\newcommand{\set}[1]{\{#1\}}            % Set (as in \set{1,2,3})
+\newcommand{\setof}[2]{\{\,{#1}|~{#2}\,\}}  % Set (as in \setof{x}{x > 0})
+
+% Some letter symbols
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+\newcommand{\hTop}{\textbf{hTop}}
+\newtheorem*{Proposition}{Proposition}
+\newtheorem*{Corollary}{Corollary}
+\newcommand{\Tor}{\text{Tor}}
+\newcommand{\Ext}{\text{Ext}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\CP}{\mathbb{CP}}
+\newcommand{\RP}{\mathbb{RP}}
+\newcommand{\Spec}{\text{Spec}}
+\newcommand{\Aut}{\text{Aut}}
+\newcommand{\Proj}{\text{Proj}}
+\newcommand{\Mor}{\text{Mor}}
+\newcommand{\codim}{\text{codim}}
+\newcommand{\exer}[1]{{\bf Exercise #1} \\}
+\newcommand{\Hom}{\text{Hom}}
+\newcommand{\coker}{\text{coker}}
+\newcommand*\simplex{\includegraphics[scale=0.017]{simplex.png}}
+\newcommand{\Sch}{\textbf{Sch}}
+\newcommand{\Set}{\textbf{Set}}
+\renewcommand{\a}{\mathfrak a}
+\renewcommand{\b}{\mathfrak b}
+\renewcommand{\P}{\mathbb P}
+\theoremstyle{definition}
+\newtheorem*{thm}{Theorem}
+\newtheorem*{prob}{Problem}
+\newtheorem*{dfn}{Definition}
+\newtheorem*{claim}{Claim}
+\theoremstyle{definition}
+\newtheorem*{lem}{Lemma}
+\newtheorem*{ex}{Exercise}
+\newtheorem*{eg}{Example}
+\newtheorem*{note}{Note}
+
+\usetikzlibrary{matrix,positioning,quotes}
+
+%==============================================================================
+% YOUR DOCUMENT (start here)
+%==============================================================================
+
+\begin{document}
+\definecolor{myblue}{RGB}{100,180,255}
+\definecolor{mygreen}{RGB}{80,160,80}
+\definecolor{myred}{RGB}{200,120,100}
+
+\tableofcontents
+
+\section{Introduction}
+
+\subsection{Moduli spaces of curves (basic intro)}
+
+\subsection{Moduli spaces of maps}
+
+\subsection{Hurwitz theory}
+
+\subsection{Comparison with other invariants}
+
+Comparison with generalized Tevelev degrees
+
+Admissible covers
+
+\section{Problem statement and general approaches}
+
+\subsection{Definitions}
+Fix a positive integer $d$, a nonnegative integer $g$, ordered partitions $\sigma_1,\dots,\sigma_n$ of $d$, and subpartitions $\nu_1,\dots,\nu_n$ (i.e., $\nu_i$ is a subset of $\sigma_i$).
+
+Let $\overline{\mathcal H}_{g,\sigma,\nu}$ be the moduli space of degree $d$ admissible covers $C\to X$
+where $C$ is a genus $g$ prestable curve, $X$ is a genus $0$ prestable curve, we have marked points $q_1,\dots,q_n\in X$, the ramification profile over $q_i$ is $\sigma_i$ (with $|\nu_i|$ points of the fiber in $C$ marked), and the map is \'etale away from $q_1,\dots,q_n$. Let $m=\sum|\nu_i|$.
+We have natural maps:
+\[
+\overline{\mathcal M}_{0,n}\leftarrow \overline{\mathcal H}_{g,\sigma,\nu}\xrightarrow{\pi} \overline{\mathcal M}_{g,m}
+\]
+By Hurwitz theory, we know that the first map is finite, and so $\dim(\overline{\mathcal H}_{g,\sigma,\nu})=n-3$. The second map $\pi$ is finite when
+\[
+3g-3+m=n-3
+\]
+and in this case, we define
+\[
+W_{g,\sigma,\nu}=\deg(\pi)
+\]
+where this is an orbifold degree.
+In order to account for relabeling of marked points (any of the points $q_n$ with identical data, as well as any of the unmarked points in fibers with
+identical data), we define
+\[
+N_{g,\sigma,\nu}=\frac{W_{g,\sigma,\nu}}{|\Aut(\{(\sigma_i,\nu_i):1\leq i\leq n\})|\cdot \prod_i|\Aut(\sigma_i-\nu_i)|}
+\]
+Throughout the rest of this thesis, unless otherwise indicated, we will specialize to the case where $g=1$,
+$\sigma_1=\nu_1=\mu$, and $\nu_3=\nu_4=\dots=\emptyset$. We will write
+\[
+W_{\mu,\sigma_2,\dots,\sigma_n}^{\nu_2}
+\]
+for the relevant labeled invariant, and
+\[
+N_{\mu,\sigma_2,\dots,\sigma_n}^{\nu_2}
+\]
+for the unlabeled invariant that will be of most interest to us. In particular we will write
+\[
+N_{\mu,\sigma_2,\dots,\sigma_n}=N_{\mu,\sigma_2,\dots,\sigma_n}^{\emptyset}=\frac{W_{\mu,\sigma_2,\dots,\sigma_n}^{\emptyset}}{|\Aut(\sigma_2,\dots,\sigma_n)|\cdot\prod_{i=2}^n|\Aut(\sigma_i)|}
+\]
+If $\mu,\sigma_2,\dots,\sigma_n$ do not have ramification sufficient to satisfy Riemann-Hurwitz,
+we let \[N_{\mu,\sigma_2,\dots,\sigma_n}=N_{\mu,\sigma_2,\dots,\sigma_n,(2,1^{d-2}),\dots}.\]
+The primary task of this thesis is to understand the invariants $N_{\mu,\sigma_2,\dots,\sigma_n}$
+in some significant special cases.
+
+\begin{eg}
+  Consider the case where $d=2$, $n=1$ and $\mu=\sigma_2=\sigma_3=\sigma_4=(2)$.
+  We know that there is a unique map $(E,p)\to (\mathbb P^1,0)$ of the specified form
+  up to automorphisms of $\P^1$, and it factors through the antipodal automorphism of $E$,
+  so
+  \[
+  N_{(2)}=N_{(2),(2),(2),(2)}=\frac 12.
+  \]
+\end{eg}
+
+\subsection{Notation and conventions}
+
+\subsection{Geometric interpretation and examples}
+We can describe $N_{\mu,\sigma_2,\dots,\sigma_n}$ geometrically as follows.
+
+Let $d>2$. Up to automorphisms of $\P^1$, a degree $d$ map $f:E\to\P^1$ corresponds to a degree $d$ line bundle $\mathcal L$ and a basepoint-free two-dimensional subspace $V\subset H^0(\mathcal L)$. By Riemann-Roch, $\mathcal L$ gives an embedding $E\hookrightarrow\P(H^0(\mathcal L))\cong\P^{d-1}$, and a basepoint-free two-dimensional subspace $V\subset H^0(\mathcal L)$ corresponds to a well-defined composition
+\[
+E\hookrightarrow \P(H^0(\mathcal L))=\P(V\oplus V^{\perp})\dashrightarrow\P(V)\cong\P^1
+\]
+For the composition to be well-defined, $E$ should not intersect $\P(V^{\perp})$, a codimension 2 subspace of $\P(H^0(\mathcal L))$. Each fiber of the rational map
+$\P(V\oplus V^{\perp})\dashrightarrow\P(V)$ is a hyperplane containing $\P(V^{\perp})$, and so the fibers of the map $E\to\P^1$ correspond to intersections $H\cap E$ where $H$ is some hyperplane containing $\P(V^{\perp})$. Thus, $N_{\mu,\sigma_2\dots,\sigma_n}$ can be determined by embedding $E$ in $\P^{d-1}$ via $\mathcal L=\mathcal O(\mu_{1}p_1+\dots+\mu_{|\mu|}p_{|\mu|})$ and counting the number of codimension 2 subspaces $\P(V^{\perp})\subset \P^{d-1}$ such that (a) $\P(V^{\perp})\cap E=\emptyset$, (b) $\P(V^{\perp})\subset H_0$ where $H_0\cap E=\mu_{1}p_1+\dots+\mu_{|\mu|}p_{|\mu|}$, (c) $\P(V^{\perp})\subset H_i$ where $H_i\cap E$ has shape $\sigma_i$, for $i=2,\dots,n$.
+
+Note that if $\P(V^{\perp})$ is such a codimension 2 subspace corresponding to a map $f$, then $-\P(V^{\perp})$ (applying the involution on $E$, which extends to an automorphism of $\P(H^0(\mathcal L))$) is as well and corresponds to $x\mapsto f(-x)$.
+
+\begin{eg}
+  Let's compute $N_{(3),(3)}$. Embedding $E\hookrightarrow\P^2$ via $\mathcal L=\mathcal O(3p)$, we want to count the points $q\notin E$ such that
+  $q\in\ell_0$ (the line at infinity) and $q\in\ell_1$, where $\ell_1\cap E=3r$ for some $r\neq p$ (we don't need to worry about the simple ramification, which
+  is guaranteed). Since $q=\ell_0\cap\ell_1$ we just need to count lines $\ell_1$ with $\ell_1\cap E=3r$ for $r\neq p$; these are flex lines corresponding to nontrivial 3-torsion points, of which there are $3^2-1=8$. Precomposition with the involution of $E$ corresponds to replacing $q$ with $-q$, which corresponds to replacing the 3-torsion point with its inverse. Therefore,
+  \[
+  N_{(3),(3)}=\frac{8}{2}=4.
+  \]
+\end{eg}
+\begin{eg}
+  Let's compute $N_{(2,1),(3)}$. If $\mathcal O(2p_1+p_2)=\mathcal O(3p_{\infty})$, then we can embed $E$ in $\P^2$ with $p_{\infty}$ as the point at infinity
+  and let $\ell_0$ be a line such that $\ell_0\cap E=2p_1+p_2$. We want to count points $q\notin E$ with $q\in \ell_0$ and $q\in \ell_1$, where $\ell_1$ is a flex line. This again amounts to counting flex lines, so $N_{(2,1),(3)}=3^2=9$.
+
+  For similar reasons, $N_{(1,1,1),(3)}=9$.
+\end{eg}
+
+Another way to count $N_{\mu_0,\dots,\mu_{n+2}}$: note that $\{H:\P(V^{\perp})\subset H\}$ is a line in $\P(H^0(\mathcal L))^*$.
+Let $X_{\mu}=\{H\in\P(H^0(\mathcal L))^*:H\cap E\text{ has shape }\mu\}$.
+Counting the number of possibilities $\P(V^{\perp})$ amounts to counting lines $\ell\subset\P(H^0(\mathcal L))^*$ such that $H_0\in\ell$, $H_1,\dots,H_{n+2}\in\ell$ for distinct points $H_i\in X_{\mu_i}$, and $\P(V^{\perp})\cap E=H_0\cap H_1\cap E=\emptyset$.
+Letting $\pi:\P^{d-1}\dashrightarrow \{\text{lines in $\P^{d-1}$ through $H_0$}\}=\P^{d-2}$ send $x$ to the line through $x$ and $H_0$, the idea is to count points in $\P^{d-2}$ whose fiber contains distinct points $H_i\in X_{\mu_i}$. (TODO: ensure $\ell$ isn't contained in $\{H:p\in H\}$, a plane in $(\P^3)^*$)
+
+Now we move on to $d=4$, and embed $E$ in $\P^3$ via
+$\mathcal L=\mathcal O(4p)$. We have a stratification of $(\P^3)^*$:
+
+\begin{tikzpicture}
+  \node {$X_{(1,1,1,1)}$}
+  child {node {$X_{(1,2)}$}
+    child {node[name=A] {$X_{(2,2)}$}}
+    child {node {$X_{(3,1)}$}
+      child {node[name=B] {$X_{(4)}$}}}};
+  \draw (A) edge (B);
+\end{tikzpicture}
+
+First, note that \[X_{(2,2)}\cong\{(x,y)\in E^2:2x+2y=0\}=\{(x,y)\in E^2:x+y\text{ is 2-torsion}\}\]
+so $X_{(2,2)}$ is a disjoint union of four curves each corresponding to a 2-torsion point $t_i$:
+\[
+C_i=\text{image}(f_i:E\hookrightarrow(\P^3)^*),\ f_i(x)=H\text{ where }H\cap E=2x+2(t_i-x)
+\]
+Note that $f_i$ is 2-to-1 ($x$ and $t_i-x$ are in the same fiber), so $C_i\cong E/S_2\cong\P^1$.
+
+See ``Documents/four\_curves\_linear.m2'' for the computation in M2 to compute $X_{(2,2)}$; it turns out that each $C_i$ is a plane conic. By counting points of
+intersection of the images of $C_i$ under $\pi:(\P^3)^*\dashrightarrow\P^2$, we find that
+\[
+N_{(4),(2,2),(2,2)}=\frac 32
+\]
+as expected from the Hurwitz calculation. By changing $\pi$ (and therefore $H_0$), we can also find
+\[
+N_{(3,1),(2,2),(2,2)}=N_{(2,2),(2,2),(2,2)}=6,\]\[ N_{(2,1,1),(2,2),(2,2)}=12,\ N_{(1,1,1,1),(2,2),(2,2)}=24
+\]
+
+Next we consider $X_{(3,1)}$ (calculated in ``osculating.m2''). There is a map $g:E\to(\P^3)^*$ sending $q\mapsto H$ where $H$ is the {\it osculating plane} to $E$ at $q$, i.e.\ $H$ intersects $E$ at
+$q$ with multiplicity at least 3. This $H$ can be defined as the limit of planes containing $q,r,s\in E$ as $r,s\to q$, or equivalently as the limit of planes containing
+$T_qE$ and $r$ as $r\to q$. (TODO: re-work the osculating plane stuff using that it's generated by $v(0),v'(0),v''(0)$.)
+
+Let $E=\{F=G=0\}\subset\P^3$. We know that \[T_qE=\{x:\nabla_qF\cdot x=\nabla_qG\cdot x=0\}\]
+A plane containing this tangent line must be of the form \[H=\{x:(a\nabla_qF+b\nabla_qG)\cdot x=0\}\]
+for some $a,b$. If $r\in H$, then
+\[
+a\nabla_qF\cdot r+b\nabla_qG\cdot r=0\implies [a:b]=[\nabla_qG\cdot r:-\nabla_qF\cdot r]
+\]
+This equation fails when $r=q$ (since $\nabla_qF\cdot q=\nabla_qG\cdot q=0$). Letting $[u:v]$ be the limit of $[\nabla_qG\cdot r:\nabla_qF\cdot r]$
+as $r\to q$, we'll have
+\[
+H=\left\{\left(u\frac{\partial F}{\partial x}\bigg|_q-v\frac{\partial G}{\partial x}\bigg|_q\right)x+
+\left(u\frac{\partial F}{\partial y}\bigg|_q-v\frac{\partial G}{\partial y}\bigg|_q\right)y+
+\left(u\frac{\partial F}{\partial z}\bigg|_q-v\frac{\partial G}{\partial z}\bigg|_q\right)z+
+\left(u\frac{\partial F}{\partial w}\bigg|_q-v\frac{\partial G}{\partial w}\bigg|_q\right)w=0\right\}
+\]
+It remains to find $u$ and $v$. Suppose we have a (non-algebraic) parametrization of $E$ labeled $v(t)$, with $v(0)=q$. Using L'Hopital, our goal
+is to find
+\[
+\lim_{t\to 0}[\nabla_qG\cdot v(t):\nabla_qF\cdot v(t)]=\lim_{t\to 0}[\nabla_qG\cdot v'(t):\nabla_qF\cdot v'(t)]=\lim_{t\to 0}[\nabla_qG\cdot v''(t):\nabla_qF\cdot v''(t)]=[\nabla_qG\cdot v''(0):\nabla_qF\cdot v''(0)]
+\]
+
+
+We know
+$F(v(t))=0$ and $G(v(t))=0$ so
+\[
+\nabla _{v(t)}F\cdot v'(t)=\nabla _{v(t)}G\cdot v'(t)=0
+\]
+Taking derivatives again,
+\[
+\nabla_{v(t)}F\cdot v''(t)+v'(t)\cdot\left(\frac{\partial^2F}{\partial t_i\partial t_j}\right)\cdot v'(t)=\nabla_{v(t)}G\cdot v''(t)+v'(t)\cdot\left(\frac{\partial^2G}{\partial t_i\partial t_j}\right)\cdot v'(t)=0
+\]
+It remains to compute $v'(0)\cdot H\cdot v'(0)$ where $H$ is the Hessian of $F$ or $G$.
+We know that $v'(0)$ is in the kernel of $\nabla_qF$ and $\nabla_qG$ and any generic element of both kernels will work, so we choose an element of the kernel of
+\[
+\begin{bmatrix}
+  \frac{\partial F}{\partial x}\big|_q & \frac{\partial F}{\partial y}\big|_q & \frac{\partial F}{\partial z}\big|_q & \frac{\partial F}{\partial w}\big|_q \\
+  \frac{\partial G}{\partial x}\big|_q & \frac{\partial G}{\partial y}\big|_q & \frac{\partial G}{\partial z}\big|_q & \frac{\partial G}{\partial w}\big|_q \\
+  1 & 0 & 0 & 0 \\
+  \end{bmatrix}
+\]
+It turns out $[D_1,-D_2,D_3,-D_4]$ works where $D_i$ is the determinant of the matrix produced by deleting the $i^{\text{th}}$ column, which can be shown by duplicating rows and taking determinants
+(which will be 0).
+
+After doing this it turns out that $X_{(1,3)}$ is a degree 12 curve, with singularities (cusps? TODO) at the planes $H$ with $H\cap E=4q$ for some $q$ (corresponding to the 4-torsion points). There are $4^2=16$ of these singularities.
+
+To compute $N_{(4),(3,1),(3,1)}$, we take the image $Y_{(1,3)}$ under projection from $H_0$. It turns out that $Y_{(1,3)}$ is a degree 10
+curve with cusps at the images of 4-torsion points (except for the image of $H_0$, which is a smooth point) and $20$ nodes, so
+\[
+N_{(4),(3,1),(3,1)}=\frac{20}{2}=10
+\]
+TODO: calculate $N_{(1,1,1,1),(3,1),(3,1)}$ using genus-degree formula; explain why this doesn't work for higher degree
+
+\subsection{Admissible covers}
+TODO: Explain process for calculating $N$ and/or $W$ via admissible covers
+diagrams; prove that both methods (labeled and unlabeled) work
+
+Show how reduction to $g=0$ works
+
+\section{All twos case}
+
+In this section we study the invariants $N_{\mu,(2^k),(2^k)}$ defined for $d=2k$ even.
+We will ultimately prove in multiple ways that
+\[
+N_{\mu,(2^k),(2^k)}=3\cdot 2^{|\mu|-2}.
+\]
+
+\subsection{Motivation}
+
+(Relation to GW problem for pillowcase orbifold)
+
+\subsection{Geometric solution}
+
+The problem can be restated in geometric terms as follows: let $E\subset \P^{d-1}$ be a general genus $1$ curve,
+and let $H_0$ be a general hyperplane such that $H_0\cap E$ has type $\mu$. Then letting \[X_{(2^k)}=\{H\in(\P^{d-1})^*:H\cap E\text{ is of type }(2^k)\}\]
+and $\pi:(\P^{d-1})^*\dashrightarrow \P^{d-2}$ be projection away from $H_0$, we want the number of fibers of $\pi$
+containing multiple points of $X_{(2^k)}$.
+
+For any $H\in X_{(2^k)}$, we know $H\cap E=2p_1+\dots+2p_k$ for some points $p_1,\dots,p_k\in E$. Then in the group law, we have
+\[
+2p_1+\dots+2p_k=0\implies p_1+\dots+p_k\in\{t_1,t_2,t_3,t_4\}
+\]
+where the $t_i$ are the $2$-torsion points of $E$. This means we have a map $X_{(2^k)}\to\{t_1,t_2,t_3,t_4\}$ sending $H\mapsto p_1+\dots+p_k$, and since the target is discrete, $X_{(2^k)}$ can be divided into four connected components:
+\[
+X_{(2^k)}=X_{(2^k)}^{(1)}\cup X_{(2^k)}^{(2)}\cup X_{(2^k)}^{(3)}\cup X_{(2^k)}^{(4)}
+\]
+Each component is (abstractly? TODO) isomorphic to $E^k/\sim\cong \P^{k-1}$
+
+\subsection{Combinatorial solution}
+
+Showing $N_{(d),(2^k),(2^k)}=\frac 32$ via Hurwitz counts and showing each map factors;
+also showing this result through genus reduction
+
+
+
+\section{$S_{\a,\b}$}
+
+Claims 1 and 2 with proof
+
+Generating functions
+
+Explicit solution when $n=3$
+
+Future questions: what does $S_{\{n^k,2^{\ell}\},\emptyset}(1,\dots,1)$ look like asymptotically in $k$?
+
+What about higher genus?
+
+
+\end{document}

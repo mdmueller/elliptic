@@ -104,9 +104,18 @@ def Sab_helper(a, b, mu, log=False):
         return X
 
 if __name__ == '__main__':
-    #print(Sab([3,3,2,2,2],[],[2,1,1]))
+    for k in range(3,12):
+        t = 1
+
+        d = k+t+1
+        a = 5
+        b = d-a
+        l = a+2*b+2-t-2*k
+        print(Sab([3]*k+[2]*l, [t], [a]+[1]*b))
+    '''
     k = 30
     for n in range(3,10):
         A = ns([1]*((n-2)*(k-1)+2),n)
         B = ns([1]*((n-2)*(k)+2),n)
         print((n,B/A))
+    '''
