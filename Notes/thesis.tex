@@ -1,22 +1,3 @@
-% This is a Homework Template for CS 1010.  
-% It was modified by  Michael Carl Tschantz (mtschant) 
-% who provided the ``useful infomation on latex''.
-
-% THE ONLY THING YOU NEED TO DO IN THIS PART IS 
-% TO FILL IN THE HOMEWORK NUMBER, YOUR NAME AND LOG IN BELOW
-% REPLACE ``X'' WITH THE HW NUMBER, ``Your Name'' WITH YOUR NAME,
-% AND ``your login'' WITH YOUR LOGIN.
-
-\newcommand{\hwnumber}{12}
-\newcommand{\yourname}{Michael Mueller}
-
-% NOW YOU MAY SKIP DOWN TO THE PART CALLED ``YOUR DOCUMENT''.
-
-%==============================================================================
-% Formatting parameters (how the page is set up)
-%==============================================================================
-\newcommand{\yourcourse}{Math 695}
-\newcommand{\chapter}{0}
 \newcommand{\mgn}{\mathcal M_{g,n}}
 \newcommand{\mgnb}{\overline{\mathcal M_{g,n}}}
 \newcommand{\mgb}[1]{\overline{\mathcal M_{g,#1}}}
@@ -24,8 +5,6 @@
 \documentclass[11pt]{article}           % 11pt article
 \makeatletter                   % Make '@' accessible.
 \pagestyle{myheadings}              % We do our own page headers.
-\newcommand{\thishw}{\bf Thesis}
-\def\@oddhead{\bf \thishw \hfill \yourname}
 \oddsidemargin=0in              % Left margin minus 1 inch.
 \evensidemargin=0in             % Same for even-numbered pages.
 \textwidth=6.5in                % Text width (8.5in - margins).
@@ -49,6 +28,8 @@
 \usepackage[shortlabels]{enumitem}
 \usepackage{relsize}
 \usepackage{hyperref}
+\usepackage{biblatex}
+\addbibresource{sources.bib}
 
 \makeatletter
 \newcommand*{\relrelbarsep}{.386ex}
@@ -124,6 +105,7 @@
 \newcommand*\simplex{\includegraphics[scale=0.017]{simplex.png}}
 \newcommand{\Sch}{\textbf{Sch}}
 \newcommand{\Set}{\textbf{Set}}
+\newcommand{\Hb}{\overline{\mathcal H}}
 \renewcommand{\a}{\mathfrak a}
 \renewcommand{\b}{\mathfrak b}
 \renewcommand{\P}{\mathbb P}
@@ -144,10 +126,19 @@
 % YOUR DOCUMENT (start here)
 %==============================================================================
 
-\begin{document}
 \definecolor{myblue}{RGB}{100,180,255}
 \definecolor{mygreen}{RGB}{80,160,80}
 \definecolor{myred}{RGB}{200,120,100}
+
+
+\begin{document}
+
+\title{Reverse Hurwitz counts of genus $1$ curves}
+
+\author{Michael Mueller}
+
+\maketitle
+
 
 \tableofcontents
 
@@ -155,9 +146,15 @@
 
 \subsection{Moduli spaces of curves (basic intro)}
 
+Include stable graphs
+
 \subsection{Moduli spaces of maps}
 
+Include maps of stable graphs
+
 \subsection{Hurwitz theory}
+
+Include marked and unmarked
 
 \subsection{Comparison with other invariants}
 
@@ -170,19 +167,47 @@ Admissible covers
 \subsection{Definitions}
 Fix a positive integer $d$, a nonnegative integer $g$, ordered partitions $\sigma_1,\dots,\sigma_n$ of $d$, and subpartitions $\nu_1,\dots,\nu_n$ (i.e., $\nu_i$ is a subset of $\sigma_i$).
 
-Let $\overline{\mathcal H}_{g,\sigma,\nu}$ be the moduli space of degree $d$ admissible covers $C\to X$
-where $C$ is a genus $g$ prestable curve, $X$ is a genus $0$ prestable curve, we have marked points $q_1,\dots,q_n\in X$, the ramification profile over $q_i$ is $\sigma_i$ (with $|\nu_i|$ points of the fiber in $C$ marked), and the map is \'etale away from $q_1,\dots,q_n$. Let $m=\sum|\nu_i|$.
+Let $\Hb_{g,\sigma}$ be the moduli space of degree $d$ admissible covers $C\to X$
+where $C$ is a genus $g$ prestable curve, $X$ is a genus $0$ prestable curve, we have marked points $q_1,\dots,q_n\in X$, the ramification profile over $q_i$ is $\sigma_i$, and the map is \'etale away from $q_1,\dots,q_n$. Let $m=\sum|\nu_i|$ and $N=\sum|\sigma_i|$.
+
+The following describes the situation:
+
+~\\
+
+\begin{tikzpicture}
+  \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
+  \foreach \x/\p/\c in {-5.5/$p_{1,1}$/red, -4.5/$p_{1,|\nu_1|}$/red, -3/$p_{1,|\sigma_1|}$/black}
+  {
+    \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) -- (-3.15+.3*\x, -3.5);
+    }
+  \foreach \x/\p/\c in {2.5/$p_{n,1}$/red, 3.5/$p_{n,|\nu_n|}$/red, 4.5/$p_{n,|\sigma_n|}$/black}
+  {
+    \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) -- (2+.3*\x, -3.5);
+    }
+
+    \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, -4);
+  \foreach \x/\q in {-4.5/$q_1$, 3/$q_n$}
+    \filldraw[black] (\x,-4) circle (0.6mm) node[below] {\q};
+\end{tikzpicture}
+
+%TODO: something other than color, for accessibility?
+
 We have natural maps:
-\[
-\overline{\mathcal M}_{0,n}\leftarrow \overline{\mathcal H}_{g,\sigma,\nu}\xrightarrow{\pi} \overline{\mathcal M}_{g,m}
-\]
-By Hurwitz theory, we know that the first map is finite, and so $\dim(\overline{\mathcal H}_{g,\sigma,\nu})=n-3$. The second map $\pi$ is finite when
+
+\begin{tikzcd}
+\overline{\mathcal M}_{0,n} & \ar[l,""] \Hb_{g,\sigma} \ar[r,""] \ar[rr,out=-30,in=210,"\pi_{\nu}"] & \overline{\mathcal M}_{g,N} \ar[r,""] & \overline{\mathcal M}_{g,m}
+\end{tikzcd}
+
+Here $\pi_{\nu}$ remembers the source curve and red points, i.e.\ the points corresponding to $\nu$.
+By Hurwitz theory, we know that the first map is finite, and so $\dim(\Hb_{\sigma,\mu})=n-3$. The second map $\pi_{\nu}$ is finite when
 \[
 3g-3+m=n-3
 \]
 and in this case, we define
 \[
-W_{g,\sigma,\nu}=\deg(\pi)
+W_{g,\sigma,\nu}=\deg(\pi_{\nu})
 \]
 where this is an orbifold degree.
 In order to account for relabeling of marked points (any of the points $q_n$ with identical data, as well as any of the unmarked points in fibers with
@@ -190,33 +215,41 @@ identical data), we define
 \[
 N_{g,\sigma,\nu}=\frac{W_{g,\sigma,\nu}}{|\Aut(\{(\sigma_i,\nu_i):1\leq i\leq n\})|\cdot \prod_i|\Aut(\sigma_i-\nu_i)|}
 \]
-Throughout the rest of this thesis, unless otherwise indicated, we will specialize to the case where $g=1$,
+In many cases studied in this thesis, we will specialize to the case where $g=1$,
 $\sigma_1=\nu_1=\mu$, and $\nu_3=\nu_4=\dots=\emptyset$. We will write
 \[
-W_{\mu,\sigma_2,\dots,\sigma_n}^{\nu_2}
+W_{\sigma_1,\dots,\sigma_n}^{\lambda}(\mu)=W_{1,(\mu,\sigma_1,\dots,\sigma_n),(\lambda,\emptyset,\dots,\emptyset)}
 \]
 for the relevant labeled invariant, and
 \[
-N_{\mu,\sigma_2,\dots,\sigma_n}^{\nu_2}
+N_{\sigma_1,\dots,\sigma_n}^{\lambda}(\mu)=N_{1,(\mu,\sigma_1,\dots,\sigma_n),(\lambda,\emptyset,\dots,\emptyset)}
 \]
 for the unlabeled invariant that will be of most interest to us. In particular we will write
 \[
-N_{\mu,\sigma_2,\dots,\sigma_n}=N_{\mu,\sigma_2,\dots,\sigma_n}^{\emptyset}=\frac{W_{\mu,\sigma_2,\dots,\sigma_n}^{\emptyset}}{|\Aut(\sigma_2,\dots,\sigma_n)|\cdot\prod_{i=2}^n|\Aut(\sigma_i)|}
+N_{\sigma_1,\dots,\sigma_n}(\mu)=N_{\sigma_1,\dots,\sigma_n}^{\emptyset}(\mu)=\frac{W_{\sigma_1,\dots,\sigma_n}^{\emptyset}(\mu)}{|\Aut(\sigma_2,\dots,\sigma_n)|\cdot\prod_{i=2}^n|\Aut(\sigma_i)|}
 \]
-If $\mu,\sigma_2,\dots,\sigma_n$ do not have ramification sufficient to satisfy Riemann-Hurwitz,
-we let \[N_{\mu,\sigma_2,\dots,\sigma_n}=N_{\mu,\sigma_2,\dots,\sigma_n,(2,1^{d-2}),\dots}.\]
-The primary task of this thesis is to understand the invariants $N_{\mu,\sigma_2,\dots,\sigma_n}$
+If $\mu,\sigma_1,\dots,\sigma_n$ do not have ramification sufficient to satisfy Riemann-Hurwitz,
+we let \[N_{\sigma_1,\dots,\sigma_n}(\mu) = N_{\sigma_1,\dots,\sigma_n,(2,1^{d-2}),\dots}(\mu).\]
+The primary task of this thesis is to understand the invariants $N_{\sigma_1,\dots,\sigma_n}(\mu)$
 in some significant special cases.
 
 \begin{eg}
-  Consider the case where $d=2$, $n=1$ and $\mu=\sigma_2=\sigma_3=\sigma_4=(2)$.
+  Consider the case where $d=2$, $n=1$ and $\mu=\sigma_1=\sigma_2=\sigma_3=(2)$.
   We know that there is a unique map $(E,p)\to (\mathbb P^1,0)$ of the specified form
   up to automorphisms of $\P^1$, and it factors through the antipodal automorphism of $E$,
   so
   \[
-  N_{(2)}=N_{(2),(2),(2),(2)}=\frac 12.
+  N(2)=N_{(2),(2),(2)}(2)=1. %TODO: why is it not 1/2?
   \]
 \end{eg}
+
+\begin{eg}
+  Consider the case where $g=0$, $\sigma=(\sigma_1,\sigma_2,\sigma_3)$ and $m=3$. In this case
+  \[
+  W_{0,\sigma,\nu}=\overline H(\sigma_1,\sigma_2,\sigma_3)
+  \]
+  where $\overline H$ is a marked Hurwitz number.
+  \end{eg}
 
 \subsection{Notation and conventions}
 
@@ -336,9 +369,441 @@ N_{(4),(3,1),(3,1)}=\frac{20}{2}=10
 \]
 TODO: calculate $N_{(1,1,1,1),(3,1),(3,1)}$ using genus-degree formula; explain why this doesn't work for higher degree
 
-\subsection{Admissible covers}
+\section{Admissible covers}
 
-We may also calculate $W_{\mu,\sigma_2,\dots,\sigma_n}$ as follows when $|\mu|\geq 2$:
+In this section we explain a known method in the literature that we will use
+to recursively compute $W_{g,\sigma,\nu}$. This is a method used in \cite{Generalized} to prove Proposition 6, and reliant on a result from \cite{Lian}. We begin by motivating the method, and then illustrate the use of the method as adapted to the specific context of this thesis.
+
+Recall that $W_{g,\sigma,\nu}$ is the degree of the map $\pi_{\nu}:\Hb_{g,\sigma}\to\overline{\mathcal M_{g,m}}$
+where $\sum|\nu_i|=m$; our enumerative interpretation is that, for a fixed general $m$-pointed genus $g$ curve $(C,p_1,\dots,p_m)$, $W_{g,\sigma,\nu}$ counts the number of Hurwitz covers of the correct form with source $(C,p_1,\dots,p_m)$. One can hope (and we will see) that the same is roughly true for
+a specific $m$-pointed genus $g$ {\it stable} curve lying in a suitable boundary divisor of $\overline{\mathcal M_{g,m}}$.
+
+We first begin with a rough illustration of what we intend to do.
+
+\begin{eg}
+  Suppose we are interested in calculating $W_{(3),(2,1),(2,1),(2,1)}(2,1)$, the degree of the map
+  \[
+  \pi:\Hb_{1,\sigma}\to\overline{\mathcal M_{1,2}}
+  \]
+  
+  Let $A$ be a stable graph consisting of a genus $1$ vertex connected to a genus $0$ vertex, with two legs on the
+  genus $0$ vertex:
+
+                  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\};
+
+ \matrix[amat,right=4cm of mat1,nodes=ssnode] (mat2) {$0$\\};
+
+ \draw  (mat1-1-1) edge (mat2-1-1);
+ 
+  % draw legs for right side
+ \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$p_{1,1}$}
+ (mat2-1-1) -- +(330:1) node[anchor=west] {$p_{1,2}$};
+
+              \end{tikzpicture}
+  
+
+  Intuitively we want to count covers from a generic stable curve with graph $A$ to a genus $0$
+  curve, such that $p_{1,1}$ and $p_{1,2}$ are in the same fiber (with ramification indices $2$ and $1$),
+  and there is marked ramification elsewhere with ramification profiles $(3),(2,1),(2,1),(2,1)$.
+  Remembering the marked points, the source should be a stable curve in $\overline{\mathcal M_{1,9}}$ with graph $\hat A$, where $\hat A$
+  becomes $A$ after applying a forgetful map.
+
+  One possible graph $\hat A_1$, obtained by putting $p_{5,1}$ and $p_{5,2}$ on the genus $0$ component and other
+  marked points on the genus $1$ component, is the source of a type of admissible cover in $\Hb_{1,\sigma}$:
+
+                  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\};
+
+    \matrix[dmat,left=1cm of mat1] (degrees1) {$3$\\};
+
+
+ \matrix[amat,right=4cm of mat1,nodes=ssnode] (mat2) {$0$\\};
+
+ \matrix[dmat,right=1cm of mat2] (degrees2) {$3$\\};
+
+ \draw  (mat1-1-1) edge["$3$"] (mat2-1-1);
+
+  % draw legs for left side
+ \draw (mat1-1-1) -- +(45:1) node[anchor=west] {$p_{2,1}$}
+ (mat1-1-1) -- +(220:1) node[anchor=north] {$p_{3,1}$}
+ (mat1-1-1) -- +(245:1) node[anchor=north] {$p_{3,2}$}
+ (mat1-1-1) -- +(165:1) node[anchor=east] {$p_{4,1}$}
+ (mat1-1-1) -- +(190:1) node[anchor=east] {$p_{4,2}$};
+%  (mat1-1-1) -- +(95:1) node[anchor=south] {$p_{5,1}$}
+% (mat1-1-1) -- +(125:1) node[anchor=south] {$p_{5,2}$};
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(10:1) node[anchor=west] {$p_{1,1}$}
+ (mat2-1-1) -- +(345:1) node[anchor=west] {$p_{1,2}$}
+ (mat2-1-1) -- +(50:1) node[anchor=south] {$p_{5,1}$}
+ (mat2-1-1) -- +(85:1) node[anchor=south] {$p_{5,2}$};
+
+ \matrix[amat,nodes=fsnode,below=2cm of mat1] (mat3) {$0$\\};
+
+ \matrix[amat,nodes=ssnode,below=2cm of mat2] (mat4) {$0$\\};
+
+  \draw (mat3-1-1) -- +(45:1) node[anchor=west] {$q_2$}
+  (mat3-1-1) -- +(180:1) node[anchor=east] {$q_4$}
+  (mat3-1-1) -- +(240:1) node[anchor=north] {$q_3$};
+   
+  \draw  (mat4-1-1) -- +(0:1) node[anchor=west] {$q_1$}
+ (mat4-1-1) -- +(70:1) node[anchor=south] {$q_5$};
+
+ \draw  (mat3-1-1) edge[] (mat4-1-1);
+
+ \draw  (mat1-1-1) edge[->] (mat3-1-1);
+ \draw  (mat2-1-1) edge[->] (mat4-1-1);
+
+                \end{tikzpicture}
+
+                  Another possible graph $\hat A_2$, obtained by putting $p_{2,1}$ on the genus $0$ component
+                  and the other marked points on the genus $1$ component,
+                  is the source of another type of admissible cover in $\Hb_{1,\sigma}$:
+
+                                    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+                                      \matrix[amat,nodes=fsnode] (mat1) {$1$\\
+                                      $0$\\};
+
+  \matrix[dmat,left=1cm of mat1] (degrees1) {$2$\\
+  $1$\\};
+
+
+ \matrix[amat,right=4cm of mat1,nodes=ssnode] (mat2) {$0$\\};
+
+ \matrix[dmat,right=1cm of mat2] (degrees2) {$3$\\};
+
+ \draw  (mat1-1-1) edge["$2$"] (mat2-1-1)
+ (mat1-2-1) edge["$1$"] (mat2-1-1);
+
+  % draw legs for left side
+ \draw (mat1-1-1) -- +(35:1) node[anchor=west] {$p_{5,1}$}
+ (mat1-2-1) -- +(35:1) node[anchor=west] {$p_{5,2}$}
+ (mat1-1-1) -- +(220:1) node[anchor=north] {$p_{3,1}$}
+ (mat1-2-1) -- +(220:1) node[anchor=north] {$p_{3,2}$}
+ (mat1-1-1) -- +(165:1) node[anchor=east] {$p_{4,1}$}
+ (mat1-2-1) -- +(165:1) node[anchor=east] {$p_{4,2}$};
+%  (mat1-1-1) -- +(95:1) node[anchor=south] {$p_{5,1}$}
+% (mat1-1-1) -- +(125:1) node[anchor=south] {$p_{5,2}$};
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(10:1) node[anchor=west] {$p_{1,1}$}
+ (mat2-1-1) -- +(345:1) node[anchor=west] {$p_{1,2}$}
+ (mat2-1-1) -- +(50:1) node[anchor=south] {$p_{2,1}$};
+
+ \matrix[amat,nodes=fsnode,below=2cm of mat1] (mat3) {$0$\\};
+
+ \matrix[amat,nodes=ssnode,below=2cm of mat2] (mat4) {$0$\\};
+
+  \draw (mat3-1-1) -- +(45:1) node[anchor=west] {$q_5$}
+  (mat3-1-1) -- +(180:1) node[anchor=east] {$q_4$}
+  (mat3-1-1) -- +(240:1) node[anchor=north] {$q_3$};
+   
+  \draw  (mat4-1-1) -- +(0:1) node[anchor=west] {$q_1$}
+ (mat4-1-1) -- +(50:1) node[anchor=south] {$q_2$};
+
+ \draw  (mat3-1-1) edge[] (mat4-1-1);
+
+ \draw  (mat1-2-1) edge[->] (mat3-1-1);
+ \draw  (mat2-1-1) edge[->] (mat4-1-1);
+
+                \end{tikzpicture}
+
+                                    We hope that $W_{(3),(2,1),(2,1),(2,1)}(2,1)$ can be expressed
+                                    as a sum of terms corresponding to these kinds of
+                                    admissible covers:
+
+                                    There are three graphs similar to $\hat A_1$, corresponding to a choice of $i\in\{3,4,5\}$ for which $p_{i,1}$ and $p_{i,2}$ appear on the genus $0$ component. The contribution from each graph should be a product
+                                    \[
+                                    W_{(3),(2,1),(2,1)}(3)\cdot \overline H((3),(2,1),(2,1))=W_{(3),(2,1),(2,1)}(3)\cdot 1=2N_{(3),(2,1),(2,1)}(3)=2\cdot 8=16
+                                    \]
+                                    There is only a single graph like $\hat A_2$,
+                                    and its contribution is
+                                    \[
+                                    W_{(2),(2),(2)}(2)\cdot \overline H((3),(2,1),(2,1))=3!\cdot N_{(2),(2),(2)}(2)\cdot 1=6
+                                    \]
+                                    Therefore our expectation is that
+                                    \[
+                                    W_{(3),(2,1),(2,1),(2,1)}(3)=3\cdot 16+6=54\implies N_{(3),(2,1),(2,1),(2,1)}(3)=\frac{54}{3!}=9.
+                                    \]
+  \end{eg}
+
+                \subsection{Setup}
+
+                We now turn to a general explanation of this technique loosely applied in the example above, and in following \cite{Generalized} we will write an explicit application of the technique to our specific invariants.
+                
+
+
+Let $A$ be a stable graph
+corresponding to a boundary stratum in $\overline{\mathcal M_{g,m}}$.
+Following Proposition 3.2 of \cite{Lian}, we have a commutative diagram
+\[\begin{tikzcd}
+\amalg \mathcal H_{(\Gamma,\Gamma')} & \Hb_{g,\sigma} \\
+\amalg \overline{\mathcal M_{\hat A}} & \overline{\mathcal M_{g,N}} \\
+	\overline{\mathcal M_A} & \overline{\mathcal M_{g,m}}
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-1, to=2-1, "\amalg \phi_{(\Gamma,\Gamma')}"]
+        \arrow[from=2-1, to=3-1]
+	\arrow[from=1-2, to=2-2]
+	\arrow[from=2-1, to=2-2]
+        \arrow[from=2-2, to=3-2]
+        \arrow[from=3-1, to=3-2]
+        \arrow[from=1-2, to=3-2, bend left, "\pi_{\nu}"]
+\end{tikzcd}\]
+
+where $\Gamma$ and $\Gamma'$ are stable graphs (the latter being genus $0$), $\Gamma\to\Gamma'$ is an admissible cover of stable graphs, $\Gamma$
+comes with a chosen $\hat A$-structure (i.e., a specialization to $\hat A$),
+and $\hat A$ is any stable graph reducing to $A$ under the forgetful map.
+
+This square is Cartesian on the level of closed points. By
+Proposition 3.3 of \cite{Lian}, if $\mathcal H_{(\Gamma,\Gamma')}$ is of
+expected dimension, its contribution to $\xi_A^*\pi_*([\Hb_{g,\sigma}])$
+is a nonzero multiple of $\phi_*([\mathcal H_{(\Gamma,\Gamma')}])$ on $\overline{\mathcal M_A}$, and in fact the coefficient is given by the product of edges contracted in the $A$-structure of $\Gamma$ divided by the size of the automorphism group (TODO: why?).
+
+\begin{thm}
+  If $A$ is a stable graph corresponding to a boundary divisor in $\overline{\mathcal M_{g,m}}$, then
+  \[
+  \frac 1{|\Aut(A)|}W_{g,\sigma,\nu}=\sum_{\hat A\rightsquigarrow A}\sum_{(\Gamma,\Gamma')}\frac 1{|\Aut(\Gamma)|}c_{\Gamma}W_{(\Gamma,\Gamma')}
+  \]
+  where $\hat A$ becomes $A$ after forgetting points, $\Gamma$ is a stable graph with a chosen $\hat A$-structure and an admissible
+  cover to $\Gamma'$ a stable genus $0$ graph with one edge, $c_{\Gamma}$ is the
+  product of contracted edges in the $\hat A$-structure, and
+  $W_{(\Gamma,\Gamma')}$ is a product of terms $W_{g',\sigma',\nu'}$ corresponding to each vertex of $\Gamma$.
+\end{thm}
+
+\begin{proof}
+  Note that
+  \[
+  \xi_A^*\pi_*([\mathcal H_{g,\sigma,\nu}]) =
+  \xi_A^*(W_{g,\sigma,\nu}[\overline{\mathcal M_{g,m}}])=
+  W_{g,\sigma,\nu}[\overline{\mathcal M_A}]
+  \]
+  Therefore, $W_{g,\sigma,\nu}$ is a sum of
+  terms $\frac 1{|\Aut(\Gamma)|}c_{\Gamma}W_{(\Gamma,\Gamma')}$, for
+  any $(\Gamma,\Gamma')$ such that
+  $\mathcal H_{(\Gamma,\Gamma')}\to\overline{\mathcal M_A}$
+  is dominant.
+
+  We have a natural map $\mathcal H_{(\Gamma,\Gamma')}\to \overline{\mathcal M_{\Gamma'}}$ remembering the target, which is finite by Hurwitz theory. Therefore,
+  \[
+  \dim(\mathcal H_{(\Gamma,\Gamma')})=\dim(\overline{\mathcal M_{\Gamma'}})
+  \]
+  For $\mathcal H_{(\Gamma,\Gamma')}\to\overline{\mathcal M_A}$ to be
+  dominant means therefore that
+  \[
+  \dim(\overline{\mathcal M_{\Gamma'}})=\dim(\overline{\mathcal M_A})=
+  \dim(\overline{\mathcal M_{g,m}})-1=\dim(\overline{\mathcal M_{0,n}})-1
+  \]
+  or equivalently that $\Gamma'$ has a single edge.
+\end{proof}
+
+\subsection{Genus reduction}
+
+We can apply this technique to compute invariants $W_{\sigma_1,\dots,\sigma_n}(d)$ by reduction to
+genus $0$ invariants, and illustrate with the following example.
+
+\begin{eg}
+  Suppose we are interested in calculating $W_{(4),(2,1,1),(2,1,1)}(4)$, the number of degree $4$ covers from a fixed elliptic curve $(E,p_1)$ to $\P^1$ with full ramification over $p_1$ and another point, with ramification points labeled.
+  
+  Let $A$ be a stable graph consisting of a single genus $0$ vertex with
+  a loop and a leg labeled $p_{1,1}$; and let $\hat A$ be a graph with
+  additional legs corresponding to the other fibers of ramification.
+
+  While no such admissible cover
+  can have actual source of the form described by $\hat A$ (due to the loop), there are in fact
+  covers whose source {\it stabilizes} to the kind we want.
+  Consider the following picture:
+
+              \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$0$\\};
+
+ \matrix[amat,right=4cm of mat1,nodes=ssnode] (mat2) {$0$\\};
+
+ \draw  (mat1-1-1) edge[bend left] (mat2-1-1)
+ (mat1-1-1) edge[bend right] (mat2-1-1);
+
+  % draw legs for left side
+ \draw (mat1-1-1) -- +(95:1) node[anchor=south] {$p_{1,1}$}
+ (mat1-1-1) -- +(215:1) node[anchor=north] {$p_{3,1}$}
+ (mat1-1-1) -- +(245:1) node[anchor=north] {$p_{3,2}$}
+ (mat1-1-1) -- +(285:1) node[anchor=north] {$p_{3,3}$};
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(60:1) node[anchor=west] {$p_{2,1}$}
+ (mat2-1-1) -- +(305:1) node[anchor=west] {$p_{4,1}$}
+ (mat2-1-1) -- +(330:1) node[anchor=west] {$p_{4,2}$}
+ (mat2-1-1) -- +(355:1) node[anchor=west] {$p_{4,3}$};
+
+              \end{tikzpicture}
+
+  This is a stable graph $\Gamma$ that specializes to
+  $\hat A$ in a unique way, by contracting
+  the two edges; this corresponds to a choice of $\hat A$-structure
+  as defined in \cite{Schmitt} (TODO: illustrate what this means).
+  In the sense of Definition 2.10 from \cite{Lian}, there is an admissible cover of stable graphs $\Gamma\to\Gamma'$ depicted as follows where $a+b=4$:
+
+                \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$0$\\};
+
+    \matrix[dmat,left=1cm of mat1] (degrees1) {$4$\\};
+
+
+ \matrix[amat,right=4cm of mat1,nodes=ssnode] (mat2) {$0$\\};
+
+ \matrix[dmat,right=1cm of mat2] (degrees2) {$4$\\};
+
+ \draw  (mat1-1-1) edge[bend left,"$a$"] (mat2-1-1)
+ (mat1-1-1) edge[bend right,"$b$"] (mat2-1-1);
+
+  % draw legs for left side
+ \draw (mat1-1-1) -- +(125:1) node[anchor=south] {$p_{1,1}$}
+ (mat1-1-1) -- +(170:1) node[anchor=east] {$p_{3,1}$}
+ (mat1-1-1) -- +(195:1) node[anchor=east] {$p_{3,2}$}
+ (mat1-1-1) -- +(215:1) node[anchor=east] {$p_{3,3}$};
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$p_{2,1}$}
+ (mat2-1-1) -- +(300:1) node[anchor=west] {$p_{4,1}$}
+ (mat2-1-1) -- +(330:1) node[anchor=west] {$p_{4,2}$}
+ (mat2-1-1) -- +(355:1) node[anchor=west] {$p_{4,3}$};
+
+ \matrix[amat,nodes=fsnode,below=2cm of mat1] (mat3) {$0$\\};
+
+ \matrix[amat,nodes=ssnode,below=2cm of mat2] (mat4) {$0$\\};
+
+  \draw (mat3-1-1) -- +(125:1) node[anchor=south] {$q_1$}
+ (mat3-1-1) -- +(215:1) node[anchor=north] {$q_3$};
+   
+  \draw  (mat4-1-1) -- +(30:1) node[anchor=west] {$q_2$}
+ (mat4-1-1) -- +(330:1) node[anchor=west] {$q_4$};
+
+ \draw  (mat3-1-1) edge[] (mat4-1-1);
+
+ \draw  (mat1-1-1) edge[->] (mat3-1-1);
+ \draw  (mat2-1-1) edge[->] (mat4-1-1);
+
+                \end{tikzpicture}
+
+                The contribution of such $(\Gamma,\Gamma')$ is
+                \[
+                \frac 1{|\Aut(\Gamma)|}c_{\Gamma}W_{(\Gamma,\Gamma')}=\frac 1{|\Aut(a,b)|}\cdot 4\cdot \overline H((4),(a,b),(2,1,1))\cdot \overline H((4),(a,b),(2,1,1))
+                \]
+                When $(a,b)=(2,2)$ this is
+                \[
+                \frac 12\cdot 4\cdot 2\cdot 2=8
+                \]
+                and when $(a,b)=(3,1)$ this is
+                \[
+                1\cdot 4\cdot 2\cdot 2=16.
+                \]
+                There are similar choices of $(\Gamma,\Gamma')$ where the components of $q_3$ and
+                $q_4$ are swapped,
+                yielding a cumulative sum of $2\cdot (8+16)=48$.
+
+                The other type of cover $\Gamma\to\Gamma'$ to consider can be depicted as follows:
+
+                                \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$0$\\};
+
+    \matrix[dmat,left=1cm of mat1] (degrees1) {$4$\\};
+
+
+    \matrix[amat,right=4cm of mat1,nodes=ssnode] (mat2) {$0$\\
+      $0$\\
+    $0$\\};
+
+ \matrix[dmat,right=1cm of mat2] (degrees2) {$2$\\
+   $1$\\
+ $1$\\};
+
+ \draw  (mat1-1-1) edge[bend left,"$1$"] (mat2-1-1)
+ (mat1-1-1) edge["$1$"] (mat2-1-1)
+ (mat1-1-1) edge["$1$"] (mat2-2-1)
+ (mat1-1-1) edge["$1$"] (mat2-3-1);
+
+  % draw legs for left side
+ \draw (mat1-1-1) -- +(125:1) node[anchor=south] {$p_{1,1}$}
+ (mat1-1-1) -- +(225:1) node[anchor=east] {$p_{2,1}$};
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$p_{3,1}$}
+ (mat2-2-1) -- +(30:1) node[anchor=west] {$p_{3,2}$}
+ (mat2-3-1) -- +(30:1) node[anchor=west] {$p_{3,3}$}
+ (mat2-1-1) -- +(330:1) node[anchor=west] {$p_{4,1}$}
+ (mat2-2-1) -- +(330:1) node[anchor=west] {$p_{4,2}$}
+ (mat2-3-1) -- +(330:1) node[anchor=west] {$p_{4,3}$};
+
+ \matrix[amat,nodes=fsnode,below=2cm of mat1] (mat3) {$0$\\};
+
+ \matrix[amat,nodes=ssnode,below=2cm of mat2] (mat4) {$0$\\};
+
+  \draw (mat3-1-1) -- +(125:1) node[anchor=south] {$q_1$}
+ (mat3-1-1) -- +(215:1) node[anchor=north] {$q_2$};
+   
+  \draw  (mat4-1-1) -- +(30:1) node[anchor=west] {$q_3$}
+ (mat4-1-1) -- +(330:1) node[anchor=west] {$q_4$};
+
+ \draw  (mat3-1-1) edge[] (mat4-1-1);
+
+                                \end{tikzpicture}
+
+                                There are $2\cdot 2$ choices for placement of $p_{3,2}$ and $p_{4,2}$
+                                and $2\cdot 2$ automorphisms of the graph
+                                (swapping the two top edges and swapping
+                                the two lower right vertices), so
+                                the contribution
+                                is
+                                \begin{align*}
+                                  4\cdot \frac 1{|\Aut(\Gamma)|}c_{\Gamma}W_{(\Gamma,\Gamma')}&=4\cdot\frac 14\cdot 2\cdot \overline H((4),(4),(1,1,1,1))\cdot \overline H((2),(2),(1,1)) \\
+                                  &=2\cdot 6\cdot 1\\
+                                  &=12
+                                \end{align*}
+                                Combining our results,
+                                \[
+                                \frac 12W_{(4),(2,1,1),(2,1,1)}(4)=48+12=60\implies W_{(4),(2,1,1),(2,1,1)}(4)=120\implies N_{(4),(2,1,1),(2,1,1)}(4)=\frac{120}{2^3}=15
+                                \]
+                                This matches our expectation, since $N_{(4),(2,1,1),(2,1,1)}(4)$ counts
+                                nontrivial $4$-torsion points of an elliptic curve.
+                                
+  \end{eg}
+
+  \subsection{Merging two points}
 
 Consider a special genus $1$ stable curve $C$ with $|\mu|$ marked points, obtained by taking
 a generic genus $1$ curve with $|\mu|-1$ marked points and gluing a genus $0$ tail with $3$ marked points.
@@ -348,11 +813,6 @@ In other words, we consider a generic point $C$ in the image of the gluing map
 \]
 We will compute the number of admissible covers $\pi:C\to C'$ where $C'$ is a genus $0$ prestable curve and
 $\pi$ has the ramification needed for $W_{\mu,\sigma_2,\dots,\sigma_n}$.
-
-TODO: Explain process for calculating $N$ and/or $W$ via admissible covers
-diagrams; prove that both methods (labeled and unlabeled) work
-
-Show how reduction to $g=0$ works
 
 \section{All twos case}
 
@@ -455,7 +915,7 @@ using two methods: first, by categorizing all such maps explicitly using Hurwitz
 \end{claim}
 \begin{proof}
   The pictures above illustrate how such maps should factor. We prove the claim by fixing branch points $0,1,\infty,w$ in $\P^1$, counting the (orbifold) number of factored
-  maps over these branch points as well as the maps in the last picture, and show that these are equal.
+  maps over these branch points as well as the maps in the last picture, and showing that these are equal.
 
   The latter count is given by
   \[
@@ -561,14 +1021,17 @@ with ramification $(d),(2^k),(2^k),(2,1,\dots,1)$:
 
             TODO: perform counts for these diagrams
 
+\subsection{Recursion and general solution}
 \section{$S_{\a,\b}$}
 
 \subsection{Definitions and basic results}
 
 Let
 \[
-S_{\mathfrak a,\mathfrak b}(\mu)=N_{\mu,(2,1,\dots)^{a_2},(2,1,\dots)^{b_2},(3,1,\dots)^{a_3},(3,1,\dots)^{b_3},\dots}^{\{2^{b_2}3^{b_3}\dots\}}
+S_{\a,\b}(\mu)=
+N_{\mu,(2,1,\dots)^{a_2},(2,1,\dots)^{b_2},(3,1,\dots)^{a_3},(3,1,\dots)^{b_3},\dots}^{\{2^{b_2}3^{b_3}\dots\}}
 \]
+(TODO: fix notation to be consistent with earlier.)
 Here $a_2,a_3,\dots$ describe unmarked ramification and $b_2,b_3,\dots$ describe marked ramification. For
 simplicity, assume that all ramification is included and define $S_{\mathfrak a,\mathfrak b}(\mu)= 0$ if $\mu_i\leq 0$ for any $i$.
 
@@ -833,7 +1296,7 @@ $p$. So our diagram looks like:
 \begin{claim}[Claim 2]
   For $n>0$,
   \begin{align*}
-    S_{\mathfrak a,\mathfrak b}(\mu, n, m) &= \sum_{z\in\mathfrak a,\ z\leq n+m}\min(n,m,z-1,n+m-z+1)S_{\a-\{z\},\b}(\mu,n+m-z+2) \\
+    S_{\a,\b}(\mu, n, m) &= \sum_{z\in\mathfrak a,\ z\leq n+m}\min(n,m,z-1,n+m-z+1)S_{\a-\{z\},\b}(\mu,n+m-z+2) \\
     &+\sum_{z_1,z_2\in\a-\{2\}}\hat H((z_1+z_2-n-m-3,n,m),(z_1,1,\dots),(z_2,1,\dots))S_{\a-\{z_1,z_2\},\b+\{z_1+z_2-n-m-3\}}(\mu)
   \end{align*}
 \end{claim}
@@ -1063,7 +1526,7 @@ the case where $\mu=(d)$. It remains to calculate $S_{\{a_1,a_2,a_3\},\emptyset}
   $0$\\};
 
  \matrix[dmat,right=1cm of mat2] (degrees2) {$e+f$\\
-   $1$
+   $1$ \\
     \vdots \\
     $1$\\};
 
@@ -1126,51 +1589,6 @@ What about higher genus?
 
 \section{Appendix 1: Hurwitz Counts}
 
-\begin{lem}
-  In the symmetric group $S_d$, let $\tau=(1\ 2)(3\ 4)\cdots (2i-1\ 2i)$
-  and let $\sigma$
-  be another product of $i$ disjoint transpositions, with product $X=\tau\sigma$ consisting
-  of at most two disjoint cycles.
-
-  If $\sigma$ is in the subgroup $S_{2i}\subset S_d$ (i.e. it involves only the points $1,\dots,2i$),
-  then there
-  exist $x_1,\dots,x_{i-1}$ such that
-  \[
-  \{1,\dots,2i\}=\{1,x_1,\dots,x_{i-1},\tau(1),\tau(x_1),\dots,\tau(x_{i-1})\},
-  \]
-  and $\sigma$ can be written as a product $\sigma=\sigma_1\cdots\sigma_i$ where:
-  \begin{itemize}
-  \item  $\sigma_1=(1\ x_1)$,
-  \item $\sigma_j=(\tau(x_{j-2})\ x_j)$ for $1<j<i$ (here $x_0=1$),
-  \item $\sigma_i=(\tau(x_{i-2})\ \tau(x_{i-1}))$.
-    \end{itemize}
-  
-%  \[
-%  \sigma=(1\ x_1)(\tau(1)\ x_2)(\tau(x_1)\ x_3)(\tau(x_2)\ x_4)(\tau(x_3)\ x_5)(\tau(x_4)\ x_6)\cdots(\tau(x_{i-3})\ x_{i-1})(\tau(x_{i-2})\ \tau(x_{i-1}))
-%  \]
-  
-  \iffalse
-  There
-  \[
-  \sigma=(1\ 3)(2\ 5)(4\ 7)(6\ 9)(8\ 11)\cdots (2i-4\ 2i-1)(2i-2\ 2i)
-  \]
-  \fi
-
-  there
-  are $\dots$ choices for $\sigma$.
-\end{lem}
-\begin{proof}
-
-  We prove the claimed form of $\sigma_1,\dots,\sigma_j$ by induction on $j$. The base case $j=1$ is clear since
-  there must be some transposition $(1\ x_i)$.
-
-  Let $1<j<i$. Then by the inductive hypothesis,
-  \[
-  \sigma_1\cdots\sigma_{j-1}=(1\ x_1)(\tau(x_0)\ x_2)\cdots (\tau(x_{j-3})\ x_{j-1})
-  \]
-  If $x_{j-2}$
-  
-  \end{proof}
 
 \begin{claim}
 For $d=2k$ even,
@@ -1178,6 +1596,72 @@ For $d=2k$ even,
 H((d),(2^k),(2^k),(2,1^{d-2}))=\frac k2
 \]
 \end{claim}
+\begin{proof}
+  In the symmetric group $S_d$, let $\tau$ and $\sigma$
+  be products of $k$ disjoint transpositions, with $X=\sigma\tau$ consisting
+  of two disjoint cycles.
+
+  We claim that there exist $x_1,\dots,x_{k-1}$ such that
+  \[
+  \{1,\dots,d\}=\{1,x_1,\dots,x_{k-1},\tau(1),\tau(x_1),\dots,\tau(x_{k-1})\},
+  \]
+  and:
+  \begin{itemize}
+  \item $\sigma(1)=x_1$, 
+  \item $\sigma(\tau(x_{j-2}))=x_j$ for $1<j<k$ (here $x_0=1$),
+  \item $\sigma(\tau(x_{k-2}))= \tau(x_{k-1}))$.
+  \end{itemize}
+  This can be shown by induction on $j$ (the base case, $j=1$, amounts to choosing $x_1=\sigma(1)$).
+  Assume the claim up through $j-1$, i.e.\ there exist
+  $x_1,\dots,x_{j-1}$ with the given properties and
+  \[\{1,\dots,2j\}=\{1,x_1,\dots,x_{j-1},\tau(1),\tau(x_1),\dots,\tau(x_{j-1})\}\]
+
+  Let $x_j$ be
+  the image of $\tau(x_{j-2})$ under $\sigma$.
+  We know $x_j$ is distinct from $1,x_1,\dots,x_{j-1},\tau(1),\dots,\tau(x_{j-2})$
+  as these have been assigned values under $\sigma$ already (and the last is impossible
+  since $\sigma$ has no fixed points).
+  If $x_j=\tau(x_{j-1})$, then $X=\sigma\tau$ contains a cycle
+  which looks like
+  \[
+  1\to x_2\to x_4\to\cdots\to x_{j-2}\to \tau(x_{j-1})\to \tau(x_{j-3})\to\cdots\to \tau(x_1)\to 1
+  \]
+  if $j$ is even or
+  \[
+  1\to x_2\to x_4\to\cdots\to x_{j-1}\to \tau(x_{j-2})\to \tau(x_{j-4})\to\cdots\to \tau(x_1)
+  \]
+  if $j$ is odd, both of which are length $j$. The orbit of the point $\tau(1)$ produces
+  another cycle of length $j$. These two cycles involve $2j$ points.
+  Under the assumption that $X$ overall consists of only
+  two disjoint cycles, this is impossible if $j<k$, in which case
+  \[
+  \{1,x_1,\dots,x_{j},\tau(1),\dots,\tau(x_{j})\}=\{1,\dots,2j+2\}
+  \]
+  completing the inductive claim. On the other hand if $j=k$, then
+  we are forced to have $x_k=\tau(x_{k-1})$
+  and $X$ consists of two disjoint $k$-cycles.
+
+  The number of pairs $(\tau,\sigma)$ whose product consists of two
+  disjoint cycles is the number of possibilities for $\tau$, i.e.
+  \[
+  (d-1)(d-3)\cdots (1),
+  \]
+  multiplied by the number of possibilities for $\sigma$ given $\tau$, which is
+  \[
+  (d-2)(d-4)\cdots (2).\]
+  A permutation consisting of two disjoint cycles
+  is uniquely a $d$-cycle multipled by a transposition, and
+  a $d$-cycle can be written as a product of two $k$-cycles multipled by a
+  transposition if the transposition interchanges a point of one $k$-cycle
+  with a point of another; there are $k^2$ such transpositions.
+
+  Thus, our
+  Hurwitz count is
+  \begin{align*}
+  \frac 1{d!}\cdot ((d-1)(d-3)\cdots 1)\cdot  ((d-2)(d-4)\cdots 2)\cdot\left(\frac d2\right)^2 = \frac{1}{d}\cdot\frac{d^2}{4}=\frac k2
+  \end{align*}
+  as claimed.
+  \end{proof}
 
 \begin{claim}
 For $d=2k$ even,
@@ -1281,5 +1765,6 @@ In particular if $n=m=1$ and $d>3$, the Hurwitz number is $1$.
   \]
   \end{proof}
 
+\printbibliography
 
 \end{document}
