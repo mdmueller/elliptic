@@ -206,9 +206,10 @@ We have natural maps:
 
 Here $\pi_{\nu}$ remembers the source curve and red points, i.e.\ the points corresponding to $\nu$.
 By Hurwitz theory, we know that the first map is finite, and so $\dim(\Hb_{\sigma,\mu})=n-3$. The second map $\pi_{\nu}$ is finite when
-\[
-3g-3+m=n-3
-\]
+\begin{align*}
+  \label{eqn:dimension}
+3g-3+m=n-3\iff 3g+m=n
+\end{align*}
 and in this case, we define
 \[
 W_{g,\sigma,\nu}=\deg(\pi_{\nu})
@@ -583,6 +584,7 @@ expected dimension, its contribution to $\xi_A^*\pi_*([\Hb_{g,\sigma}])$
 is a nonzero multiple of $\phi_*([\mathcal H_{(\Gamma,\Gamma')}])$ on $\overline{\mathcal M_A}$, and in fact the coefficient is given by the product of edges contracted in the $A$-structure of $\Gamma$ divided by the size of the automorphism group (TODO: why?).
 
 \begin{thm}
+  \label{thm:admissible}
   If $A$ is a stable graph corresponding to a boundary divisor in $\overline{\mathcal M_{g,m}}$, then
   \[
   \frac 1{|\Aut(A)|}W_{g,\sigma,\nu}=\sum_{\hat A\rightsquigarrow A}\sum_{(\Gamma,\Gamma')}\frac 1{|\Aut(\Gamma)|}c_{\Gamma}W_{(\Gamma,\Gamma')}
@@ -807,7 +809,7 @@ genus $0$ invariants, and illustrate with the following example.
                                 
 \end{eg}
 
-In general, any invariant $W_{\sigma_1,\dots,\sigma_n}(\mu)$ can be computed via this method, using the
+In general, any invariant $W_{\sigma_1,\dots,\sigma_n}(d)$ can be computed via this method, using the
 same graph $A$ in this example and reducing to genus $0$ invariants (which will all be marked
 Hurwitz numbers).
 
@@ -846,6 +848,33 @@ Hurwitz numbers).
                 in the first example of this section.
                 The base case where $\ell(\mu)=1$ can be solved via genus reduction.
                 In principle, this gives us a complete (albeit potentially combinatorially difficult) method to compute any invariant $W_{\sigma_1,\dots,\sigma_n}(\mu)$.
+
+                More generally, we can use the theorem to compute $W_{g,\sigma,\nu}$ when $m=\sum\limits_{i=1}^n|\nu_i|\geq 2$, by letting $A$ be a graph with a genus $g$ vertex attached to a genus $0$ vertex, and two of the
+                marked points on the genus $0$ vertex. The following lemma will be useful:
+
+                \begin{lem}
+                  \label{lem:branchpoints}
+                  Letting $A$ be as above, in Theorem~\ref{thm:admissible}, every admissible cover of graphs $\Gamma\to\Gamma'$ where $\Gamma$ contains a genus $g$ vertex (guaranteed when $g=1$) has precisely $2$ branch points
+                  whose fiber does not intersect the genus $g$ vertex.
+                \end{lem}
+
+                \begin{proof}
+                  Let $\Gamma\to\Gamma'$ be an admissible cover of graphs where $\Gamma$ comes with a $\hat A$-structure and $\hat A$ specializes to $A$, and assume $\Gamma$ has a genus $g$ vertex $v$.
+                  Then $\Hb_{(\Gamma,\Gamma')}$ has a factor $\Hb_{v}$ corresponding to the vertex $v$,
+                  and there is a finite map $\Hb_{v}\to\overline{\mathcal M_{g,m-1}}$ which recalls
+                  the vertex $v$ along with the $m-2$ fixed points on the genus $g$ vertex of $A$ and
+                  the point corresponding to the node of $A$. Thus,
+                  \[
+                  \dim(\Hb_v)=\dim(\overline{\mathcal M_{g,m-1}})=3g-3+m-1
+                  \]
+                  By Equation~\ref{eqn:dimension}, $\dim(\Hb_v)=n-4$. There is also a finite morphism
+                  $\Hb_v\to\overline{\mathcal M_{0,k+1}}$ where $k$ is the number of proper branch points from this
+                  component (and thus $k+1$ is the number of branch points including the node), so
+                  \[
+                  k-2=n-4\implies k=n-2
+                  \]
+                  and therefore the number of branch points not arising from the genus $g$ vertex is $n-(n-2)=2$.
+                  \end{proof}
 
 
 \section{All twos case}
@@ -1101,11 +1130,23 @@ N_{(2^k),(2^k)}(d)=3.
 
 \subsubsection{Genus reduction}
 
-Consider a genus $0$ curve with a self-node, along
-with a marked point $p$. There are two kinds of
-admissible covers from this curve to $\P^1$
-with ramification $(d),(2^k),(2^k),(2,1,\dots,1)$:
+We apply the method of Section 3 to yield another proof that
+$N_{(2^k),(2^k)}(d)=3$:
 
+\begin{claim}
+  For $d=2k$ even,
+  \[
+  W_{(2^k),(2^k),(2,1^{d-2})}(d)=6(d-2)!\cdot (k!)^2
+  \]
+\end{claim}
+\begin{proof}
+  Let $A$ be a stable graph consisting of a genus $0$ vertex with a loop and a marked point $p_{1,1}$.
+  Let $\hat A$ be the stable graph with additional marked points on the genus $0$ vertex for
+  the further ramification.
+
+There are two kinds of
+admissible covers $\Gamma\to\Gamma'$ with $\Gamma$ specializing to $\hat A$. The first
+is of the form:
 
             \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=3.2em,rounded corners,
@@ -1127,7 +1168,7 @@ with ramification $(d),(2^k),(2^k),(2,1,\dots,1)$:
  (mat1-1-1) edge["$b$"] (mat2-1-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:1) node[anchor=south] {$p$}
+ \draw (mat1-1-1) -- +(95:1) node[anchor=south] {$p_{1,1}$}
  (mat1-1-1) -- +(245:1) node[anchor=north] {$(2,1^{d-2})$};
 
  % draw legs for right side
@@ -1135,6 +1176,20 @@ with ramification $(d),(2^k),(2^k),(2,1,\dots,1)$:
  (mat2-1-1) -- +(330:1) node[anchor=west] {$(2^k)$};
 
             \end{tikzpicture}
+
+            There are two $\hat A$-structures, corresponding to a choice
+            of edge to contract, and so $c_{\Gamma}=a+b=d$. The right-hand count here under Theorem~\ref{thm:admissible} is
+            \begin{align*}
+              \overline H((d),(a,b),(2,1^{d-2}))\cdot \overline H((2^k),(2^k),(a,b))\cdot d\cdot\frac 1{|\Aut(a,b)|}
+            \end{align*}
+            By Claim TODO in Appendix 1, the second term vanishes unless $a=b=k$, in which case
+            the count (by Claims TODO and TODO) is
+            \[
+            (1\cdot (d-2)!)\cdot \left(\frac 1d\cdot k!\cdot k!\cdot 2\right)\cdot d\cdot\frac 12
+            =(d-2)!\cdot (k!)^2
+            \]
+
+            Now the second picture is of the form:
             
             \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=3.2em,rounded corners,
@@ -1164,7 +1219,7 @@ with ramification $(d),(2^k),(2^k),(2,1,\dots,1)$:
  (mat1-1-1) edge["$2$"] (mat2-4-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:1) node[anchor=south] {$p$}
+ \draw (mat1-1-1) -- +(95:1) node[anchor=south] {$p_{1,1}$}
  (mat1-1-1) -- +(245:1) node[anchor=north] {$(2^k)$};
 
  % draw legs for right side
@@ -1173,11 +1228,30 @@ with ramification $(d),(2^k),(2^k),(2,1,\dots,1)$:
  (mat2-2-1) -- +(330:1) node[anchor=west] {$2$}
  (mat2-4-1) -- +(330:1) node[anchor=west] {$2$};
 
-          \end{tikzpicture}
+            \end{tikzpicture}
 
-            TODO: perform counts for these diagrams
+            With markings remembered, the number of such diagrams is
+            \[
+            2\cdot k\cdot\binom{d-2}{2}\cdot\binom{d-4}{2}\cdot\dots\cdot\binom 22=2k\cdot\frac{(d-2)!}{2^{k-1}}
+            \]
+            There are two $\hat A$-structures, each with associated coefficient $2^{k-1}$,
+            and so the combined contribution to the right-hand side of Theorem~\ref{thm:admissible} is
+            \begin{align*}
+              &2k\cdot\frac{(d-2)!}{2^{k-1}}\cdot\overline H((d),(2^k),(2^{k-1},1,1))\cdot \overline H((1,1),(2),(2))\cdot \overline H((2),(2),(1,1))^{k-1}\cdot\frac 12\cdot 2\cdot 2^{k-1} \\
+              &=2k\cdot (d-2)!\cdot (k!\cdot (k-1)!) \\
+              &=2(d-2)!\cdot (k!)^2
+            \end{align*}
+            We conclude by adding up and seeing that the right-hand side of Theorem~\ref{thm:admissible} is
+            \[
+            (d-2)!\cdot (k!)^2+ 2(d-2)!\cdot (k!)^2=3(d-2)!\cdot (k!)^2\implies W_{(2^k),(2^k),(2,1^{d-2})}(d)=6(d-2)!\cdot (k!)^2.
+            \]
+
+\end{proof}
 
 \subsection{Recursion and general solution}
+
+
+
 \section{$S_{\a,\b}$}
 
 \subsection{Definitions and basic results}
@@ -1214,16 +1288,8 @@ simplicity, assume that all ramification is included and define $S_{\mathfrak a,
 \begin{proof}
   We consider diagrams which stabilize to a genus $1$ curve containing $x_1,\dots,x_k$ and all but one
   of the other fixed points, attached to a genus $0$ tail containing $q$ (with ramification $n$) and $p$
-  (with ramification $y$).
-
-  First, note that the total number of branch points for any such map should be $|\mathfrak a|+|\mathfrak b|+1$.
-  Restricting to the genus $1$ component, the moduli space of maps for that component has a finite map to $\overline{\mathcal M}_{1,|\mathfrak b|+k}$ and therefore has dimension $|\mathfrak b|+k$, so the number of branch points is $|\mathfrak b|+k+3$. One
-  of these branch points is the node of the target genus $0$, so discounting this there are $|\mathfrak b|+k+2$ proper branch points.
-  Therefore, the number of branch points outside the genus $1$ component is
-  \[
-  (|\mathfrak a|+|\mathfrak b|+1)-(|\mathfrak b|+k+2)=|\mathfrak a|-k-1=|\mathfrak a|-|(\mu,n)|=2
-  \]
-  by the lemma.
+  (with ramification $y$). Recall by Lemma~\ref{lem:branchpoints} that there are two branch points not
+  arising from the genus $1$ component.
   
   A diagram with $x_1,\dots,x_k$ on the right side looks like:
 
@@ -1463,10 +1529,6 @@ Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''
   of the other fixed points, attached to a genus $0$ tail containing $q$ (with ramification index $n$) and $r$
   (with ramification index $m$).
   
-  By reasoning as in the last claim, the number of branch points not coming from the genus $1$ component is
-  \[
-  (|\mathfrak a|+|\mathfrak b|+1)-(|\b|+k+3)=|\a|-|(\mu,n,m)|=2.
-  \]
   If $x_1,\dots,x_k,q,r$ are on the right side, then there is one more branch point arising as the image of some $s$ (with
   ramification index $z$). Suppose $q$ and $r$ are on different components:
 
@@ -1745,19 +1807,11 @@ What about higher genus?
 
 \section{Appendix 1: Hurwitz Counts}
 
-
-\begin{claim}
-For $d=2k$ even,
-\[
-H((d),(2^k),(2^k),(2,1^{d-2}))=\frac k2
-\]
-\end{claim}
-\begin{proof}
-  In the symmetric group $S_d$, let $\tau$ and $\sigma$
-  be products of $k$ disjoint transpositions, with $X=\sigma\tau$ consisting
-  of two disjoint cycles.
-
-  We claim that there exist $x_1,\dots,x_{k-1}$ such that
+\begin{lem}
+  Let $d=2k$ be even. In the symmetric group $S_d$, if $\tau$ and $\sigma$ are products of $k$ disjoint
+  transposition with $X=\sigma\tau$ consisting of two disjoint cycles, then $X$
+  consists of two disjoint $k$-cycles and there exist
+  $x_1,\dots,x_{k-1}$ such that
   \[
   \{1,\dots,d\}=\{1,x_1,\dots,x_{k-1},\tau(1),\tau(x_1),\dots,\tau(x_{k-1})\},
   \]
@@ -1767,6 +1821,8 @@ H((d),(2^k),(2^k),(2,1^{d-2}))=\frac k2
   \item $\sigma(\tau(x_{j-2}))=x_j$ for $1<j<k$ (here $x_0=1$),
   \item $\sigma(\tau(x_{k-2}))= \tau(x_{k-1}))$.
   \end{itemize}
+\end{lem}
+\begin{proof}
   This can be shown by induction on $j$ (the base case, $j=1$, amounts to choosing $x_1=\sigma(1)$).
   Assume the claim up through $j-1$, i.e.\ there exist
   $x_1,\dots,x_{j-1}$ with the given properties and
@@ -1797,6 +1853,20 @@ H((d),(2^k),(2^k),(2,1^{d-2}))=\frac k2
   we are forced to have $x_k=\tau(x_{k-1})$
   and $X$ consists of two disjoint $k$-cycles.
 
+  \end{proof}
+
+\begin{claim}
+For $d=2k$ even,
+\[
+H((d),(2^k),(2^k),(2,1^{d-2}))=\frac k2
+\]
+\end{claim}
+\begin{proof}
+  In the symmetric group $S_d$, let $\tau$ and $\sigma$
+  be products of $k$ disjoint transpositions, with $X=\sigma\tau$ consisting
+  of two disjoint cycles.
+
+  
   The number of pairs $(\tau,\sigma)$ whose product consists of two
   disjoint cycles is the number of possibilities for $\tau$, i.e.
   \[
@@ -1811,12 +1881,24 @@ H((d),(2^k),(2^k),(2,1^{d-2}))=\frac k2
   transposition if the transposition interchanges a point of one $k$-cycle
   with a point of another; there are $k^2$ such transpositions.
 
-  Thus, our
-  Hurwitz count is
+  Thus, our Hurwitz count is
   \begin{align*}
   \frac 1{d!}\cdot ((d-1)(d-3)\cdots 1)\cdot  ((d-2)(d-4)\cdots 2)\cdot\left(\frac d2\right)^2 = \frac{1}{d}\cdot\frac{d^2}{4}=\frac k2
   \end{align*}
   as claimed.
+\end{proof}
+
+\begin{claim}
+  For $d=2k$ even,
+  \[
+  H((2^k),(2^k),(a,b))=\begin{cases}
+  \frac 1d & a=b=k \\
+  0 & \text{else}
+  \end{cases}
+  \]
+\end{claim}
+\begin{proof}
+  This is a result of the lemma above.
   \end{proof}
 
 \begin{claim}
