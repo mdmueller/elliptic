@@ -110,14 +110,15 @@
 \renewcommand{\b}{\mathfrak b}
 \renewcommand{\P}{\mathbb P}
 \theoremstyle{definition}
-\newtheorem*{thm}{Theorem}
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
 \newtheorem*{prob}{Problem}
-\newtheorem*{dfn}{Definition}
-\newtheorem*{claim}{Claim}
+\newtheorem{dfn}{Definition}
+\newtheorem{claim}{Claim}
 \theoremstyle{definition}
-\newtheorem*{lem}{Lemma}
-\newtheorem*{ex}{Exercise}
-\newtheorem*{eg}{Example}
+\newtheorem{lem}{Lemma}
+\newtheorem{ex}{Exercise}
+\newtheorem{eg}{Example}
 \newtheorem*{note}{Note}
 
 \usetikzlibrary{matrix,positioning,quotes}
@@ -933,7 +934,7 @@ It will be necessary to compute the degree of $X_{(2^k)}$, so we begin with a mo
 \end{lem}
 
 \begin{proof}
-  We use Proposition 5.1, p 358 of ``Geometry of Algebraic Curves'' by Arbarello, Cornalba, Griffiths and Harris. Considering the map
+  We use Proposition 5.1 on p 358 of \cite{Harris}. Considering the map
   $\phi:E^n\to\text{Sym}^dE$ sending $(x_1,\dots,x_n)\mapsto \sum_{i=1}^n\mu_ix_i$,
   the degree we want is the restriction of $x^{n-1}[\text{im}(\phi)]$ to
   the divisor $(\P^{d-1})^*\subset\text{Sym}^dE$ consisting of effective divisors
@@ -1250,34 +1251,413 @@ is of the form:
 
 \subsection{Recursion and general solution}
 
+We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particular we will show:
 
+\begin{thm}
+  If $a>b$, then
+  \[
+  N_{(2^k),(2^k)}(a,b,\mu')=N_{(2^k),(2^k)}(a+b,\mu')+N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')
+  \]
+  and
+  \[
+  N_{(2^k),(2^k)}(a,a,\mu')=N_{(2^k),(2^k)}(2a,\mu')+2N_{(2^{k-a}),(2^{k-a})}(\mu')
+  \]
+  \end{thm}
+\begin{proof}
+  We will use Theorem~\ref{thm:admissible} to compute $W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,b,\mu')$,
+  letting $A$ be the graph with a genus $1$ vertex containing
+  $p_{1,3},\dots,p_{1,\ell(\mu)}$ connected to a genus $0$ vertex containing $p_{1,1}$ and $p_{1,2}$.
+  Any admissible cover of graphs $\Gamma\to\Gamma'$ has precisely two branch points that do
+  not arise from the genus $1$ vertex of $\Gamma$, by Lemma~\ref{lem:branchpoints}.
+
+  Suppose the points $p_{1,1},\dots,p_{1,\ell(\mu)}$ appear on the right side of $\Gamma$, i.e.
+  their images are not on the same component as the image of the genus $1$ vertex. If
+  $p_{1,1}$ and $p_{1,2}$ are on the same component, then we have the picture:
+
+  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
+    $0$\\
+    \vdots \\
+  $0$\\};
+
+  \matrix[dmat,left=2cm of mat1] (degrees1) {$d-\sum c_i$\\
+    $c_1$\\
+    \vdots \\
+  $c_r$\\};
+
+ \matrix[amat,right=7cm of mat1,nodes=ssnode] (mat2) {$0$\\
+   \vdots\\
+   $0$ \\
+   $0$\\};
+ \matrix[dmat,right=1.5cm of mat2] (degrees2) {$\mu_1$\\
+   \vdots\\
+   $\mu_k$ \\
+ $a+b$\\};
+
+ \draw  (mat1-1-1) edge["$\mu_{\ell(\mu)}$"] (mat2-1-1)
+ (mat1-1-1) edge["$\mu_{3}$"] (mat2-3-1)
+ (mat1-1-1) edge["$a+b-\sum c_i$"] (mat2-4-1)
+ (mat1-2-1) edge["$c_1$"] (mat2-4-1)
+ (mat1-4-1) edge["$c_r$"] (mat2-4-1);
+
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$p_{1,\ell(\mu)}$}
+ (mat2-3-1) -- +(30:1) node[anchor=west] {$p_{1,3}$}
+ (mat2-4-1) -- +(30:1) node[anchor=west] {$p_{1,2}$}
+ (mat2-4-1) -- +(330:1) node[anchor=west] {$p_{1,1}$};
+
+  \end{tikzpicture}
+
+  Riemann-Hurwitz for the bottom-right vertex tells us that there must be
+  \[
+  2(a+b)-2-(a+b-2)-\left(a+b-\sum c_i-1+\sum(c_i-1)\right)=1+r
+  \]
+  additional ramification on that vertex; since there cannot be a ramification profile of $(2^k)$
+  on the right side, the additional ramification must be simple, and so $r=0$.
+  Upon
+  choosing which fiber of simple branching will appear on the right side and how it will appear,
+  for which there are
+  \[
+  \ell(\mu)\cdot \binom{d-2}{a+b-2,\mu_3,\dots,\mu_{\ell(\mu)}}
+  \]
+  %TODO: say some version of Theorem 3.1 which uses N, A and not W, hat(A)?
+  choices, there is a unique such map $\Gamma\to\Gamma'$, and $\Gamma$ has a unique $\hat A$-structure
+  with $c_{\Gamma}=\prod\limits_{i=3}^{\ell(\mu)}\mu_i$, so the corresponding contribution to the right side of Theorem~\ref{thm:admissible} in this case is
+  \begin{align*}
+    &\ell(\mu)\binom{d-2}{a+b-2,\mu_3,\dots,\mu_{\ell(\mu)}} W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)-1}}(a+b,\mu') \prod_{i=3}^{\ell(\mu)}\overline H((\mu_i),(\mu_i),(1^{\mu_i})) \overline H((a+b),(a,b),(2,1^{a+b-2})) c_{\Gamma} \\
+    &=\ell(\mu)\cdot\frac{(d-2)!}{(a+b-2)!\mu_3!\cdots\mu_{\ell(\mu)}!}\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)-1}\cdot (\ell(\mu)-1)!\cdot N_{(2^k),(2^k)}(a+b,\mu')\cdot\prod_{i=3}^{\ell(\mu)}\mu_i!\cdot (a+b-2)! \tag*{(using Claim~\ref{claim:Hurwitz2})} \\
+    &=(\ell(\mu))!\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)}\cdot N_{(2^k),(2^k)}(a+b,\mu') \\
+  \end{align*}
+
+  and the left side is the $W$ invariant of interest, since $A$ has no nontrivial automorphisms. Thus,
+  the contribution to $N_{(2^k),(2^k)}(a,b,\mu')$ is
+  \begin{align*}
+    \frac{W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}}{(k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)}\cdot (\ell(\mu))!} =N_{(2^k),(2^k)}(a+b,\mu').
+  \end{align*}
+
+  Next, consider the case where $p_{1,1}$ and $p_{1,2}$ are not on the same component, in which
+  case at least one vertex containing one of these two contains some additional ramification
+  (necessarily simple).
+  This then exhausts the branch points not arising from the genus $1$ vertex, so we have the following
+  picture:
+
+    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
+    $0$\\};
+
+  \matrix[dmat,left=2cm of mat1] (degrees1) {$d-2e$\\
+    $2e$\\};
+
+ \matrix[amat,right=7cm of mat1,nodes=ssnode] (mat2) {$0$\\
+   $0$ \\
+   $0$ \\
+   $0$\\
+ $0$\\};
+ \matrix[dmat,right=1.5cm of mat2] (degrees2) {$\mu_3$\\
+   \vdots\\
+   $\mu_k$ \\
+   $a$\\
+ $b$\\};
+
+ \draw  (mat1-1-1) edge["$\mu_{\ell(\mu)}$"] (mat2-1-1)
+ (mat1-1-1) edge["$\mu_{3}$"] (mat2-3-1)
+ (mat1-1-1) edge["$a+b-2e$"] (mat2-4-1)
+ (mat1-2-1) edge["$2e-b$"] (mat2-4-1)
+ (mat1-2-1) edge["$b$"] (mat2-5-1);
+
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$p_{1,\ell(\mu)}$}
+ (mat2-3-1) -- +(30:1) node[anchor=west] {$p_{1,3}$}
+ (mat2-4-1) -- +(30:1) node[anchor=west] {$p_{1,1}$}
+ (mat2-4-1) -- +(310:1) node[anchor=west] {$(2,1^{a-2})$}
+ (mat2-5-1) -- +(30:1) node[anchor=west] {$p_{1,2}$};
+
+  % draw legs for left side
+ \draw  (mat1-2-1) -- +(30:1) node[anchor=west] {$(2^e)$}
+ (mat1-2-1) -- +(80:1) node[anchor=south] {$(2^e)$};
+
+    \end{tikzpicture}
+
+    By Claim~\ref{claim:twoscycles}, $\overline H((2^e),(2^e),(2e-b,b))$ vanishes
+    unless $b=e$ (which requires $a+b-2e=a-b>0\iff a>b$), in which case the corresponding
+    contribution to $W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,b,\mu')$ is
+
+    \begin{align*}
+      &\ell(\mu)\binom{d-2}{a-2,b,\mu_3,\dots,\mu_{\ell(\mu)}}\binom{k}{b}^2\binom{d-2}{2b}^{\ell(\mu)-1}W_{(2^{k-b}),(2^{k-b}),(2,1^{d-2b-2})^{\ell(\mu)-1}}(a-b,\mu')\overline H((2^b),(2^b),(b,b),(1^{2b})) \cdot \\
+      &\prod_{i=3}^{\ell(\mu)}
+      \overline H((\mu_i),(\mu_i),(1^{\mu_i}))\mu_i\cdot \overline H((a-b,b),(a),(2,1^{a-2}))\overline H((b),(b),(1^b))\cdot b^2 \\
+      &=\ell(\mu)\frac{(d-2)!(k!)^2((d-2)!)^{\ell(\mu)-1}}{(a-2)!b!\mu_3!\cdots\mu_{\ell(\mu)}!(b!)^2((k-b)!)^2((2b)!(d-2b-2)!)^{\ell(\mu)-1}}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot((k-b)!)^2\cdot \\
+      &2\cdot ((d-2b-2)!)^{\ell(\mu)-1}(\ell(\mu)-1)! \cdot\frac 1{2b}(b!)^2\cdot 2\cdot \mu_3!\cdots\mu_{\ell(\mu)}!(a-2)!b!\cdot b \\
+      &=(\ell (\mu))!N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)-1}(d-2)!
+    \end{align*}
+    (TODO: check this carefully) so the contribution to $N_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,b,\mu')$ is $N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')$.
+
+    We can now turn to the situation where $p_{1,1},\dots,p_{1,\ell(\mu)}$ appear
+    on the left side of $\Gamma$, i.e.\ where their images are on the same
+    component as the image of the genus $1$ vertex. Since $p_{1,1}$ is not on the
+    genus $1$ vertex, its path to the genus $1$ vertex must pass through
+    a vertex on the right side, yielding at least two branch points.
+    If any of $p_{1,3},\dots,p_{1,\ell(\mu)}$ were not on the genus $1$ vertex then
+    this would be true of another vertex, implying that both fibers of
+    ramification profile $(2^k)$ are on the right side and there is only
+    simple ramification on the genus $1$ vertex (contradicting
+    dimensional assumptions).
+
+    If $p_{1,1}$ and $p_{1,2}$ are on different components, we have the following
+    picture:
+
+        \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
+    $0$\\
+  $0$\\};
+
+  \matrix[dmat,left=2cm of mat1] (degrees1) {$d-a-b$\\
+    $a$\\
+  $b$\\};
+
+ \matrix[amat,right=7cm of mat1,nodes=ssnode] (mat2) {$0$\\
+   $0$ \\
+   $0$ \\
+   $0$\\};
+ \matrix[dmat,right=1.5cm of mat2] (degrees2) {$1$\\
+   \vdots\\
+   $1$ \\
+   $e$\\};
+
+ \draw  (mat1-1-1) edge["$1$"] (mat2-1-1)
+ (mat1-1-1) edge["$1$"] (mat2-3-1)
+ (mat1-1-1) edge["$e-a-b$"] (mat2-4-1)
+ (mat1-2-1) edge["$a$"] (mat2-4-1)
+ (mat1-3-1) edge["$b$"] (mat2-4-1);
+
+
+ % draw legs for right side
+ \draw  
+ (mat2-4-1) -- +(30:1) node[anchor=west] {$(2,1^{e-2})$}
+ (mat2-4-1) -- +(310:1) node[anchor=west] {$(2,1^{e-2})$};
+
+  % draw legs for left side
+ \draw  (mat1-2-1) -- +(30:1) node[anchor=west] {$p_{1,1}$}
+ (mat1-3-1) -- +(30:1) node[anchor=west] {$p_{1,2}$};
+
+    \end{tikzpicture}
+
+        This is impossible by Riemann-Hurwitz for the bottom-right vertex, and so
+        we are left with one remaining picture to consider where $p_{1,1}$ and
+        $p_{1,2}$ appear on the same component (here $2e=a+b$):
+
+                \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
+    $0$\\};
+
+  \matrix[dmat,left=2cm of mat1] (degrees1) {$d-2e$\\
+    $2e$\\};
+
+ \matrix[amat,right=7cm of mat1,nodes=ssnode] (mat2) {$0$\\
+   $0$ \\
+   $0$ \\
+   $0$\\
+   $0$\\
+   $0$\\
+ $0$\\};
+ \matrix[dmat,right=1.5cm of mat2] (degrees2) {$1$\\
+   \vdots\\
+   $1$ \\
+   $2$\\
+   $1$\\
+   \vdots\\
+ $1$\\};
+
+ \draw  (mat1-1-1) edge["$1$"] (mat2-1-1)
+ (mat1-1-1) edge["$1$"] (mat2-3-1)
+ (mat1-1-1) edge["$1$"] (mat2-4-1)
+ (mat1-2-1) edge["$1$"] (mat2-4-1)
+ (mat1-2-1) edge["$1$"] (mat2-5-1)
+ (mat1-2-1) edge["$1$"] (mat2-7-1);
+
+
+ % draw legs for right side
+ \draw  
+ (mat2-4-1) -- +(30:1) node[anchor=west] {$2$}
+ (mat2-4-1) -- +(310:1) node[anchor=west] {$2$};
+
+  % draw legs for left side
+ \draw  (mat1-2-1) -- +(50:1) node[anchor=west] {$p_{1,1}$}
+ (mat1-2-1) -- +(80:1) node[anchor=south] {$p_{1,2}$}
+ (mat1-2-1) -- +(160:1) node[anchor=east] {$(2^e)$}
+ (mat1-2-1) -- +(220:1) node[anchor=north] {$(2^e)$};
+
+                \end{tikzpicture}
+
+                By Claim~\ref{claim:twoscycles}, $\overline H((a,b),(2^e),(2^e))$ vanishes unless $a=b$.
+                There are $\binom{\ell(\mu)}{2}$ choices for simple ramification profiles to place on the right
+                side, $(d-2)!$ choices (TODO: why?) for which unramified points appear in the top right
+                and bottom right corners of the diagram within the first chosen simple ramification profile,
+                $(d-2)!$ choices for placement of unramified points in the second chosen
+                right simple ramification profile, $\binom ka^2$ choices for placement of even ramification profiles
+                on the left side, and $\binom{d-2}{2a}^{\ell(\mu)-2}$ choices for placement of unramified points in
+                simple ramification profiles on the left side. Therefore the total
+                contribution to $W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,a,\mu')$ in this case is
+                \begin{align*}
+                  &\binom{\ell(\mu)}{2}((d-2)!)^2\binom ka^2\binom{d-2}{2a}^{\ell(\mu)-2}W_{(2^{k-a}),(2^{k-a}),(2,1^{d-2a-2})^{\ell(\mu)-2}}(\mu')\overline H((a,a),(2^a),(2^a),(1^{2a})^{\ell(\mu)-2}) \cdot \\
+                  & \overline H((2),(2),(1,1)) \\
+                  &=\frac{(\ell(\mu))(\ell(\mu)-1)}{2}((d-2)!)^2\frac{(k!)^2}{(a!(k-a)!)^2}\frac{((d-2)!)^{\ell(\mu)-2}}{((2a)!(d-2a-2)!)^{\ell(\mu)-2}}((k-a)!)^2\cdot 2 \cdot \\
+                  &((d-2a-2)!)^{\ell(\mu)-2}\cdot (\ell(\mu)-2)!N_{(2^{k-a}),(2^{k-a})}(\mu')\cdot\frac{((2a)!)^{\ell(\mu)-2}((a!)^2)}{a} \\
+                  &=\frac{(\ell(\mu))!((d-2)!)^{\ell(\mu)}(k!)^2((d-2a-2)!)^{\ell(\mu)-3}}{}
+                \end{align*}
+
+\end{proof}
+
+\begin{cor}
+  For any $\mu$, $N_{(2^k),(2^k)}(\mu)=3\cdot 2^{\ell(\mu)-1}$.
+\end{cor}
+\begin{proof}
+  We can prove this by induction on $\ell(\mu)$; the base case $\ell(\mu)=1$ was proven in TODO. Assume
+  the result for all $\nu$ with $\ell(\nu)\leq k$, and suppose $\ell(\mu)=k\geq 2$.
+  Then we can write $\mu=(a,b,\mu')$. If $a=b$, then
+  \begin{align*}
+    N_{(2^k),(2^k)}(a,a,\mu') &= N_{(2^k),(2^k)}(2a,\mu')+2N_{(2^{k-a}),(2^{k-a})}(\mu') \\
+    &=3\cdot 2^{\ell(\mu)-2}+2(3\cdot 2^{\ell(\mu)-3}) \\
+    &=3\cdot 2^{\ell(\mu)-1}
+  \end{align*}
+  and similarly if $a>b$ (without loss of generality),
+    \begin{align*}
+      N_{(2^k),(2^k)}(a,b,\mu') &= N_{(2^k),(2^k)}(a+b,\mu')+2N_{(2^{k-b}),(2^{k-b})}(a-b,\mu') \\
+      &= 3\cdot 2^{\ell(\mu)-2}+3\cdot 2^{\ell(\mu)-2} \\
+      &= 3\cdot 2^{\ell(\mu)-1}.
+  \end{align*}
+  \end{proof}
 
 \section{$S_{\a,\b}$}
 
+In this section, we consider a family of invariants $N_{g,\sigma,\nu}$ where
+one ramification profile
+$\mu$ is fully marked,
+each other ramification profile $\sigma_i$ is of the form $(a,1,\dots,1)$, and
+the only ``remembered'' points in these ramified fibers are the ones with
+a nontrivial ramification index. We will establish general recursive formulas
+(claims TODO and TODO)
+that allow us to compute this family of invariants, and will establish
+specific closed-forms in special cases.
+
+
 \subsection{Definitions and basic results}
 
-Let
+Fix a degree $d\geq 1$. For any partition $\mu$ of $d$, and multisets $\a$ and $\b$ of
+positive integers less than or equal to $d$, let
 \[
-S_{\a,\b}(\mu)=
-N_{\mu,(2,1,\dots)^{a_2},(2,1,\dots)^{b_2},(3,1,\dots)^{a_3},(3,1,\dots)^{b_3},\dots}^{\{2^{b_2}3^{b_3}\dots\}}
+S_{\a,\b}(\mu)=N_{1,\sigma,\nu}
 \]
-(TODO: fix notation to be consistent with earlier.)
-Here $a_2,a_3,\dots$ describe unmarked ramification and $b_2,b_3,\dots$ describe marked ramification. For
-simplicity, assume that all ramification is included and define $S_{\mathfrak a,\mathfrak b}(\mu)= 0$ if $\mu_i\leq 0$ for any $i$.
+where
+\[
+\sigma=\{\mu\}\cup\{(x,1,\dots,1):x\in\a\cup\b\},\quad \nu=\{\mu\}\cup\{(x,1,\dots,1):x\in\b\}
+\]
+By Riemann-Hurwitz,
+\[
+d-\ell(\mu)+\sum_{x\in\a\cup\b}(x-1)=2d.
+\]
+
+
 
 \begin{lem}
-  If $S_{\mathfrak a,\mathfrak b}(\mu)$ is well-defined, $|\mathfrak a|=|\mu|+2$.
+  If $S_{\mathfrak a,\mathfrak b}(\mu)$ is well-defined, $|\mathfrak a|=\ell(\mu)+2$.
 \end{lem}
 \begin{proof}
-  Let $\mathcal X$ be the moduli space of maps from a genus $1$ curve to $\mathbb P^1$, with ramification as required for $S_{\mathfrak a,\mathfrak b}(\mu)$, and with all relevant points of the genus $1$ curve marked
-  (corresponding to $\mathfrak a$, $\mathfrak b$, and $\mu$). There is a map $\mathcal X\to\overline{\mathcal M}_{1,|\mathfrak b|+|\mu|}$ remembering the genus $1$ curve and the fixed points, which is finite by assumption, so $\dim(\mathcal X)=|\mathfrak b|+|\mu|$. There is also a map $\mathcal X\to\overline{\mathcal M}_{0,|\mathfrak a|+|\mathfrak b|+1}$ remembering the branch points of the target, which is finite by Hurwitz's theorem, and so
+  By Equation TODO, $3+m=n$ where $m$ is the number of points marked under $\nu$ and
+  $n$ is the number of branch points. In this case $n=|\mathfrak a|+|\mathfrak b|+1$
+  and $m=\ell(\mu)+|\mathfrak b|$, so
   \[
-  |\mathfrak b|+|\mu|=\dim(\overline{\mathcal M}_{0,|\mathfrak a|+|\mathfrak b|+1})=|\mathfrak a|+|\mathfrak b|-2
+  3+\ell(\mu)+|\mathfrak b|=|\mathfrak a|+|\mathfrak b|+1\implies |\mathfrak a|=\ell(\mu)+2.
   \]
-  yielding the result.
 \end{proof}
 
+\begin{eg}
+  Let $d=4$, let $\mu=(4)$, let $\a=\{3,2,2\}$ and let $\b=\{2\}$. Then
+  \[
+  S_{\a,\b}(\mu)=N_{1,((4),(3,1),(2,1,1),(2,1,1)),((4),(),(),(2))}
+  \]
+  This counts genus $1$ covers of $\P^1$ of the following form, with red points fixed:
+
+  \begin{figure}[h]
+  \centering
+\begin{tikzpicture}
+  \draw[domain=-7:7,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
+  \foreach \x/\p/\c/\d in {-4.5/$p_{1,1}$/red/4}
+  {
+    \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (-3.15+.3*\x, -3.5);
+  }
+
+  \foreach \x/\p/\c/\d in {-1.8/$p_{2,1}$/black/3, -0.5/$p_{2,2}$/black/1}
+  {
+    \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (-1+.3*\x, -3.5);
+  }
+
+    \foreach \x/\p/\c/\d in {1/$p_{3,1}$/black/2, 2/$p_{3,2}$/black/1, 3/$p_{3,3}$/black/1}
+  {
+    \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (1+.3*\x, -3.5);
+  }
+  
+  \foreach \x/\p/\c/\d in {4/$p_{4,1}$/red/2, 4.8/$p_{4,2}$/black/1, 5.7/$p_{4,3}$/black/1}
+  {
+    \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (3+.3*\x, -3.5);
+    }
+
+    \draw[domain=-7:7,samples=50,color=gray!50,thick] plot (\x, -4);
+  \foreach \x/\q in {-4.5/$q_1$, -1.4/$q_2$, 1.4/$q_3$, 4.3/$q_4$}
+    \filldraw[black] (\x,-4) circle (0.6mm) node[below] {\q};
+\end{tikzpicture}
+
+\label{fig:Sab}
+  \end{figure}
+  \end{eg}
+
+We will compute the invariants $S_{\a,\b}(\mu)$ as follows. First,
+we use our admissible covers technique
+and Theorem TODO (Section 2) to establish a recursion (Claim 1) that allows us to remove elements of
+$\b$, reducing to the case where $\b=\emptyset$. We then apply the same
+technique to establish another recursion (Claim 2) that allows us to
+remove elements of $\mu$, reducing to the case where $\mu=(d)$. Finally,
+we establish the base case (Claim TODO) using our previously demonstrated genus reduction technique.
+
+While these results in principle provide an algorithm for computing any invariant
+$S_{\a,\b}(\mu)$, the recursions involved are too messy to expect a general closed
+form solution for these invariants,
+even in the special case of interest $\mu=(1^d)$. However, we expect that the special cases
+$T_n(\mu)$ are more tractable, and we will explicitly find a closed form
+for the invariants $T_3(1^d)$ in Claim TODO.
+
 \subsection{Reduction of $\b$}
+
 \begin{claim}[Claim 1]
   For $n>0$, if $b_y>0$, then
   \begin{align*}
@@ -1809,7 +2189,7 @@ What about higher genus?
 
 \begin{lem}
   Let $d=2k$ be even. In the symmetric group $S_d$, if $\tau$ and $\sigma$ are products of $k$ disjoint
-  transposition with $X=\sigma\tau$ consisting of two disjoint cycles, then $X$
+  transpositions with $X=\sigma\tau$ consisting of two disjoint cycles, then $X$
   consists of two disjoint $k$-cycles and there exist
   $x_1,\dots,x_{k-1}$ such that
   \[
@@ -1889,6 +2269,7 @@ H((d),(2^k),(2^k),(2,1^{d-2}))=\frac k2
 \end{proof}
 
 \begin{claim}
+  \label{claim:twoscycles}
   For $d=2k$ even,
   \[
   H((2^k),(2^k),(a,b))=\begin{cases}
@@ -1907,6 +2288,26 @@ For $d=2k$ even,
 H((d),(2^k),(2^{k-1},1,1))=1
 \]
 \end{claim}
+\begin{proof}
+  In the symmetric group $S_d$, let $X$ be a disjoint product of $k$ transpositions
+  and let $Y$ be a disjoint product of $k-1$ transpositions. Let $Y'$ be a product
+  of $k$ transpositions obtained by adding the missing transposition to $Y$, i.e.\ $Y'=Y\sigma$.
+  Then the condition that $Z=XY$ is a $d$-cycle is equivalent to the condition that
+  \[
+  Z\sigma=XY\sigma=XY'
+  \]
+  is a product of two disjoint cycles. By the lemma above,
+  this occurs if and only if $X$ and $Y'$ multiply to two disjoint $k$-cycles and are of
+  the form written in the lemma, so the number of corresponding choices
+  for $X$ and $Y$ is equal to the number of choices for $X$ and $Y'$ multiplying
+  to two disjoint $k$-cycles (of which there are $(d-1)!$ by Claim 8) times the number
+  of choices for $\sigma$, of which there are $k$. Thus,
+  \[
+  H((d),(2^k),(2^{k-1},1,1))=\frac{(d-1)!\cdot k}{d!}=\frac 12
+  \]
+  (TODO: shouldn't it be 1?)
+  
+  \end{proof}
 
 \begin{claim}
 For $d=2k+1$ odd,
@@ -1921,8 +2322,34 @@ For $2\leq a\leq d-1$,
 H((d),(a,1,\dots,1),(d-a+1,1,\dots,1))=1
 \]
 \end{claim}
+\begin{proof}
+  In the symmetric group $S_d$, let $X$ be an $a$-cycle and let
+  $Y$ be a $b$-cycle where $a+b=d+1$. Then there is some point
+  $p\in\{1,\dots,d\}$ which is not in the stabilizer of $X$ or $Y$;
+  if there is another such point $q$, then
+  \[
+  |\text{points not in both stabilizers}|=a+b-|\text{points not in either stabilizer}|\leq (d+1)-2<d
+  \]
+  implying that there is a point stabilized by $X$ and $Y$, so $XY$ is not a $d$-cycle. On the other hand
+  if $p$ is unique, then
+  $XY$ contains a cycle:
+  \[
+  p\to\dots\to \text{pred}_Y(p)\to\text{succ}_X(p)\to\dots\to\text{pred}_X(p)\to p
+  \]
+  
+  The number of $a$-cycles is $\binom da\cdot (a-1)!$
+  and a choice of $b$-cycle such that the product is a $d$-cycle is
+  the number of choices for $p$ (i.e., $a$) times the number of orientations
+  of $b$ elements (i.e., $(b-1)!$). Therefore,
+  \begin{align*}
+    H((d),(a,1,\dots,1),(d-a+1,1,\dots,1))&=\frac{\binom da\cdot (a-1)!\cdot a(b-1)!}{d!} \\
+    &=\frac{\frac{d!}{a!(b-1)!}\cdot a!(b-1)!}{d!} \\
+    &=1.
+  \end{align*}
+  \end{proof}
 
 \begin{claim}
+  \label{claim:Hurwitz2}
   If $a+b-2=d$, $1\leq n\leq d/2$, and $2\leq a\leq d/2+1$ (equivalently $2\leq a\leq b$), then
 \[
 H((d-n,n),(a,1,\dots,1),(b,1,\dots,1))=\begin{cases}
@@ -2006,3 +2433,8 @@ In particular if $n=m=1$ and $d>3$, the Hurwitz number is $1$.
 \printbibliography
 
 \end{document}
+
+Hi all: On Thursday 11/21, a Day of Action for Palestine coordinated by international solidarity groups, we invite
+fellow UM academic researchers, and any other interested North Campus allies, to a meeting of our Researchers Against War collective at 4-5:30pm (insert location/RSVP/link).
+
+For over a year, Israel has carried out its genocide of Palestinians not only with UM's financial investment, but with weapons of war developed by the US military and defense contractors who recruit UM students and rely on results of military-funded university research.
