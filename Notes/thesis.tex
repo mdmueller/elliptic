@@ -110,15 +110,15 @@
 \renewcommand{\b}{\mathfrak b}
 \renewcommand{\P}{\mathbb P}
 \theoremstyle{definition}
-\newtheorem{thm}{Theorem}
-\newtheorem{cor}{Corollary}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{cor}{Corollary}[section]
 \newtheorem*{prob}{Problem}
-\newtheorem{dfn}{Definition}
-\newtheorem{claim}{Claim}
-\theoremstyle{definition}
-\newtheorem{lem}{Lemma}
-\newtheorem{ex}{Exercise}
-\newtheorem{eg}{Example}
+\newtheorem{dfn}{Definition}[section]
+\newtheorem{claim}{Claim}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{ex}{Exercise}[section]
+\newtheorem{eg}{Example}[section]
 \newtheorem*{note}{Note}
 
 \usetikzlibrary{matrix,positioning,quotes}
@@ -201,28 +201,64 @@ where $C$ is a genus $g$ prestable curve, $X$ is a genus $0$ prestable curve, we
 Let $m=\sum|\nu_i|$ and $N=\sum|\sigma_i|$.
 We have natural maps:
 
+\begin{figure}[h]
+  \centering
 \begin{tikzcd}
 \overline{\mathcal M}_{0,n} & \ar[l,""] \Hb_{g,\sigma} \ar[r,""] \ar[rr,out=-30,in=210,"\pi_{\nu}"] & \overline{\mathcal M}_{g,N} \ar[r,""] & \overline{\mathcal M}_{g,m}
 \end{tikzcd}
+\label{fig:maps}
+\end{figure}
 
-Here $\pi_{\nu}$ remembers the source curve and red points, i.e.\ the points corresponding to $\nu$.
-By Hurwitz theory, we know that the first map is finite, and so $\dim(\Hb_{\sigma,\mu})=n-3$. The second map $\pi_{\nu}$ is finite when
-\begin{align*}
-  \label{eqn:dimension}
-3g-3+m=n-3\iff 3g+m=n
-\end{align*}
-and in this case, we define
+Here $\pi_{\nu}$ remembers the source curve and red points, i.e.\ the points corresponding to $\nu$. 
+
+\begin{lem}
+  \label{lem:dim}
+ The map $\pi_{\nu}$ is finite when $3g+m=n$.
+\end{lem}
+\begin{proof}
+  By Hurwitz theory, we know that the first map is finite, and so $\dim(\Hb_{\sigma,\mu})=n-3$. The map $\pi_{\nu}$ will be finite if and only if
+  $\dim(\Hb_{\sigma,\mu})=\dim(\overline{\mathcal M_{g,m}})$, i.e.
+  \[
+  3g-3+m=n-3\iff 3g+m=n.
+  \]
+  \end{proof}
+
+When the condition of Lemma~\ref{lem:dim} is satisfied, we can define:
+\begin{dfn}
+  For a genus $g$, list of partitions $\sigma$ of the
+  same positive integer $d$, and subpartitions $\nu$,
 \[
 W_{g,\sigma,\nu}=\deg(\pi_{\nu})
 \]
 where this is an orbifold degree.
+\end{dfn}
 In order to account for relabeling of marked points (any of the points $q_n$ with identical data, as well as any of the unmarked points in fibers with
 identical data), we define
 \[
-N_{g,\sigma,\nu}=\frac{W_{g,\sigma,\nu}}{|\Aut(\{(\sigma_i,\nu_i):1\leq i\leq n\})|\cdot \prod_i|\Aut(\sigma_i-\nu_i)|}
+N_{g,\sigma,\nu}=\frac{W_{g,\sigma,\nu}}{|\Aut(\sigma-\nu)|}
 \]
+where $\Aut(\sigma-\nu)$ denotes automorphisms of $\sigma_i-\nu_i$ for each $i$ together with automorphisms of $\{\sigma_i-\nu_i\}$, i.e.
+\[
+|\Aut(\sigma-\nu)|=|\Aut(\{(\sigma_i,\nu_i):1\leq i\leq n\})|\cdot \prod_i|\Aut(\sigma_i-\nu_i)|.
+\]
+\begin{eg}
+  When $g=1$, $\sigma=((2,2),(2,2),(2,2),(2,1,1),(2,1,1))$ and $\nu=((2,2),\emptyset,\emptyset,\emptyset,\emptyset)$, we have
+  \[
+  N_{g,\sigma,\nu}=\frac{W_{g,\sigma,\nu}}{|\Aut(2,2)|^2\cdot |\Aut(2,1,1)|^2\cdot |\Aut((2,2),(2,2),(2,1,1),(2,1,1))|}=\frac{W_{g,\sigma,\nu}}{2^2\cdot 2^2\cdot 2\cdot 2}.
+  \]
+  \end{eg}
+
+One way to think about $N_{g,\sigma,\nu}$ is as follows: the map
+$\pi_{\nu}:\Hb_{g,\sigma}\to\overline{\mathcal M_{g,m}}$ factors through
+$\Hb_{g,\sigma}/\Aut(\sigma-\nu)$, and $N_{g,\sigma,\nu}$ is the degree of the map
+\[
+\Hb_{g,\sigma}/\Aut(\sigma-\nu)\to\overline{\mathcal M_{g,m}}.
+\]
+
 In many cases studied in this thesis, we will specialize to the case where $g=1$,
-$\sigma_1=\nu_1=\mu$, and $\nu_3=\nu_4=\dots=\emptyset$. We will write
+$\sigma_1=\nu_1=\mu$, and $\nu_3=\nu_4=\dots=\emptyset$.
+\begin{dfn}
+  We will write
 \[
 W_{\sigma_1,\dots,\sigma_n}^{\lambda}(\mu)=W_{1,(\mu,\sigma_1,\dots,\sigma_n),(\lambda,\emptyset,\dots,\emptyset)}
 \]
@@ -230,7 +266,8 @@ for the relevant labeled invariant, and
 \[
 N_{\sigma_1,\dots,\sigma_n}^{\lambda}(\mu)=N_{1,(\mu,\sigma_1,\dots,\sigma_n),(\lambda,\emptyset,\dots,\emptyset)}
 \]
-for the unlabeled invariant that will be of most interest to us. In particular we will write
+for the unlabeled invariant.\end{dfn}
+In particular we will write
 \[
 N_{\sigma_1,\dots,\sigma_n}(\mu)=N_{\sigma_1,\dots,\sigma_n}^{\emptyset}(\mu)=\frac{W_{\sigma_1,\dots,\sigma_n}^{\emptyset}(\mu)}{|\Aut(\sigma_2,\dots,\sigma_n)|\cdot\prod_{i=2}^n|\Aut(\sigma_i)|}
 \]
@@ -257,7 +294,7 @@ in some significant special cases.
   where $\overline H$ is a marked Hurwitz number.
   \end{eg}
 
-\subsection{Notation and conventions}
+\subsection{Main results}
 
 \subsection{Geometric interpretation and examples}
 We can describe $N_{\mu,\sigma_2,\dots,\sigma_n}$ geometrically as follows.
@@ -371,7 +408,7 @@ After doing this it turns out that $X_{(1,3)}$ is a degree 12 curve, with singul
 To compute $N_{(4),(3,1),(3,1)}$, we take the image $Y_{(1,3)}$ under projection from $H_0$. It turns out that $Y_{(1,3)}$ is a degree 10
 curve with cusps at the images of 4-torsion points (except for the image of $H_0$, which is a smooth point) and $20$ nodes, so
 \[
-N_{(4),(3,1),(3,1)}=\frac{20}{2}=10
+N_{(4),(3,1),(3,1)}=20
 \]
 TODO: calculate $N_{(1,1,1,1),(3,1),(3,1)}$ using genus-degree formula; explain why this doesn't work for higher degree
 
@@ -628,6 +665,7 @@ We can apply this technique to compute invariants $W_{\sigma_1,\dots,\sigma_n}(d
 genus $0$ invariants, and illustrate with the following example.
 
 \begin{eg}
+  \label{eg:genusreduction}
   Suppose we are interested in calculating $W_{(4),(2,1,1),(2,1,1)}(4)$, the number of degree $4$ covers from a fixed elliptic curve $(E,p_1)$ to $\P^1$ with full ramification over $p_1$ and another point, with ramification points labeled.
   
   Let $A$ be a stable graph consisting of a single genus $0$ vertex with
@@ -790,14 +828,13 @@ genus $0$ invariants, and illustrate with the following example.
 
                                 \end{tikzpicture}
 
-                                There are $2\cdot 2$ choices for placement of $p_{3,2}$ and $p_{4,2}$
-                                and $2\cdot 2$ automorphisms of the graph
-                                (swapping the two top edges and swapping
-                                the two lower right vertices), so
+                                There are two choices for placement of $p_{3,2}$ and $p_{4,2}$
+                                and two automorphisms of the graph
+                                (swapping the two top edges), so
                                 the contribution
                                 is
                                 \begin{align*}
-                                  4\cdot \frac 1{|\Aut(\Gamma)|}c_{\Gamma}W_{(\Gamma,\Gamma')}&=4\cdot\frac 14\cdot 2\cdot \overline H((4),(4),(1,1,1,1))\cdot \overline H((2),(2),(1,1)) \\
+                                  2\cdot \frac 1{|\Aut(\Gamma)|}c_{\Gamma}W_{(\Gamma,\Gamma')}&=2\cdot\frac 12\cdot 2\cdot \overline H((4),(4),(1,1,1,1))\cdot \overline H((2),(2),(1,1)) \\
                                   &=2\cdot 6\cdot 1\\
                                   &=12
                                 \end{align*}
@@ -868,7 +905,7 @@ Hurwitz numbers).
                   \[
                   \dim(\Hb_v)=\dim(\overline{\mathcal M_{g,m-1}})=3g-3+m-1
                   \]
-                  By Equation~\ref{eqn:dimension}, $\dim(\Hb_v)=n-4$. There is also a finite morphism
+                  By Lemma~\ref{lem:dim}, $\dim(\Hb_v)=n-4$. There is also a finite morphism
                   $\Hb_v\to\overline{\mathcal M_{0,k+1}}$ where $k$ is the number of proper branch points from this
                   component (and thus $k+1$ is the number of branch points including the node), so
                   \[
@@ -1057,11 +1094,12 @@ using two methods: first, by categorizing all such maps explicitly using Hurwitz
 
 %\includegraphics[angle=90,scale=0.15]{diagram2.jpg}
 
-\begin{claim}
+\begin{thm}
+  \label{thm:combinatorial}
   Let $f:E\to\P^1$ be of degree $d=2k$ such that $f(p)=0$ with full ramification,
   and $f$ has ramification profiles $(2^k)$ over $1$ and $\infty$. Then $f$ factors as
   $E\to\P^1\to\P^1$ where the first map is degree $2$ and the second is degree $k$.
-\end{claim}
+\end{thm}
 \begin{proof}
   Figures \ref{fig:comb1} and \ref{fig:comb2} illustrate how such maps should factor. We prove the claim by fixing branch points $0,1,\infty,w$ in $\P^1$, counting the (orbifold) number of factored
   maps over these branch points as well as the maps in Figure \ref{fig:twos}, and showing that these are equal.
@@ -1107,15 +1145,22 @@ using two methods: first, by categorizing all such maps explicitly using Hurwitz
   \[
   H((d),(2^k),(2^k),(2,1,\dots,1))
   \]
-  which is $k/2$ by the Appendix. For the former count, we
+  which is $k/2$ by Claim~\ref{claim:twoscomplete}. For the former count, we
   first consider maps $\P^1\to\P^1$  (with $0,1,\infty,w$ fixed)
-  described in Figure \ref{fig:comb1} or \ref{fig:comb2} (depending on the parity of $k$). These
-  are counted by
-  $H((k),(2^{(k-1)/2},1),(2^{(k-1)/2},1))$ if $k$ is odd or
-  $H((k),(2^{k/2-1},1,1),(2^{k/2}))$ if $k$ is even, both of which are $1$
-  by results of the Appendix. The count for the upstairs map $E\to\P^1$ is
-  $H((2),(2),(2),(2))=\frac 12$ multiplied by the number of options for point $q_4$
-  (which is $k$). Thus, the orbifold number of factored maps lying over $0,1,\infty,w$ is $1\cdot \frac 12\cdot k$, proving the claim.
+  described in Figure \ref{fig:comb1} or \ref{fig:comb2}, depending on the parity of $k$:
+
+  \begin{itemize}
+  \item If $k$ is odd, the orbifold number of such maps is $H((k),(2^{(k-1)/2},1),(2^{(k-1)/2},1))$ which
+    equals $1$ by Claim~\ref{claim:twosodd}. There are $k$ choices for $q_1,q_2,q_3,q_4$
+    since $q_2$ and $q_3$ are determined and there are $k$ choices for $q_4$.
+  \item If $k$ is even, the orbifold number of such maps is $H((k),(2^{k/2-1},1,1),(2^{k/2}))$ which equals $\frac 12$ by Claim~\ref{claim:twoseven}. There are $2k$ choices for $q_1,q_2,q_3,q_4$
+    since there are two choices for labeling $q_2$ and $q_3$, and there are $k$ choices for
+    $q_4$.
+  \end{itemize}
+  In either case, the orbifold number of such covers with $q_1,q_2,q_3,q_4$ labeled is $k$.
+
+  Once $q_1,q_2,q_3,q_4$ are fixed, the count for the upstairs map $E\to\P^1$ is
+  $H((2),(2),(2),(2))=\frac 12$. Thus, the orbifold number of factored maps lying over $0,1,\infty,w$ is $\frac 12\cdot k$, proving the claim.
   
 \end{proof}
 
@@ -1134,12 +1179,13 @@ N_{(2^k),(2^k)}(d)=3.
 We apply the method of Section 3 to yield another proof that
 $N_{(2^k),(2^k)}(d)=3$:
 
-\begin{claim}
+\begin{thm}
+  \label{thm:genusreduction3}
   For $d=2k$ even,
   \[
   W_{(2^k),(2^k),(2,1^{d-2})}(d)=6(d-2)!\cdot (k!)^2
   \]
-\end{claim}
+\end{thm}
 \begin{proof}
   Let $A$ be a stable graph consisting of a genus $0$ vertex with a loop and a marked point $p_{1,1}$.
   Let $\hat A$ be the stable graph with additional marked points on the genus $0$ vertex for
@@ -1183,8 +1229,8 @@ is of the form:
             \begin{align*}
               \overline H((d),(a,b),(2,1^{d-2}))\cdot \overline H((2^k),(2^k),(a,b))\cdot d\cdot\frac 1{|\Aut(a,b)|}
             \end{align*}
-            By Claim TODO in Appendix 1, the second term vanishes unless $a=b=k$, in which case
-            the count (by Claims TODO and TODO) is
+            By Claim~\ref{claim:twoscycles} in Appendix 1, the second term vanishes unless $a=b=k$, in which case
+            the count (by Claims~\ref{claim:twoscycles} and \ref{claim:Hurwitz2}) is
             \[
             (1\cdot (d-2)!)\cdot \left(\frac 1d\cdot k!\cdot k!\cdot 2\right)\cdot d\cdot\frac 12
             =(d-2)!\cdot (k!)^2
@@ -1529,7 +1575,8 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
                   & \overline H((2),(2),(1,1)) \\
                   &=\frac{(\ell(\mu))(\ell(\mu)-1)}{2}((d-2)!)^2\frac{(k!)^2}{(a!(k-a)!)^2}\frac{((d-2)!)^{\ell(\mu)-2}}{((2a)!(d-2a-2)!)^{\ell(\mu)-2}}((k-a)!)^2\cdot 2 \cdot \\
                   &((d-2a-2)!)^{\ell(\mu)-2}\cdot (\ell(\mu)-2)!N_{(2^{k-a}),(2^{k-a})}(\mu')\cdot\frac{((2a)!)^{\ell(\mu)-2}((a!)^2)}{a} \\
-                  &=\frac{(\ell(\mu))!((d-2)!)^{\ell(\mu)}(k!)^2((d-2a-2)!)^{\ell(\mu)-3}}{}
+                  &=2N_{(2^{k-a}),(2^{k-a})}(\mu')\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)}\cdot (\ell(\mu))!
+%                  &=\frac{(\ell(\mu))!((d-2)!)^{\ell(\mu)}(k!)^2((d-2a-2)!)^{\ell(\mu)-3}}{}
                 \end{align*}
 
 \end{proof}
@@ -1538,7 +1585,7 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   For any $\mu$, $N_{(2^k),(2^k)}(\mu)=3\cdot 2^{\ell(\mu)-1}$.
 \end{cor}
 \begin{proof}
-  We can prove this by induction on $\ell(\mu)$; the base case $\ell(\mu)=1$ was proven in TODO. Assume
+  We can prove this by induction on $\ell(\mu)$; the base case $\ell(\mu)=1$ was proven in Theorems~\ref{thm:combinatorial} and \ref{thm:genusreduction3}. Assume
   the result for all $\nu$ with $\ell(\nu)\leq k$, and suppose $\ell(\mu)=k\geq 2$.
   Then we can write $\mu=(a,b,\mu')$. If $a=b$, then
   \begin{align*}
@@ -1560,9 +1607,9 @@ In this section, we consider a family of invariants $N_{g,\sigma,\nu}$ where
 one ramification profile
 $\mu$ is fully marked,
 each other ramification profile $\sigma_i$ is of the form $(a,1,\dots,1)$, and
-the only ``remembered'' points in these ramified fibers are the ones with
+the only ``remembered'' points in these ramified fibers are some subset of the ones with
 a nontrivial ramification index. We will establish general recursive formulas
-(claims TODO and TODO)
+(Theorems~\ref{thm:reduceb} and \ref{thm:reducea})
 that allow us to compute this family of invariants, and will establish
 specific closed-forms in special cases.
 
@@ -1582,14 +1629,43 @@ By Riemann-Hurwitz,
 \[
 d-\ell(\mu)+\sum_{x\in\a\cup\b}(x-1)=2d.
 \]
+We will use the convention that $x_1,\dots,x_{\ell(\mu)}$
+form the fiber corresponding to $\mu$, $p_{i,1},\dots,p_{i,d-a_i+1}$ form
+the fiber corresponding to the $i^{\text{th}}$ value $a_i\in\a$, and
+$P_{i,1},\dots,P_{i,d-b_i+1}$ form the fiber corresponding to the
+$i^{\text{th}}$ value $b_i\in\b$.
+
+\begin{prop}
+  Elements $1$ in both $\a$ and $\b$ can be removed:
+  $S_{\a+\{1\},\b}(\mu)=S_{\a,\b+\{1\}}(\mu)=S_{\a,\b}(\mu)$.
+  We can therefore assume without loss of generality that $\a$
+  and $\b$ contain integers greater than $1$.
+\end{prop}
+\begin{proof}
+  The addition of a ramification profile $(1,\dots,1)$ does not affect
+  our counting problem, since this is the generic form of a fiber;
+  in the case of $\b$, imposing that one marked point on the
+  generic genus $1$
+  marked curve is part of a generic fiber is no restriction at all.
+  (TODO: prove more formally)
+  \end{proof}
+
+The special case $\b=\emptyset$ is of most interest to us, as it can be rewritten
+\[
+S_{\a,\emptyset}(\mu)=N_{(a_1,1,\dots,1),\dots,(a_{|\a|},1,\dots,1)}(\mu)
+\]
+However even if we wish to focus solely on this special case, our
+recursive formulas require us to consider the more general notion (see
+Theorem~\ref{thm:reducea}).
 
 
 
 \begin{lem}
+  \label{lem:Sabdim}
   If $S_{\mathfrak a,\mathfrak b}(\mu)$ is well-defined, $|\mathfrak a|=\ell(\mu)+2$.
 \end{lem}
 \begin{proof}
-  By Equation TODO, $3+m=n$ where $m$ is the number of points marked under $\nu$ and
+  By Lemma~\ref{lem:dim}, $3+m=n$ where $m$ is the number of points marked under $\nu$ and
   $n$ is the number of branch points. In this case $n=|\mathfrak a|+|\mathfrak b|+1$
   and $m=\ell(\mu)+|\mathfrak b|$, so
   \[
@@ -1608,13 +1684,19 @@ d-\ell(\mu)+\sum_{x\in\a\cup\b}(x-1)=2d.
   \centering
 \begin{tikzpicture}
   \draw[domain=-7:7,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
-  \foreach \x/\p/\c/\d in {-4.5/$p_{1,1}$/red/4}
+  \foreach \x/\p/\c/\d in {-6/$x_1$/red/4}
   {
     \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
-    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (-3.15+.3*\x, -3.5);
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (-6, -3.5);
   }
 
-  \foreach \x/\p/\c/\d in {-1.8/$p_{2,1}$/black/3, -0.5/$p_{2,2}$/black/1}
+    \foreach \x/\p/\c/\d in {-4.8/$p_{1,1}$/black/3, -3.5/$p_{1,2}$/black/1}
+  {
+    \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (-2.8+.3*\x, -3.5);
+  }
+  
+  \foreach \x/\p/\c/\d in {-1.8/$p_{2,1}$/black/2, -.9/$p_{2,2}$/black/1, .2/$p_{2,3}$/black/1}
   {
     \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (-1+.3*\x, -3.5);
@@ -1626,52 +1708,115 @@ d-\ell(\mu)+\sum_{x\in\a\cup\b}(x-1)=2d.
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (1+.3*\x, -3.5);
   }
   
-  \foreach \x/\p/\c/\d in {4/$p_{4,1}$/red/2, 4.8/$p_{4,2}$/black/1, 5.7/$p_{4,3}$/black/1}
+  \foreach \x/\p/\c/\d in {4/$P_{1,1}$/red/2, 4.8/$P_{1,2}$/black/1, 5.7/$P_{1,3}$/black/1}
   {
     \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (3+.3*\x, -3.5);
     }
 
     \draw[domain=-7:7,samples=50,color=gray!50,thick] plot (\x, -4);
-  \foreach \x/\q in {-4.5/$q_1$, -1.4/$q_2$, 1.4/$q_3$, 4.3/$q_4$}
+  \foreach \x/\q in {-6/$q_1$, -4/$q_2$, -1.4/$q_3$, 1.4/$q_4$, 4.3/$q_5$}
     \filldraw[black] (\x,-4) circle (0.6mm) node[below] {\q};
 \end{tikzpicture}
 
 \label{fig:Sab}
   \end{figure}
+\end{eg}
+
+\begin{eg}
+  \label{eg:Sabns}
+  We can specialize to the case where $\a$ is of the simple form
+  $\a=\{n,\dots,n\}\cup\{2,\dots,2\}$, where there are $k$ appearances
+  of $n$ and $\ell$ appearances of $2$, and $\b=\{t\}$ (the $\b=\emptyset$
+  case, which is of particular interest to us, corresponding to $t=1$).
+  By Riemann-Hurwitz and Lemma~\ref{lem:Sabdim}, for
+  $S_{\{n\}^k\cup\{2\}^{\ell},\{t\}}(\mu)$ to be well-defined,
+  \begin{align*}
+    d-(|\a|-2)+\sum_{x\in\a}(x-1)+(t-1)=2d &\iff d-(k+\ell-2)+k(n-1)+\ell+t-1=2d \\
+    &\iff k(n-2)+1+t=d
+  \end{align*}
+  and $k+\ell=\ell(\mu)+2$.
+  For example in the case $n=3$ and $t=1$, we have $d=k+2$; for any fixed $d$,
+  \[S_{\{3\}^{d-2}\cup\{2\}^{\ell(\mu)+4-d},\emptyset}(\mu)\] counts genus $1$ covers
+  with a fixed ramification profile $\mu$ and as many other
+  points of ramification index $3$ as possible. It is well-defined
+  as long as $d-\ell(\mu)\leq 4$.
+  In Example~\ref{eg:threes}, we saw that
+  \[
+  S_{\{3\}^2\cup\{2\},\emptyset}(4)=N_{(4),(3,1),(3,1)}=20.
+  \]
+  For $n>3$, there are additional
+  restrictions on the degree $d$.
   \end{eg}
 
 We will compute the invariants $S_{\a,\b}(\mu)$ as follows. First,
 we use our admissible covers technique
-and Theorem TODO (Section 2) to establish a recursion (Claim 1) that allows us to remove elements of
-$\b$, reducing to the case where $\b=\emptyset$. We then apply the same
-technique to establish another recursion (Claim 2) that allows us to
-remove elements of $\mu$, reducing to the case where $\mu=(d)$. Finally,
-we establish the base case (Claim TODO) using our previously demonstrated genus reduction technique.
+and Theorem~\ref{thm:admissible} to establish a recursion (Theorem~\ref{thm:reduceb}) that allows us to remove elements of
+$\b$, and we then apply the same
+technique to establish another recursion (Theorem~\ref{thm:reducea}) that allows us to remove elements of $\a$; the combination
+of these recursions allows us to reduce to the case where $\mu=(d)$ and $\b$ is empty. Finally,
+we establish the base case (Theorem~\ref{thm:Sabbase}) using our previously demonstrated genus reduction technique.
 
 While these results in principle provide an algorithm for computing any invariant
 $S_{\a,\b}(\mu)$, the recursions involved are too messy to expect a general closed
 form solution for these invariants,
 even in the special case of interest $\mu=(1^d)$. However, we expect that the special cases
-$T_n(\mu)$ are more tractable, and we will explicitly find a closed form
-for the invariants $T_3(1^d)$ in Claim TODO.
+$T_{k,t,a}^{(n)}$ are more tractable, and we will explicitly find a closed form
+for the invariants $T_{k,1,1}^{(3)}$ in Proposition~\ref{prop:deg4}.
 
 \subsection{Reduction of $\b$}
 
-\begin{claim}[Claim 1]
-  For $n>0$, if $b_y>0$, then
+\begin{thm}
+  \label{thm:reduceb}
+  For $n>0$, if $y>0$, then
   \begin{align*}
     S_{\mathfrak a,\mathfrak b+\{y\}}(\mu, n) &=S_{\mathfrak a,\mathfrak b}(\mu, n-y+1) +\sum_{z\in\mathfrak a}\min(z-1,y-1,n,y+z-n-2)S_{\mathfrak a-\{z\},\mathfrak b+\{y+z-n-2\}}(\mu)
   \end{align*}
-\end{claim}
+  This sum is over $\a$ as a set rather than a multiset, i.e.\ there is
+  a single term for each unique value in $\a$.
+\end{thm}
 
 \begin{proof}
-  We consider diagrams which stabilize to a genus $1$ curve containing $x_1,\dots,x_k$ and all but one
-  of the other fixed points, attached to a genus $0$ tail containing $q$ (with ramification $n$) and $p$
-  (with ramification $y$). Recall by Lemma~\ref{lem:branchpoints} that there are two branch points not
+  Let $k=\ell(\mu)$. We will apply Theorem~\ref{thm:admissible}
+  to calculate $W_{1,\sigma,\nu}$ and divide by the normalizing factor
+  \[ 
+  \prod_{x\in\a+\b+\{y\}}(d-x)!\cdot |\Aut(\a)|\cdot |\Aut(\b+\{y\})|
+  \]
+  Let $A$ be the following graph,
+  with a genus $1$ component containing $x_1,\dots,x_k$ and all but one
+  of the other fixed points:
+
+                  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=3.2em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.5cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=3.2em,nodes={minimum size=1.5cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\};
+
+ \matrix[amat,right=4cm of mat1,nodes=ssnode] (mat2) {$0$\\};
+
+ \draw  (mat1-1-1) edge (mat2-1-1);
+
+  % draw legs for left side
+ \draw (mat1-1-1) -- +(35:1) node[anchor=west] {$P_{|\b|,1}$}
+ (mat1-1-1) -- +(60:1) node[anchor=south] {$\dots$}
+ (mat1-1-1) -- +(100:1) node[anchor=south] {$P_{2,1}$}
+ (mat1-1-1) -- +(285:1) node[anchor=north] {$(x_1,\dots,x_k)$};
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(60:1) node[anchor=west] {$x_{k+1}$}
+ (mat2-1-1) -- +(330:1) node[anchor=west] {$P_{1,1}$};
+
+                \end{tikzpicture}
+
+                  Note that $|\Aut(A)|=1$.
+We now aim to count admissible covers of graphs $\Gamma\to\Gamma'$ where $\Gamma$ has a $\hat A$-structure and $\hat A$ specializes to $A$.
+Recall by Lemma~\ref{lem:branchpoints} that there are two branch points not
   arising from the genus $1$ component.
   
-  A diagram with $x_1,\dots,x_k$ on the right side looks like:
+  A cover of graphs with $x_1,\dots,x_k$ on the right side looks like:
 
 \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=3.2em,rounded corners,
@@ -1711,14 +1856,14 @@ for the invariants $T_3(1^d)$ in Claim TODO.
  % draw legs for right side
  \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$x_1$}
  (mat2-3-1) -- +(30:1) node[anchor=west] {$x_k$}
- (mat2-4-1) -- +(30:1) node[anchor=west] {$q$};
+ (mat2-4-1) -- +(30:1) node[anchor=west] {$x_{k+1}$};
 
 \end{tikzpicture}
 
 There are two branch points outside the genus $1$ component, which must be the images of
-$x_1,\dots,x_k,q$ and of $p$. This means there is no extra ramification on any genus $0$ component, which is why each top right bubble
+$x_1,\dots,x_k,x_{k+1}$ and of $P_{1,1}$. This means there is no extra ramification on any genus $0$ component, which is why each top right bubble
 connects only to the genus $1$ component. The bottom right bubble must have some ramification beyond what is pictured here, which is necessarily
-$p$. So our diagram looks like:
+$P_{1,1}$. So our diagram looks like:
 
   \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=3.2em,rounded corners,
@@ -1758,19 +1903,19 @@ $p$. So our diagram looks like:
  % draw legs for right side
  \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$x_1$}
  (mat2-3-1) -- +(30:1) node[anchor=west] {$x_k$}
- (mat2-4-1) -- +(30:1) node[anchor=west] {$q$}
- (mat2-4-1) -- +(330:1) node[anchor=west] {$p$};
+ (mat2-4-1) -- +(30:1) node[anchor=west] {$x_{k+1}$}
+ (mat2-4-1) -- +(330:1) node[anchor=west] {$P_{1,1}$};
 
   \end{tikzpicture}
 
   As there is no extra ramification outside the genus $1$ component,
   the dimension reduction of $r$ should match the codimension reduction
-  corresponding to the removal of $p$, which is $y-1$. So $r=y-1$ and we
+  corresponding to the removal of $P_{1,1}$, which is $y-1$. So $r=y-1$ and we
   have the first term in the claim, since $H((n),(y,1,\dots),(n-y+1,1,\dots))=1$.
 
-  Now consider the case where $x_1,\dots,x_k,q$ are on the left side. In this
+  Now consider the case where $x_1,\dots,x_k,x_{k+1}$ are on the left side. In this
   case, the branch points not coming from the genus $1$ component will be
-  the image of $p$ and the image of another point $p'$ (with ramification index $z\in\mathfrak a$). Consider the possibility that
+  the image of $P_{1,1}$ and the image of another point $p_{i,1}$ (with ramification index $z\in\mathfrak a$). Consider the possibility that
   $x_1,\dots,x_k$ are not all on the genus $1$ component:
 
   \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
@@ -1805,10 +1950,10 @@ $p$. So our diagram looks like:
 
   This would require the genus $0$ on the right side to have multiple branch points contributing
   $e$ ramification,
-  but $p$ cannot live on this component (because of the stabilization condition), a contradiction.
+  but $P_{1,1}$ cannot live on this component (because of the stabilization condition), a contradiction.
   Therefore, $x_1,\dots,x_k$ all live on the genus $1$ component.
 
-  The points $p$ and $p'$ cannot lie on separate components, because the following diagram cannot be completed:
+  The points $P_{1,1}$ and $p_{i,1}$ cannot lie on separate components, because the following diagram cannot be completed:
 
         \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=3.2em,rounded corners,
@@ -1833,16 +1978,16 @@ $p$. So our diagram looks like:
   % draw legs for left side
  \draw (mat1-1-1) -- +(115:1) node[anchor=south] {fixed points}
  (mat1-1-1) -- +(260:1) node[anchor=north] {$x_1,\dots,x_k$}
- (mat1-2-1) -- +(260:1) node[anchor=east] {$q$};
+ (mat1-2-1) -- +(260:1) node[anchor=east] {$x_{k+1}$};
 
    % draw legs for right side
- \draw (mat2-1-1) -- +(75:1) node[anchor=south] {$p'$}
- (mat2-2-1) -- +(265:1) node[anchor=north] {$p$};
+ \draw (mat2-1-1) -- +(75:1) node[anchor=south] {$p_{i,1}$}
+ (mat2-2-1) -- +(265:1) node[anchor=north] {$P_{1,1}$};
 
 
  \end{tikzpicture}
 
-  Therefore $p$ and $p'$ lie on the same genus $0$ component, all other genus $0$ components on the right side have degree $1$,
+  Therefore $P_{1,1}$ and $p_{i,1}$ lie on the same genus $0$ component, all other genus $0$ components on the right side have degree $1$,
   and we end up with:
   
         \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
@@ -1875,11 +2020,11 @@ $p$. So our diagram looks like:
   % draw legs for left side
  \draw (mat1-1-1) -- +(115:1) node[anchor=south] {fixed points}
  (mat1-1-1) -- +(260:1) node[anchor=north] {$x_1,\dots,x_k$}
- (mat1-2-1) -- +(140:1) node[anchor=east] {$q$};
+ (mat1-2-1) -- +(260:1) node[anchor=north] {$x_{k+1}$};
 
    % draw legs for right side
- \draw (mat2-4-1) -- +(75:1) node[anchor=south] {$p$}
- (mat2-4-1) -- +(265:1) node[anchor=north] {$p'$};
+ \draw (mat2-4-1) -- +(75:1) node[anchor=south] {$P_{1,1}$}
+ (mat2-4-1) -- +(265:1) node[anchor=north] {$p_{i,1}$};
 
 
         \end{tikzpicture}
@@ -1895,13 +2040,14 @@ $p$. So our diagram looks like:
 \end{proof}
 
 \subsection{Reduction of $\a$}
-\begin{claim}[Claim 2]
+\begin{thm}
+  \label{thm:reducea}
   For $n>0$,
   \begin{align*}
     S_{\a,\b}(\mu, n, m) &= \sum_{z\in\mathfrak a,\ z\leq n+m}\min(n,m,z-1,n+m-z+1)S_{\a-\{z\},\b}(\mu,n+m-z+2) \\
     &+\sum_{z_1,z_2\in\a-\{2\}}\hat H((z_1+z_2-n-m-3,n,m),(z_1,1,\dots),(z_2,1,\dots))S_{\a-\{z_1,z_2\},\b+\{z_1+z_2-n-m-3\}}(\mu)
   \end{align*}
-\end{claim}
+\end{thm}
 Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''.
 
 \begin{proof}
@@ -2092,19 +2238,24 @@ Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''
           $s_2$ should not be distinguished.
 \end{proof}
 
-Claim 1 allows us to reduce to the case where $\b=\emptyset$, and Claim 2 allows us to reduce to
-the case where $\mu=(d)$. It remains to calculate $S_{\{a_1,a_2,a_3\},\emptyset}(d)$ as a base case:
+It remains to calculate $S_{\{a_1,a_2,a_3\},\emptyset}(d)$ as a base case:
 
-\begin{claim}
+\begin{thm}
+  \label{thm:Sabbase}
   When $\a=\{a_1,a_2,a_3\}$, $S_{\a,\emptyset}(d)$ is given by
   \[
-  \sum_{i=1}^3\sum_{e+f=d-a_i+2}\frac{2(a_j+a_k+2) H((d),(a_1,1,\dots),(e,f,1,\dots)) H((e,f),(a_j,1,\dots),(a_k,1,\dots)) |\Aut(e,f,1^{d-e-f})|}{(a_i-2)!|\Aut(a_1,a_2,a_3)|}
+  \sum_{i=1}^3\sum_{e+f=d-a_i+2}\frac{2(a_j+a_k-2) H((d),(a_i,1,\dots),(e,f,1,\dots)) H((e,f),(a_j,1,\dots),(a_k,1,\dots)) |\Aut(e,f,1^{d-e-f})|}{(a_i-2)!|\Aut(a_1,a_2,a_3)|}
   \]
   where $\{1,2,3\}=\{i,j,k\}$.
-\end{claim}
+\end{thm}
 \begin{proof}
-  We will want to calculate $W_{(d),(a_1,1,\dots),(a_2,1,\dots),(a_3,1,\dots),(2,1,\dots)^{k}}$ (where $k=d+4-a_1-a_2-a_3$ by Riemann-Hurwitz) and then divide by \[(d-a_1)!(d-a_2)!(d-a_3)!((d-1)!)^kk!|\Aut(a_1,a_2,a_3)|\]
-  The pictures to consider look like:
+  We will want to calculate $W_{(a_1,1,\dots),(a_2,1,\dots),(a_3,1,\dots)}(d)$ and then divide by \[(d-a_1)!(d-a_2)!(d-a_3)!|\Aut(a_1,a_2,a_3)|\]
+  Let $A$ be the standard graph for genus reduction; we will apply Theorem~\ref{thm:admissible}. Any admissible cover of graphs $\Gamma\to\Gamma'$ will
+  have a single genus $0$ component on the left side containing
+  $x_1$ with a double edge to a genus $0$ component on the right side.
+  By Riemann-Hurwitz, the left component has another ramified
+  point $p_{i,1}$, and the genus $0$ component to which it has a double
+  edge has two ramified points $p_{j,1}$ and $p_{k,1}$. Our picture looks like:
 
             \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=3.2em,rounded corners,
@@ -2134,31 +2285,167 @@ the case where $\mu=(d)$. It remains to calculate $S_{\{a_1,a_2,a_3\},\emptyset}
  (mat1-1-1) edge["$1$"] (mat2-4-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:1) node[anchor=south] {$p$}
- (mat1-1-1) -- +(245:1) node[anchor=north] {$a_1$};
+ \draw (mat1-1-1) -- +(95:1) node[anchor=south] {$x_1$}
+ (mat1-1-1) -- +(245:1) node[anchor=north] {$p_{i,1}$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$a_2$}
- (mat2-1-1) -- +(330:1) node[anchor=west] {$a_3$};
+ \draw  (mat2-1-1) -- +(30:1) node[anchor=west] {$p_{j,1}$}
+ (mat2-1-1) -- +(330:1) node[anchor=west] {$p_{k,1}$};
+ 
 
-          \end{tikzpicture}
+            \end{tikzpicture}
 
+            Riemann-Hurwitz says that
+            \[
+            (a_i-1)+(d-1)+(e+f-2)=2d-2\iff e+f=d-a_i+2
+            \]
+            and
+            \[
+            (e+f-2)+(a_j-1)+(a_k-1)=2(e+f)-2\iff a_i+a_j+a_k=d+4
+            \]
+            where this second equality is already known.
+
+            The number of choices for points not marked in this
+            picture is computed as follows: first,
+            there are $\binom{d-a_j}{e+f-a_j}$ choices
+            for which of $p_{j,2},\dots$ to place on the top right component,
+            and similarly $\binom{d-a_k}{e+f-a_k}$ choices
+            for which of $p_{k,2},\dots$ to place on the top right component.
+            Once these are fixed, each other genus $0$ component
+            on the right can be identified by which element of
+            $p_{j,2},\dots$ it contains, and there are
+            then $(d-e-f)!$ choices for placement of
+            the remaining $p_{k,2},\dots$ among
+            these components.
+
+            Therefore, the contribution to the right side of Theorem~\ref{thm:admissible} is
+            \begin{align*}
+              &\frac{c_{\Gamma}}{|\Aut(\Gamma)|}\binom{d-a_j}{e+f-a_j}\binom{d-a_k}{e+f-a_k}(d-e-f)!\cdot\overline H((d),(a_i,1,\dots),(e,f,1,\dots))\cdot\overline H((e,f),(a_j,1,\dots),(a_k,1,\dots)) \\
+              &=\frac{e+f}{|\Aut(e,f)|}\cdot\frac{(d-a_j)!(d-a_k)!}{(e+f-a_j)!(e+f-a_k)!((d-e-f)!)^2}\cdot (d-e-f)!\cdot H((d),(a_i,1,\dots),(e,f,1,\dots))\cdot \\
+              &(d-a_i)!|\Aut(e,f,1,\dots)|H((e,f),(a_j,1,\dots),(a_k,1,\dots))\cdot (e+f-a_j)!(e+f-a_k)!|\Aut(e,f)| \\
+              &=\frac{(e+f)\prod\limits_{\ell=1}^3(d-a_{\ell})!\cdot H((d),(a_i,1,\dots),(e,f,1,\dots))H((e,f),(a_j,1,\dots),(a_k,1,\dots)) |\Aut(e,f,1,\dots)|}{(d-e-f)!}
+            \end{align*}
+            and so the contribution to $S_{\a,\emptyset}(d)$ is double this
+            (given $|\Aut(A)|=2$) divided by the normalizing factor, i.e.
+            \[
+            \frac{2(e+f)\cdot H((d),(a_i,1,\dots),(e,f,1,\dots))\cdot H((e,f),(a_j,1,\dots),(a_k,1,\dots))\cdot|\Aut(e,f,1,\dots)|}{(d-e-f)!\cdot |\Aut(a_i,a_j,a_k)|}
+            \]
+            Since $e+f=a_j+a_k-2$ and $d-e-f=a_i-2$, this proves the claim.
 \end{proof}
+\begin{eg}
+  We can use this formula to prove that $S_{\{4,2,2\},\emptyset}(4)=15$, as was previously shown in
+  Example~\ref{eg:genusreduction}.
+  The $i=1$ term is
+  \[
+  \frac{2(2+2-2)H((4),(4),(1,1,1,1))H((1,1),(2),(2))|\Aut(1,1,1,1)|}{2!|\Aut(4,2,2)|} =\frac{2\cdot 2\cdot \frac 14\cdot \frac 12\cdot 4!}{2\cdot 2}=3,
+  \]
+  while both the $i=2$ and $i=3$ terms are
+  \[
+  \frac{2(4)H((4),(2,1,1),(3,1))H((3,1),(4),(2,1,1))|\Aut(3,1)|}{0!\cdot 2}=\frac{2\cdot 4\cdot 1\cdot 1\cdot 1}{2}=4
+  \]
+  (corresponding to $(e,f)=(3,1)$) plus
+  \[
+  \frac{2(4)H((4),(2,1,1),(2,2))H((2,2),(4),(2,1,1))|\Aut(2,2)|}{0!\cdot 2}=\frac{2\cdot 4\cdot \frac 12\cdot \frac 12\cdot 2}{2}=2
+  \]
+  (corresponding to $(e,f)=(2,2)$). Adding these together yields
+  \[
+  3+2(4+2)=15.
+  \]
+  \end{eg}
 
 \subsection{Applying recursions}
 
-TODO: proof that Claims 1 and 2 suffice to calculate all
-$S_{\a,\b}$ from base cases
+In order to solve our recursions, we need the following result:
 
-We will now use the recursions to study families
-\[T_n(\mu)=S_{\{n^k,2^{\ell}\},\emptyset}(\mu)\]
-for fixed $n$, where $k$ is as large as possible
-and then $\ell$ is determined by Riemann-Hurwitz. As a first
-case, we have
-\[
-T_3(\mu)=S_{\{(3^{d-2}),(2^{\ell})\},\emptyset}(\mu)
-\]
+\begin{thm}
+  Every invariant $S_{\a,\b}(\mu)$ can be computed by
+  a finite
+  sequence of applications of Theorems~\ref{thm:reduceb}, \ref{thm:reducea} and \ref{thm:Sabbase}.
+  \end{thm}
+\begin{proof}
+  Let $X=\{(a,b,k)\}=\Z_{\geq 0}^3$ with the total order where
+  $(a,b,k)<(a',b',k')$
+  if:
+  \begin{itemize}
+  \item $k<k'$, or
+  \item $k=k'$ and $b<b'$, or
+    \item $k=k'$, $b=b'$, and $a<a'$
+  \end{itemize}
+  We will prove by induction on $(a,b,k)$, under this order, that
+  any $S_{\a,\b}(\mu)$ with $|\a|=a$, $|\b|=b$, and $\ell(\mu)=k$
+  can be computed by a finite sequence of applications
+  of Theorems~\ref{thm:reduceb}, \ref{thm:reducea} and \ref{thm:Sabbase}.
+  Induction is possible here because for invariants $S_{\a,\b}(\mu)$
+  we require $\ell(\mu)\leq d$ and $|\a|,|\b|\leq 2d$, implying
+  that each $(a,b,k)$ is greater than only finitely many triples
+  of interest.
+  
+  As a base case, if $(a,b,k)<(\infty,0,1)$, then
+  this means either $k=0$ (in which case
+  our convention is $S_{\a,\b}(\emptyset)=0$) or $k=1$ and $b=0$
+  (in which case we can directly apply Theorem~\ref{thm:Sabbase} to find
+  $S_{\a,\emptyset}(d)$).
 
+  Now suppose that $(a,b,k)>(\infty,0,1)$
+  and that the theorem is true for any $(a',b',k')<(a,b,k)$. There are two cases:
+  \begin{enumerate}
+  \item If $k>1$, then Theorem~\ref{thm:reducea} reduces $S_{\a,\b}(\mu)$ to
+    a sum of terms involving triples less than $(a,b,k)$.
+  \item If $k=1$ and $b>0$, then Theorem~\ref{thm:reduceb} reduces
+    $S_{\a,\b}(\mu)$ to a sum of terms involving triples less than $(a,b,k)$.
+  \end{enumerate}
+  In either case the result is proven.
+\end{proof}
+
+\begin{eg}
+  We compute the value of $S_{\{3,2,2,2\},\{2\}}(3,1)$:
+  \begin{align*}
+    S_{\{3,2,2,2\},\{2\}}(3,1) &= S_{\{3,2,2,2\},\emptyset}(3,0)+\sum_{z\in\{3,2,2,2\}}S_{\{3,2,2,2\}-\{z\},\{z-1\}}(3) \tag*{(Theorem~\ref{thm:reduceb})} \\
+    &=0+S_{\{2,2,2\},\{2\}}(3)+3S_{\{3,2,2\},\emptyset}(3) \\
+    &=S_{\{2,2,2\},\emptyset}(2)+3S_{\{3,2,2\},\emptyset}(3)
+  \end{align*}
+  (TODO: apply Theorem 7 for base case)
+\end{eg}
+
+In general, the application of these recursions is somewhat complex and
+does not seem to lead to a closed form. However, we can make headway
+by considering a slight modification of the family of invariants
+in Example~\ref{eg:Sabns}.
+
+\begin{dfn}
+  Define
+  \[
+  T_{k,t,a}^{(n)}=S_{\{n\}^k\cup\{2\}^{\ell},\{t\}}(a,1^b)
+  \]
+  where $b=k(n-2)+2-a$, so that $a+b=d=k(n-2)+2$,
+  and $\ell=b+3-k$. Note that $T_{k,1,a}^{(n)}$
+  recovers the notion of Example~\ref{eg:Sabns} for $\mu=(a,1^b)$.
+  \end{dfn}
+
+Theorems~\ref{thm:reduceb} and \ref{thm:reducea} specialize to recursions
+within the family $T_{k,t,a}^{(n)}$:
+\begin{itemize}
+\item $T_{k,t,a}^{(n)}=T_{k,1,a-t+1}^{(n)}+\cdot\min(n-1,t-1,a,t+n-a-2)T_{k-1,t+n-a-2,1}^{(n)}+ T_{k,t-a,1}^{(n)}$
+  \item For $a<k(n-2)+2$, \[T_{k,1,a}^{(n)}=T_{k,1,a+1}^{(n)}+(a+1\geq n)T_{k-1,1,a+3-n}^{(n)}+\hat H((a,1,2n-a-4),(n,1,\dots),(n,1,\dots))T_{k-2,2n-a-4,1}^{(n)}\]
+\end{itemize}
+Theorem~\ref{thm:Sabbase} also gives us a formula for
+$T_{k,1,k(n-2)+2}$.
+
+We pay particular attention to two special subfamilies:
+$V_{k,t}^{(n)}=T_{k,t,1}^{(n)}$ (where $\mu=(1^d)$) and $U_{k,a}^{(n)}=T_{k,1,a}^{(n)}$
+(where $\b=\{1\}$ or equivalently, $\b=\emptyset$). Ultimately the
+overlap of these two subfamilies, $T_{k,1,1}^{(n)}=S_{}$, will be relatively tractable
+and we are interested in its growth rate as a function of $k$.
+
+For these subfamilies we have:
+\begin{itemize}
+\item $V_{k,t}^{(n)}=V_{k,t-1}^{(n)}+V_{k-1,t+n-3}^{(n)}$ for $t>1$
+  \item For $a<k(n-2)+2$, \[U_{k,a}^{(n)}=U_{k,a+1}^{(n)}+(a+1\geq n)U_{k-1,a+3-n}^{(n)}+\hat H((a,1,2n-a-4),(n,1,\dots),(n,1,\dots)) V_{k-2,2n-a-4}\]
+\end{itemize}
+
+
+
+\iffalse
 We find that:
 \[
 T_3(\mu,a,1)=T_3(\mu,a+1)+T_3(\mu,a)\text{ for $a>1$}
@@ -2169,19 +2456,93 @@ T_3(\mu,a,2)=T_3(\mu,a+2)+2T_3(\mu,a+1)\text{ for $a\geq 2$}
 \[
 T_3(\mu,3,3)=T_3(\mu,6)+2T_3(\mu,5)
 \]
-and $T_3(\mu,a,b)=0$ if $a+b>6$ (for dimension reasons; TODO how does this fit with the last claim?).
+and $T_3(\mu,a,b)=0$ if $a+b>6$ (for dimension reasons; TODO how does this fit with the last claim?).\fi
 
-\begin{claim}
-  For $d\geq 3$,
+We focus in particular on the case where $n=3$:
+\[
+U_{k,a}^{(3)}=U_{k,a+1}^{(3)}+U_{k-1,a}^{(3)}\text{ for }1<a<k+2,\qquad U_{k,1}^{(3)}=U_{k,2}^{(3)}+U_{k-2,1}^{(3)}
+\]
+
+\begin{prop}
+  \label{prop:deg4}
+  For $k\geq 1$,
   \[
-  T_3(1^d)=\frac{d(d-1)(2(d-1)^2+1)}{6}
+  U_{k,1}^{(3)}=T_{k,1,1}^{(3)}=f(k)
   \]
-\end{claim}
+  where
+  \[
+  f(k) = \frac{(k+2)(k+1)(2(k+1)^2+1)}{6}
+  \]
+\end{prop}
+\begin{proof}
+  First, we can use Theorem~\ref{thm:Sabbase} to compute:
+  \begin{itemize}
+  \item $U_{3,5}=16$
+  \item $U_{2,4}=20$
+  \item $U_{1,3}=8$
+    \item $U_{0,2}=1$
+    \end{itemize}
+  Note that $U_{k,a}=0$ if $a\geq 6$, since
+  $\ell=(k+2-a)+3-k=5-a<0$. Therefore,
+  \[
+  U_{k,5}^{(3)}-U_{k-1,5}^{(3)}=U_{k,6}^{(3)}=0
+  \]
+  implying that $U_{k,5}^{(3)}$ when
+  defined is constant and always equal to $U_{3,5}^{(3)}=16$.
 
+  Next,
+  \[
+  U_{k,4}^{(3)}-U_{k-1,4}^{(3)}=U_{k,5}^{(3)}=16
+  \]
+  so $U_{k,4}^{(3)}$ is linear in $k$ with slope $16$, and since $U_{2,4}^{(3)}=20$,
+  this implies $U_{k,4}^{(3)}=16k-12$ where defined.
+
+  For $a=3$,
+  \[
+  U_{k,3}^{(3)}-U_{k-1,3}^{(3)}=U_{k,4}^{(3)}=16k-12
+  \]
+  so given that $U_{1,3}^{(3)}=8$,
+  \[
+  U_{k,3}^{(3)}=8+\sum_{j=2}^k(16j-12)=8+16\left(\frac{j(j+1)}2-1\right)-12(k-1)=8k^2-4k+4
+  \]
+  where defined. For $a=2$,
+  \[
+  U_{k,2}^{(3)}-U_{k-1,2}^{(3)}=U_{k,3}^{(3)}=8k^2-4k+4
+  \]
+  so given that $U_{0,2}=1$,
+  \[
+  U_{k,2}^{(3)}=1+\sum_{j=1}^k(8j^2-4j+4)=1+8\cdot\frac{k(k+1)(2k+1)}{6}-4\cdot\frac{k(k+1)}{2}+4k=\frac{8k^3}{3}+2k^2+\frac{10k}{3}+1
+  \]
+  where defined. Finally, $U_{k,1}^{(3)}-U_{k-2,1}^{(3)}=U_{k,2}^{(3)}$
+  and $U_{0,1}^{(3)}=1$, $U_{1,1}^{(3)}=9$. There is a unique
+  function $k\mapsto U_{k,1}^{(3)}$ satisfying these conditions,
+  so we need only show that these conditions hold for the quartic $f(k)$:
+  \begin{align*}
+    f(k)-f(k-2)&=\frac{(k+2)(k+1)(2(k+1)^2+1)}{6}-\frac{k(k-1)(2(k-1)^2+1)}{6} \\
+    &=\frac{2k^4+10k^3+19k^2+17k+6}{6}-\frac{2k^4-6k^3+7k^2-3k}{6} \\
+    &=\frac{16k^3+12k^2+20k+6}{6} \\
+    &=U_{k,2}^{(3)}
+  \end{align*}
+  and $f(0)=\frac{(2)(1)(3)}{6}=1$, $f(1)=\frac{(3)(2)(2\cdot 2^2+1)}{6}=9$.
+
+  \iffalse
+  , so we can prove the proposition
+  regardless of the parity of $k$:
+  \begin{itemize}
+  \item If $k=2m+1$ is odd, then
+    \begin{align*}
+      U_{k,1}^{(3)} &= 9+\sum_{j=1}^m\left(\frac{8(2j+1)^3}{3}+2(2j+1)^2+\frac{10(2j+1)}{3}+1\right) \\
+      &= 9+\sum_{j=1}^m\left(\frac{64}{3}j^3+40j^2+\frac{92}{3}j+9\right) \\
+      &= 
+    \end{align*}
+    \item
+  \end{itemize}
+  \fi
+\end{proof}
 
 TODO: Generating functions
 
-Future questions: what does $T_n(1,\dots,1)$ look like asymptotically in $k$?
+Future questions: what does $T_{k,1,1}^{(n)}$ look like asymptotically in $k$, in general?
 
 What about higher genus?
 
@@ -2236,6 +2597,7 @@ What about higher genus?
   \end{proof}
 
 \begin{claim}
+  \label{claim:twoscomplete}
 For $d=2k$ even,
 \[
 H((d),(2^k),(2^k),(2,1^{d-2}))=\frac k2
@@ -2283,9 +2645,10 @@ H((d),(2^k),(2^k),(2,1^{d-2}))=\frac k2
   \end{proof}
 
 \begin{claim}
+  \label{claim:twoseven}
 For $d=2k$ even,
 \[
-H((d),(2^k),(2^{k-1},1,1))=1
+H((d),(2^k),(2^{k-1},1,1))=\frac 12
 \]
 \end{claim}
 \begin{proof}
@@ -2305,11 +2668,11 @@ H((d),(2^k),(2^{k-1},1,1))=1
   \[
   H((d),(2^k),(2^{k-1},1,1))=\frac{(d-1)!\cdot k}{d!}=\frac 12
   \]
-  (TODO: shouldn't it be 1?)
   
   \end{proof}
 
 \begin{claim}
+  \label{claim:twosodd}
 For $d=2k+1$ odd,
 \[
 H((d),(2^k,1),(2^{k},1))=1
@@ -2433,8 +2796,3 @@ In particular if $n=m=1$ and $d>3$, the Hurwitz number is $1$.
 \printbibliography
 
 \end{document}
-
-Hi all: On Thursday 11/21, a Day of Action for Palestine coordinated by international solidarity groups, we invite
-fellow UM academic researchers, and any other interested North Campus allies, to a meeting of our Researchers Against War collective at 4-5:30pm (insert location/RSVP/link).
-
-For over a year, Israel has carried out its genocide of Palestinians not only with UM's financial investment, but with weapons of war developed by the US military and defense contractors who recruit UM students and rely on results of military-funded university research.
