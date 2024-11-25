@@ -29,6 +29,7 @@
 \usepackage{relsize}
 \usepackage{hyperref}
 \usepackage{biblatex}
+\usepackage{listings}
 \addbibresource{sources.bib}
 
 \makeatletter
@@ -84,42 +85,26 @@
 \newcommand{\N}{\ensuremath{\mathbb{N}}}
 \newcommand{\Z}{\ensuremath{\mathbb{Z}}}
 \newcommand{\R}{\ensuremath{\mathbb{R}}}
-\newcommand{\hTop}{\textbf{hTop}}
 \newtheorem*{Proposition}{Proposition}
 \newtheorem*{Corollary}{Corollary}
-\newcommand{\Tor}{\text{Tor}}
-\newcommand{\Ext}{\text{Ext}}
 \newcommand{\Q}{\mathbb{Q}}
-\newcommand{\F}{\mathbb{F}}
 \newcommand{\C}{\mathbb{C}}
-\newcommand{\CP}{\mathbb{CP}}
-\newcommand{\RP}{\mathbb{RP}}
-\newcommand{\Spec}{\text{Spec}}
 \newcommand{\Aut}{\text{Aut}}
-\newcommand{\Proj}{\text{Proj}}
-\newcommand{\Mor}{\text{Mor}}
 \newcommand{\codim}{\text{codim}}
 \newcommand{\exer}[1]{{\bf Exercise #1} \\}
 \newcommand{\Hom}{\text{Hom}}
-\newcommand{\coker}{\text{coker}}
-\newcommand*\simplex{\includegraphics[scale=0.017]{simplex.png}}
-\newcommand{\Sch}{\textbf{Sch}}
-\newcommand{\Set}{\textbf{Set}}
 \newcommand{\Hb}{\overline{\mathcal H}}
 \renewcommand{\a}{\mathfrak a}
 \renewcommand{\b}{\mathfrak b}
 \renewcommand{\P}{\mathbb P}
 \theoremstyle{definition}
 \newtheorem{thm}{Theorem}[section]
-\newtheorem{cor}{Corollary}[section]
-\newtheorem*{prob}{Problem}
-\newtheorem{dfn}{Definition}[section]
-\newtheorem{claim}{Claim}[section]
-\newtheorem{prop}{Proposition}[section]
-\newtheorem{lem}{Lemma}[section]
-\newtheorem{ex}{Exercise}[section]
-\newtheorem{eg}{Example}[section]
-\newtheorem*{note}{Note}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{dfn}[thm]{Definition}
+\newtheorem{claim}[thm]{Claim}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{eg}[thm]{Example}
 
 \usetikzlibrary{matrix,positioning,quotes}
 
@@ -138,6 +123,34 @@
 
 \author{Michael Mueller}
 
+\begin{abstract}
+  In this thesis, we study a problem that is in a sense a reversal of the Hurwitz
+counting problem. The Hurwitz problem asks: for a
+generic {\it target} --- $\P^1$ with a list of $n$ points  $q_1,\dots,q_n\in \P^1$ --- and
+partitions $\sigma_1,\dots,\sigma_n$ of $d$, how many degree
+$d$ covers $C\to\P^1$ are there with specified ramification $\sigma_i$ over $q_i$?
+We turn the problem on its head and ask: for a generic {\it source} --- an $n$-pointed curve
+$(C,p_1,\dots,p_r)$ of genus $g$ --- and
+partitions $\mu,\sigma_1,\dots,\sigma_n$ of $d$ with $\ell(\mu)=r$,
+how many degree $d$ covers $C\to\P^1$ are there with ramification profile $\mu$ over $0$
+corresponding to a fiber $\{p_1,\dots,p_r\}$ and
+elsewhere ramification profiles $\sigma_1,\dots,\sigma_n$?
+
+While the enumerative invariants we study bear a similarity to
+generalized Tevelev degrees, they are more difficult to express in
+closed form in general. Nonetheless, we establish key results:
+in Section 4 we prove a closed form result in the case where
+the ramification profiles $\sigma_1$ and $\sigma_2$ are
+``even'' (consisting of $2,\dots,2$), and in Section 5 we establish
+recursive formulas to compute invariants where each ramification
+profile is of the form $(x,1,\dots,1)$, ultimately arriving at
+a closed form for a family of invariants with $x=3$.
+We also numerically compute some values of our invariants in sections
+2.3 and 5.5.
+
+
+  \end{abstract}
+
 \maketitle
 
 
@@ -151,32 +164,163 @@ Include stable graphs
 
 \subsection{Moduli spaces of maps}
 
-Include maps of stable graphs
+Admissible covers, Hurwitz moduli space
 
 \subsection{Hurwitz theory}
 
 Include marked and unmarked
 
-\subsection{Comparison with other invariants}
+\subsection{Main results}
 
-Comparison with generalized Tevelev degrees
+As we mention in the abstract,
+our aim is to ask the question: given an $n$-pointed curve
+$(C,p_1,\dots,p_r)$ of genus $g$ and
+partitions $\mu,\sigma_1,\dots,\sigma_n$ of $d$ with $\ell(\mu)=r$,
+how many degree $d$ covers $C\to\P^1$ are there with ramification profile $\mu$ over $0$
+corresponding to a fiber $\{p_1,\dots,p_r\}$ and
+elsewhere ramification profiles $\sigma_1,\dots,\sigma_n$?
 
-Admissible covers
+\begin{eg}
+  \label{eg:firsteg}
+Given a generic elliptic curve $(E,p)$, how many degree $4$ covers $E\to\P^1$ are there
+with $p$ fully ramified over $0$, and ramification profiles $(2,2)$, $(2,2)$ and $(2,1,1)$
+elsewhere?
+(See Figure~\ref{fig:firsteg}.)
+\end{eg}
+
+\begin{figure}[h]
+  \caption{Illustration of the covers in Example~\ref{eg:firsteg}. Here $w$ may be any value in $\P^1-\{0,1,\infty\}$.}
+  \centering
+\begin{tikzpicture}
+  \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
+  \foreach \x/\p/\l in {-5/$p$/4}
+  {
+    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (-5, -3.5);
+  }
+  \foreach \x/\p/\l in {-3//2, -2//2}
+  {
+    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (-1.7+.3*\x, -3.5);
+  }
+  \foreach \x/\p/\l in {0//2, 1//2}
+  {
+    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (.2+.3*\x, -3.5);
+    }
+  \foreach \x/\p/\l in {2.5//2, 3.5//1, 4.5//1}
+  {
+    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (2+.4*\x, -3.5);
+    }
+
+    \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, -4);
+  \foreach \x/\q in {-5/$0$, -2.45/$1$, .3/$\infty$, 3.4/$w$}
+    \filldraw[black] (\x,-4) circle (0.6mm) node[below] {\q};
+\end{tikzpicture}
+
+\label{fig:firsteg}
+\end{figure}
+
+The primary results we establish are as follows:
+\begin{itemize}
+\item In Section 4, we study a generalization of Example~\ref{eg:firsteg}: given
+  an even degree $d=2k$, a partition $\mu=(\mu_1,\dots,\mu_k)$ of $d$, and a generic
+  $k$-pointed genus $1$ curve $(C,p_1,\dots,p_k)$, we ask how many maps
+  $f:C\to\P^1$ exist with $f^{-1}(0)=\{p_1,\dots,p_k\}$, ramification index $\mu_i$
+  at $p_i$, and ramification profiles $(2,\dots,2)$ over both $1$ and $\infty\in\P^1$.
+  The answer to this ``even ramification'' problem is $3\cdot 2^{k-1}$, as
+  proven in Corollary~\ref{cor:twos}. (In particular, there are $3$ maps of
+  the kind considered in Example~\ref{eg:firsteg}.)
+\item In Section 5, we discuss a different kind of generalization: given
+  a degree $d$, a partition $\mu=(\mu_1,\dots,\mu_k)$ of $d$, multisets of positive integers $\a=\{a_1,\dots,a_r\}$ and $\b=\{b_1,\dots,b_s\}$,
+  and a generic $(k+s)$-pointed genus $1$ curve $(C,x_1,\dots,x_k,P_1,\dots,P_s)$,
+  we ask how many maps $f:C\to\P^1$ exist with $f^{-1}(0)=\{p_1,\dots,p_k\}$, ramification
+  index $\mu_i$ at $x_i$, ramification index $b_i$ at $P_i$, and other (unmarked) points
+  with ramification indices $a_1,\dots,a_r$.
+  While we do not find a closed form solution, we develop recursive relations sufficient
+  to calculate all such invariants in Theorems~\ref{thm:reduceb}, \ref{thm:reducea}, and \ref{thm:Sabbase}.
+\item As a special case of the previous point: given a degree $d$ and a generic $d$-pointed genus $1$ curve $(C,x_1,\dots,x_d)$, we ask
+  how many maps $f:C\to\P^1$ exist with $f^{-1}(0)=\{p_1,\dots,p_d\}$ and $d-2$ points in $C$ with ramification index $3$. Proposition~\ref{prop:deg4} shows that the answer is an explicit quartic in $d$, illustrating in this special case the usage of recurrence relations from Section 5.
+  
+  \end{itemize}
+
+Along the way we will demonstrate multiple techniques to calculate the enumerative
+invariants of interest to us:
+\begin{enumerate}
+\item Direct evaluation, by using the line bundle characterization of maps to $\P^1$ to recast the problem as an enumerative question about subvarieties of projective space (explained in Sections \ref{section:direct1} and \ref{section:direct2})
+\item Factoring covers as $C\to\P^1\to\P^1$, with the latter map of degree greater than $1$, where possible; this method is used in Section~\ref{section:comb}
+  \item The method outlined in Section~\ref{section:admissible}, of solving the problem for a non-generic pointed {\it stable} curve. This method is not new; it was used originally (?) in \cite{Cela} thanks to a technical result of \cite{Lian}, and is also used in \cite{Generalized}. Adapted to our context, it allows us to turn our central question into a combination of graph combinatorics and solving recurrence relations. In particular, we use this method heavily in Sections 4 and 5.
+  \end{enumerate}
+
+We note that the enumerative problem here is similar to a notion in the literature,
+that of {\it generalized Tevelev degree} \cite{Generalized}. Like our problem, the notion
+of generalized Tevelev degree turns the Hurwitz question somewhat on its head by fixing
+a pointed source curve before counting possible covers of $\P^1$. However, there is a crucial difference
+in that {\it both} a pointed source curve and certain points on the target $\P^1$ (where fibers will be ramified) are fixed. For instance:
+
+\begin{eg}
+  \label{eg:tevelev}
+  Fix a generic genus $1$ curve $C$ with points $p_1,\dots,p_6\in C$. Also fix generic points
+  $q_1,\dots,q_4\in\P^1$. We can consider degree $4$ maps $C\to\P^1$ where $p_1$ and $p_2$ are unramified points in the same fiber over $q_1$, $p_3$ and $p_4$ are unramified points in the same fiber over $q_2$, and $p_5$ and $p_6$ are ramified of index $2$ over the points $q_3$ and $q_4$ respectively.
+
+  \begin{figure}[h]
+  \caption{Illustration of the covers in Example~\ref{eg:tevelev}. Note that each depicted fiber has two unramified points not shown, and there are $5$ simply branched points not shown.}
+  \centering
+\begin{tikzpicture}
+  \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
+  \foreach \x/\p/\l in {-5.5/$p_1$/1, -4.5/$p_2$/1}
+  {
+    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (-3.4+.3*\x, -3.5);
+  }
+  \foreach \x/\p/\l in {-3/$p_3$/1, -2/$p_4$/1}
+  {
+    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (-1.7+.3*\x, -3.5);
+  }
+  \foreach \x/\p/\l in {0.3/$p_3$/2}
+  {
+    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (.2+.3*\x, -3.5);
+    }
+  \foreach \x/\p/\l in {3.3/$p_4$/2}
+  {
+    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (2+.4*\x, -3.5);
+    }
+
+    \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, -4);
+  \foreach \x/\q in {-5/$q_1$, -2.45/$q_2$, .3/$q_3$, 3.3/$q_4$}
+    \filldraw[black] (\x,-4) circle (0.6mm) node[below] {\q};
+\end{tikzpicture}
+
+\label{fig:tevelev}
+\end{figure}
+
+  In the notation of \cite{Generalized} we have $g=1$, $d=4$, $\ell=2$, $k=4$, $\mu_1=\mu_2=(1,1)$, $\mu_3=\mu_4=(2)$ and $n=6$. By Theorem 9 of that paper, the enumerative count is
+  \[
+  \text{Tev}_{1,2,(1,1),(1,1),(2),(2)}=2^1=2.
+  \]
+\end{eg}
 
 \section{Problem statement and general approaches}
 
 \subsection{Definitions}
 Fix a positive integer $d$, a nonnegative integer $g$, ordered partitions $\sigma_1,\dots,\sigma_n$ of $d$, and subpartitions $\nu_1,\dots,\nu_n$ (i.e., $\nu_i$ is a subset of $\sigma_i$).
 
-Let $\Hb_{g,\sigma}$ be the moduli space of degree $d$ admissible covers $C\to X$
-where $C$ is a genus $g$ prestable curve, $X$ is a genus $0$ prestable curve, we have marked points $q_1,\dots,q_n\in X$, the ramification profile over $q_i$ is $\sigma_i$, and the map is \'etale away from $q_1,\dots,q_n$. This situation is described in Figure \ref{fig:hurwitz}.
+Let $\Hb_{g,\sigma}$ be the moduli space consisting of degree $d$ admissible covers $C\to X$ where $C$ is a genus $g$ prestable curve and $X$ is a genus $0$ prestable curve, marked points $p_{i,j}\in C$ for every $i\in\{1,\dots,n\}$ and
+$j\leq \ell(\sigma_i)$, 
+marked points $q_1,\dots,q_n\in X$ such that
+the fiber over $q_i$ is $\{p_{i,1},\dots,p_{i,\ell(\sigma_i)}\}$ with
+ramification profile $\sigma_i$, and the map is \'etale away from $q_1,\dots,q_n$ and any nodes of the target. (See \cite{Admissible} for a reference on moduli spaces of admissible covers.) Our situation is described in Figure \ref{fig:hurwitz}.
 
 \begin{figure}[h]
   \caption{Depiction of a Hurwitz cover with notation used in this thesis}
   \centering
 \begin{tikzpicture}
   \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
-  \foreach \x/\p/\c in {-5.5/$p_{1,1}$/red, -4.5/$p_{1,|\nu_1|}$/red, -3/$p_{1,|\sigma_1|}$/black}
+  \foreach \x/\p/\c/\l in {-5.5/$p_{1,1}$/red/$\sigma_{1,1}$, -4.5/$p_{1,|\nu_1|}$/red/$\sigma_{1,\ell(\nu_1)}$, -3/$p_{1,|\sigma_1|}$/black/$\sigma_{1,\ell(\sigma_1)}$}
   {
     \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) -- (-3.15+.3*\x, -3.5);
@@ -199,7 +343,7 @@ where $C$ is a genus $g$ prestable curve, $X$ is a genus $0$ prestable curve, we
 
 
 Let $m=\sum|\nu_i|$ and $N=\sum|\sigma_i|$.
-We have natural maps:
+We have natural maps (TODO: label other maps with usual name in references):
 
 \begin{figure}[h]
   \centering
@@ -213,7 +357,8 @@ Here $\pi_{\nu}$ remembers the source curve and red points, i.e.\ the points cor
 
 \begin{lem}
   \label{lem:dim}
- The map $\pi_{\nu}$ is finite when $3g+m=n$.
+  The source and target of $\pi_{\nu}$ are of the same dimension when $3g+m=n$,
+  and thus if $\pi_{\nu}$ is finite this condition must hold.
 \end{lem}
 \begin{proof}
   By Hurwitz theory, we know that the first map is finite, and so $\dim(\Hb_{\sigma,\mu})=n-3$. The map $\pi_{\nu}$ will be finite if and only if
@@ -246,6 +391,7 @@ where $\Aut(\sigma-\nu)$ denotes automorphisms of $\sigma_i-\nu_i$ for each $i$ 
   \[
   N_{g,\sigma,\nu}=\frac{W_{g,\sigma,\nu}}{|\Aut(2,2)|^2\cdot |\Aut(2,1,1)|^2\cdot |\Aut((2,2),(2,2),(2,1,1),(2,1,1))|}=\frac{W_{g,\sigma,\nu}}{2^2\cdot 2^2\cdot 2\cdot 2}.
   \]
+  Here $\Aut(\{x_1,\dots,x_k\})$ is the subgroup of $S_k$ fixing these elements.
   \end{eg}
 
 One way to think about $N_{g,\sigma,\nu}$ is as follows: the map
@@ -260,16 +406,16 @@ $\sigma_1=\nu_1=\mu$, and $\nu_3=\nu_4=\dots=\emptyset$.
 \begin{dfn}
   We will write
 \[
-W_{\sigma_1,\dots,\sigma_n}^{\lambda}(\mu)=W_{1,(\mu,\sigma_1,\dots,\sigma_n),(\lambda,\emptyset,\dots,\emptyset)}
+W_{\sigma_1,\dots,\sigma_n}(\mu)=W_{1,(\mu,\sigma_1,\dots,\sigma_n),(\mu,\emptyset,\dots,\emptyset)}
 \]
 for the relevant labeled invariant, and
 \[
-N_{\sigma_1,\dots,\sigma_n}^{\lambda}(\mu)=N_{1,(\mu,\sigma_1,\dots,\sigma_n),(\lambda,\emptyset,\dots,\emptyset)}
+N_{\sigma_1,\dots,\sigma_n}(\mu)=N_{1,(\mu,\sigma_1,\dots,\sigma_n),(\mu,\emptyset,\dots,\emptyset)}
 \]
 for the unlabeled invariant.\end{dfn}
-In particular we will write
+In particular,
 \[
-N_{\sigma_1,\dots,\sigma_n}(\mu)=N_{\sigma_1,\dots,\sigma_n}^{\emptyset}(\mu)=\frac{W_{\sigma_1,\dots,\sigma_n}^{\emptyset}(\mu)}{|\Aut(\sigma_2,\dots,\sigma_n)|\cdot\prod_{i=2}^n|\Aut(\sigma_i)|}
+N_{\sigma_1,\dots,\sigma_n}(\mu)=\frac{W_{\sigma_1,\dots,\sigma_n}(\mu)}{|\Aut(\sigma_2,\dots,\sigma_n)|\cdot\prod_{i=2}^n|\Aut(\sigma_i)|}
 \]
 If $\mu,\sigma_1,\dots,\sigma_n$ do not have ramification sufficient to satisfy Riemann-Hurwitz,
 we let \[N_{\sigma_1,\dots,\sigma_n}(\mu) = N_{\sigma_1,\dots,\sigma_n,(2,1^{d-2}),\dots}(\mu).\]
@@ -277,7 +423,7 @@ The primary task of this thesis is to understand the invariants $N_{\sigma_1,\do
 in some significant special cases.
 
 \begin{eg}
-  Consider the case where $d=2$, $n=1$ and $\mu=\sigma_1=\sigma_2=\sigma_3=(2)$.
+  Consider the case where $d=2$, $n=1$, $\mu=\sigma_1=\sigma_2=\sigma_3=(2)$.
   We know that there is a unique map $(E,p)\to (\mathbb P^1,0)$ of the specified form
   up to automorphisms of $\P^1$, and it factors through the antipodal automorphism of $E$,
   so
@@ -294,41 +440,99 @@ in some significant special cases.
   where $\overline H$ is a marked Hurwitz number.
   \end{eg}
 
-\subsection{Main results}
+\subsection{Direct evaluation}
+\label{section:direct1}
+We can interpret $N_{\sigma_1,\dots,\sigma_n}(\mu)$ as follows.
 
-\subsection{Geometric interpretation and examples}
-We can describe $N_{\mu,\sigma_2,\dots,\sigma_n}$ geometrically as follows.
-
-Let $d>2$. Up to automorphisms of $\P^1$, a degree $d$ map $f:E\to\P^1$ corresponds to a degree $d$ line bundle $\mathcal L$ and a basepoint-free two-dimensional subspace $V\subset H^0(\mathcal L)$. By Riemann-Roch, $\mathcal L$ gives an embedding $E\hookrightarrow\P(H^0(\mathcal L))\cong\P^{d-1}$, and a basepoint-free two-dimensional subspace $V\subset H^0(\mathcal L)$ corresponds to a well-defined composition
+Let $d>2$. Up to automorphisms of $\P^1$, a degree $d$ map $f:E\to\P^1$ corresponds to a degree $d$ line bundle $\mathcal L$ and a basepoint-free two-dimensional subspace $V\subset H^0(E,\mathcal L)$. By Riemann-Roch, $\mathcal L$ gives an embedding $E\hookrightarrow\P(H^0(E,\mathcal L))\cong\P^{d-1}$, and a basepoint-free two-dimensional subspace $V\subset H^0(E,\mathcal L)$ corresponds to a well-defined composition
 \[
-E\hookrightarrow \P(H^0(\mathcal L))=\P(V\oplus V^{\perp})\dashrightarrow\P(V)\cong\P^1
+E\hookrightarrow \P(H^0(E,\mathcal L))=\P(V\oplus V^{\perp})\dashrightarrow\P(V)\cong\P^1
 \]
-For the composition to be well-defined, $E$ should not intersect $\P(V^{\perp})$, a codimension 2 subspace of $\P(H^0(\mathcal L))$. Each fiber of the rational map
-$\P(V\oplus V^{\perp})\dashrightarrow\P(V)$ is a hyperplane containing $\P(V^{\perp})$, and so the fibers of the map $E\to\P^1$ correspond to intersections $H\cap E$ where $H$ is some hyperplane containing $\P(V^{\perp})$. Thus, $N_{\mu,\sigma_2\dots,\sigma_n}$ can be determined by embedding $E$ in $\P^{d-1}$ via $\mathcal L=\mathcal O(\mu_{1}p_1+\dots+\mu_{|\mu|}p_{|\mu|})$ and counting the number of codimension 2 subspaces $\P(V^{\perp})\subset \P^{d-1}$ such that (a) $\P(V^{\perp})\cap E=\emptyset$, (b) $\P(V^{\perp})\subset H_0$ where $H_0\cap E=\mu_{1}p_1+\dots+\mu_{|\mu|}p_{|\mu|}$, (c) $\P(V^{\perp})\subset H_i$ where $H_i\cap E$ has shape $\sigma_i$, for $i=2,\dots,n$.
+For the composition to be well-defined, $E$ should not intersect $\P(V^{\perp})$, a codimension 2 subspace of $\P(H^0(E,\mathcal L))$. Each fiber of the rational map
+$\P(V\oplus V^{\perp})\dashrightarrow\P(V)$ is a hyperplane containing $\P(V^{\perp})$, and so the fibers of the map $E\to\P^1$ correspond to intersections $H\cap E$ where $H$ is some hyperplane containing $\P(V^{\perp})$. Thus, $N_{\sigma_1,\dots,\sigma_n}(\mu)$ can be determined by embedding $E$ in $\P^{d-1}$ via $\mathcal L=\mathcal O(\mu_{1}p_1+\dots+\mu_{|\mu|}p_{|\mu|})$ and counting the number of codimension 2 subspaces $\P(V^{\perp})\subset \P^{d-1}$ such that (a) $\P(V^{\perp})\cap E=\emptyset$, (b) $\P(V^{\perp})\subset H_0$ where $H_0\cap E=\mu_{1}p_1+\dots+\mu_{|\mu|}p_{|\mu|}$, (c) $\P(V^{\perp})\subset H_i$ where $H_i\cap E$ has shape $\sigma_i$, for $i=1,\dots,n$.
 
-Note that if $\P(V^{\perp})$ is such a codimension 2 subspace corresponding to a map $f$, then $-\P(V^{\perp})$ (applying the involution on $E$, which extends to an automorphism of $\P(H^0(\mathcal L))$) is as well and corresponds to $x\mapsto f(-x)$.
+Note that if $\P(V^{\perp})$ is such a codimension 2 subspace corresponding to a map $f$, then $-\P(V^{\perp})$ (applying the involution on $E$, which extends to an automorphism of $\P(H^0(E,\mathcal L))$) is as well and corresponds to $x\mapsto f(-x)$.
 
 \begin{eg}
-  Let's compute $N_{(3),(3)}$. Embedding $E\hookrightarrow\P^2$ via $\mathcal L=\mathcal O(3p)$, we want to count the points $q\notin E$ such that
+  Let's compute $N_{(3)}(3)$. Embedding $E\hookrightarrow\P^2$ via $\mathcal L=\mathcal O(3p)$, we want to count the points $q\notin E$ such that
   $q\in\ell_0$ (the line at infinity) and $q\in\ell_1$, where $\ell_1\cap E=3r$ for some $r\neq p$ (we don't need to worry about the simple ramification, which
   is guaranteed). Since $q=\ell_0\cap\ell_1$ we just need to count lines $\ell_1$ with $\ell_1\cap E=3r$ for $r\neq p$; these are flex lines corresponding to nontrivial 3-torsion points, of which there are $3^2-1=8$. Therefore,
   \[
-  N_{(3),(3)}=8.
+  N_{(3)}(3)=8.
   \]
 \end{eg}
 \begin{eg}
-  Let's compute $N_{(2,1),(3)}$. If $\mathcal O(2p_1+p_2)=\mathcal O(3p_{\infty})$, then we can embed $E$ in $\P^2$ with $p_{\infty}$ as the point at infinity
-  and let $\ell_0$ be a line such that $\ell_0\cap E=2p_1+p_2$. We want to count points $q\notin E$ with $q\in \ell_0$ and $q\in \ell_1$, where $\ell_1$ is a flex line. This again amounts to counting flex lines, so $N_{(2,1),(3)}=3^2=9$.
+  Let's compute $N_{(3)}(2,1)$. If $\mathcal O(2p_1+p_2)=\mathcal O(3p_{\infty})$, then we can embed $E$ in $\P^2$ with $p_{\infty}$ as the point at infinity
+  and let $\ell_0$ be a line such that $\ell_0\cap E=2p_1+p_2$. We want to count points $q\notin E$ with $q\in \ell_0$ and $q\in \ell_1$, where $\ell_1$ is a flex line. This again amounts to counting flex lines, so $N_{(3)}(2,1)=3^2=9$.
 
-  For similar reasons, $N_{(1,1,1),(3)}=9$.
+  For similar reasons, $N_{(3)}(1,1,1)=9$.
 \end{eg}
 
-Another way to count $N_{\mu_0,\dots,\mu_{n+2}}$: note that $\{H:\P(V^{\perp})\subset H\}$ is a line in $\P(H^0(\mathcal L))^*$.
-Let $X_{\mu}=\{H\in\P(H^0(\mathcal L))^*:H\cap E\text{ has shape }\mu\}$.
-Counting the number of possibilities $\P(V^{\perp})$ amounts to counting lines $\ell\subset\P(H^0(\mathcal L))^*$ such that $H_0\in\ell$, $H_1,\dots,H_{n+2}\in\ell$ for distinct points $H_i\in X_{\mu_i}$, and $\P(V^{\perp})\cap E=H_0\cap H_1\cap E=\emptyset$.
-Letting $\pi:\P^{d-1}\dashrightarrow \{\text{lines in $\P^{d-1}$ through $H_0$}\}=\P^{d-2}$ send $x$ to the line through $x$ and $H_0$, the idea is to count points in $\P^{d-2}$ whose fiber contains distinct points $H_i\in X_{\mu_i}$. (TODO: ensure $\ell$ isn't contained in $\{H:p\in H\}$, a plane in $(\P^3)^*$)
+Another way to count $N_{\sigma_1,\dots,\sigma_n}(\mu)$: note that $\{H:\P(V^{\perp})\subset H\}$ is a line in $\P(H^0(E,\mathcal L))^*$.
+Let $X_{\mu}=\{H\in\P(H^0(E,\mathcal L))^*:H\cap E\text{ has shape }\mu\}$.
+Counting the number of possibilities $\P(V^{\perp})$ amounts to counting lines $\ell\subset\P(H^0(E,\mathcal L))^*$ such that $H_0\in\ell$, $H_1,\dots,H_{n}\in\ell$ for distinct points $H_i\in X_{\mu_i}$, and $\P(V^{\perp})\cap E=H_0\cap H_1\cap E=\emptyset$.
+Letting $\pi:\P^{d-1}\dashrightarrow \{\text{lines in $\P^{d-1}$ through $H_0$}\}=\P^{d-2}$ send $x$ to the line through $x$ and $H_0$, the idea is to count points in $\P^{d-2}$ whose fiber contains distinct points $H_i\in X_{\mu_i}$.
 
-Now we move on to $d=4$, and embed $E$ in $\P^3$ via
+\begin{dfn}
+  Assume $E\subset \P^{d-1}$. For any partition $\tau=(\tau_1,\dots,\tau_r)$ of $d$,
+  \[
+  X_{\tau}=\{H\in (\P^{d-1})^*:H\cap E=\tau_1x_1+\dots+\tau_rx_r\text{ for some }x_i\text{ not necessarily distinct}\}
+  \]
+\end{dfn}
+
+Note that these subvarieties $X_{\tau}$ form a stratification of $(\P^{d-1})^*$,
+with $\dim(X_{\tau})=\ell(\tau)-1$ and with
+\[
+X_{(\tau_1,\tau_2,\dots,\tau_r)}\subset X_{(\tau_1+\tau_2,\tau_3,\dots,\tau_r)}
+\]
+We have an alternate interpretation, as well, of $X_{\tau}$ as the locus of effective divisors of shape $\tau$ (or a specialization of $\tau$) equivalent to $\mu_1p_1+\dots+\mu_kp_k$, or equivalently which are zero in the group law of $E$:
+\[
+X_{\tau}\cong\{(x_1^{\tau_1},\dots,x_r^{\tau_r})\in\text{Sym}^d(E):\tau_1x_1+\dots+\tau_rx_r=0\in E\}
+\]
+
+
+\begin{prop}
+  \label{prop:direct}
+  Fix $\mu=(\mu_1,\dots,\mu_k)$ a partition of $d$, and consider
+  a generic $k$-pointed
+  genus $1$ curve $(E,p_1,\dots,p_k)$ embedded in $\P^{d-1}$ with a hyperplane
+  $H_0$ such that $H_0\cap E = \mu_1p_1+\dots+\mu_kp_k$.
+  
+  Let $\pi:(\P^{d-1})^*\dashrightarrow\{\text{lines in }(\P^{d-1})^*\text{ through }H_0\}\cong \P^{d-2}$. Then
+  \[
+  N_{\sigma_1,\dots,\sigma_n}(\mu)=\left|\left\{q\in\P^{d-2}-\bigcup_{i=1}^kB_i:\pi^{-1}(q)=\{H_1,\dots,H_n\}\text{ where }H_i\in X_{\sigma_i}\text{ are distinct}\right\}\right|
+  \]
+  where $B_i=\{\ell\subset(\P^{d-1})^*:H_0\in \ell\subset\{H:p_i\in H\}\}$ is a hyperplane in $\{\text{lines in }(\P^{d-1})^*\text{ through }H_0\}\cong \P^{d-2}$.
+     (Note that if $\mu=(1,\dots,1)$, then $\pi$ is a projection onto a generic hyperplane.)
+\end{prop}
+\begin{proof}
+  We know that $N_{\sigma_1,\dots,\sigma_n}(\mu)$ is the number of codimension $2$
+  subspaces $\P(V^{\perp})\subset\P^{d-1}$ which do not intersect $E$, and which are contained in distinct $H_0,H_1,\dots,H_n$ where $H_i\in\sigma_i$. Such a subspace
+  $\P(V^{\perp})$ can be written $\P(V^{\perp})=H_i\cap H_j$ for any distinct $i$
+  and $j$.
+  The locus of $H\in(\P^{d-1})^*$ containing
+  a given subspace $\P(V^{\perp})$ of codimension $2$ is equivalent to a
+  line in $(\P^{d-1})^*$, so we are interested in
+  tuples of distinct hyperplanes $H_0,H_1,\dots,H_n$ which are collinear in
+  $(\P^{d-1})^*$. The requirement that $\P(V^{\perp})=H_0\cap H_i$ does not intersect $E$ is equivalent to $H_i$ not containing any $p_1,\dots,p_k$, or that
+  the line between $H_0$ and $H_i$ is not in any $B_1,\dots,B_k$.
+\end{proof}
+
+\begin{eg}
+  We return to the computation of $N_{(3)}(3)=N_{(3),(2,1),(2,1)}(3)$. Let $(E,p)$
+  be a generic elliptic curve in $\P^{d-1}=\P^2$; the map $\pi:(\P^2)^*\dashrightarrow \P^1$ is projection away from the line at infinity $\ell_{\infty}$.
+  Here $X_{(3)}=\{\ell:\ell\cap E=3x\text{ for some }x\}$ consists of the flex lines to $E$ (of which there are $3^2=9$ corresponding to $3$-torsion points, and one of which is $\ell_{\infty}$), while $X_{(2,1)}\subset (\P^2)^*$ is the dual curve of $E$ mapping surjectively onto $\P^1$ under $\pi$. We know that $|\pi(X_{(3)})|=8$ (since $\ell_{\infty}$ is not in the domain of $\pi$), so $N_{(3)}(3)=|\pi(X_{(3)}|=8$.
+  \end{eg}
+
+
+\subsection{Low-dimensional examples}
+
+In this section, we refer to Macaulay2 calculations to
+compute $N_{\sigma_1,\dots,\sigma_n}(\mu)$ in a couple degree $4$ cases
+using Proposition~\ref{prop:direct}; the
+code and some details are in Appendix~\ref{appendix:code}). We provide tables with values of some invariants in degrees $3$, $4$, and $5$.
+
+Let $d=4$, and consider a generic elliptic curve $(E,p)$ embedded in $\P^3$ via
 $\mathcal L=\mathcal O(4p)$. We have a stratification of $(\P^3)^*$:
 
 \begin{tikzpicture}
@@ -340,79 +544,90 @@ $\mathcal L=\mathcal O(4p)$. We have a stratification of $(\P^3)^*$:
   \draw (A) edge (B);
 \end{tikzpicture}
 
-First, note that \[X_{(2,2)}\cong\{(x,y)\in E^2:2x+2y=0\}=\{(x,y)\in E^2:x+y\text{ is 2-torsion}\}\]
+First, note that \[X_{(2,2)}\cong\{(x,y)\in E^2:2x+2y=0\}/S_4=\{(x,y)\in E^2:x+y\text{ is 2-torsion}\}/S_2\]
 so $X_{(2,2)}$ is a disjoint union of four curves each corresponding to a 2-torsion point $t_i$:
 \[
 C_i=\text{image}(f_i:E\hookrightarrow(\P^3)^*),\ f_i(x)=H\text{ where }H\cap E=2x+2(t_i-x)
 \]
-Note that $f_i$ is 2-to-1 ($x$ and $t_i-x$ are in the same fiber), so $C_i\cong E/S_2\cong\P^1$.
+Note that $f_i$ is 2-to-1 ($x$ and $t_i-x$ are in the same fiber), so $C_i\cong E/S_2\cong\P^1$. See Listing~\ref{code:X22} for the computation in M2 to compute $X_{(2,2)}$; it turns out that each $C_i$ is a plane conic. Consequently,
+we know for instance that
+\[
+N_{(2,2),(2,2)}(1,1,1,1)=\#\left(\bigcup_{i\neq j}\pi(C_i)\cap \pi(C_j)\right)=\binom 42\cdot 2^2=24
+\]
+where $\pi$ is a generic projection $\P^3\dashrightarrow\P^2$, as in
+Proposition~\ref{prop:direct}.
 
-See ``Documents/four\_curves\_linear.m2'' for the computation in M2 to compute $X_{(2,2)}$; it turns out that each $C_i$ is a plane conic. By counting points of
-intersection of the images of $C_i$ under $\pi:(\P^3)^*\dashrightarrow\P^2$, we find that
-\[
-N_{(4),(2,2),(2,2)}=3
-\]
-as expected from the Hurwitz calculation. By changing $\pi$ (and therefore $H_0$), we can also find
-\[
-N_{(3,1),(2,2),(2,2)}=N_{(2,2),(2,2),(2,2)}=6,\]\[ N_{(2,1,1),(2,2),(2,2)}=12,\ N_{(1,1,1,1),(2,2),(2,2)}=24
-\]
+The case $N_{(3,1),(3,1)}(1,1,1,1)$ is of interest; it corresponds to counting
+the number of fibers of a generic projection $\pi:\P^3\dashrightarrow\P^2$
+containing multiple points of $X_{(3,1)}$. Equivalently this is the number of
+double fibers of the map $X_{(3,1)}-\{H_0\}\to \pi(X_{(3,1)}-\{H_0\})=Y_{(3,1)}$, or the number of nodes of $Y_{(3,1)}$.
 
-Next we consider $X_{(3,1)}$ (calculated in ``osculating.m2''). There is a map $g:E\to(\P^3)^*$ sending $q\mapsto H$ where $H$ is the {\it osculating plane} to $E$ at $q$, i.e.\ $H$ intersects $E$ at
-$q$ with multiplicity at least 3. This $H$ can be defined as the limit of planes containing $q,r,s\in E$ as $r,s\to q$, or equivalently as the limit of planes containing
-$T_qE$ and $r$ as $r\to q$. (TODO: re-work the osculating plane stuff using that it's generated by $v(0),v'(0),v''(0)$.)
+Since the projection in this case is generic, $\text{deg}(Y_{(3,1)})=\text{deg}(X_{(3,1)})=12$ (by results of Listing~\ref{code:X31}, or by Lemma~\ref{lemma:degree}) and the degree-genus formula tells us that the arithmetic genus
+of $Y_{(3,1)}$ is
+\[
+g_a=\frac{(11)(10)}{2}=55
+\]
+The geometric genus of $X_{(3,1)}$ is $1$ and it has $16$ cusps,
+so the number of nodes of $Y_{(3,1)}$ is (TODO: really understand)
+\[
+N_{(3,1),(3,1),(1,1,1,1)}=55-16-1=38
+\]
+In principle one could hope that the method of this example ---
+computing the degree of $X_{(3,1)}$ and relating degree, genus, and
+number of singularities
+--- is generalizable to tackle $N_{\tau,\tau}(\mu)$. However, the degree-genus
+formula is critical here and it is not obvious how to replace this tool in higher dimensions.
 
-Let $E=\{F=G=0\}\subset\P^3$. We know that \[T_qE=\{x:\nabla_qF\cdot x=\nabla_qG\cdot x=0\}\]
-A plane containing this tangent line must be of the form \[H=\{x:(a\nabla_qF+b\nabla_qG)\cdot x=0\}\]
-for some $a,b$. If $r\in H$, then
-\[
-a\nabla_qF\cdot r+b\nabla_qG\cdot r=0\implies [a:b]=[\nabla_qG\cdot r:-\nabla_qF\cdot r]
-\]
-This equation fails when $r=q$ (since $\nabla_qF\cdot q=\nabla_qG\cdot q=0$). Letting $[u:v]$ be the limit of $[\nabla_qG\cdot r:\nabla_qF\cdot r]$
-as $r\to q$, we'll have
-\[
-H=\left\{\left(u\frac{\partial F}{\partial x}\bigg|_q-v\frac{\partial G}{\partial x}\bigg|_q\right)x+
-\left(u\frac{\partial F}{\partial y}\bigg|_q-v\frac{\partial G}{\partial y}\bigg|_q\right)y+
-\left(u\frac{\partial F}{\partial z}\bigg|_q-v\frac{\partial G}{\partial z}\bigg|_q\right)z+
-\left(u\frac{\partial F}{\partial w}\bigg|_q-v\frac{\partial G}{\partial w}\bigg|_q\right)w=0\right\}
-\]
-It remains to find $u$ and $v$. Suppose we have a (non-algebraic) parametrization of $E$ labeled $v(t)$, with $v(0)=q$. Using L'Hopital, our goal
-is to find
-\[
-\lim_{t\to 0}[\nabla_qG\cdot v(t):\nabla_qF\cdot v(t)]=\lim_{t\to 0}[\nabla_qG\cdot v'(t):\nabla_qF\cdot v'(t)]=\lim_{t\to 0}[\nabla_qG\cdot v''(t):\nabla_qF\cdot v''(t)]=[\nabla_qG\cdot v''(0):\nabla_qF\cdot v''(0)]
-\]
+We provide the following tables of values in degrees $d=3$, $d=4$, and $d=5$:
 
 
-We know
-$F(v(t))=0$ and $G(v(t))=0$ so
-\[
-\nabla _{v(t)}F\cdot v'(t)=\nabla _{v(t)}G\cdot v'(t)=0
-\]
-Taking derivatives again,
-\[
-\nabla_{v(t)}F\cdot v''(t)+v'(t)\cdot\left(\frac{\partial^2F}{\partial t_i\partial t_j}\right)\cdot v'(t)=\nabla_{v(t)}G\cdot v''(t)+v'(t)\cdot\left(\frac{\partial^2G}{\partial t_i\partial t_j}\right)\cdot v'(t)=0
-\]
-It remains to compute $v'(0)\cdot H\cdot v'(0)$ where $H$ is the Hessian of $F$ or $G$.
-We know that $v'(0)$ is in the kernel of $\nabla_qF$ and $\nabla_qG$ and any generic element of both kernels will work, so we choose an element of the kernel of
-\[
-\begin{bmatrix}
-  \frac{\partial F}{\partial x}\big|_q & \frac{\partial F}{\partial y}\big|_q & \frac{\partial F}{\partial z}\big|_q & \frac{\partial F}{\partial w}\big|_q \\
-  \frac{\partial G}{\partial x}\big|_q & \frac{\partial G}{\partial y}\big|_q & \frac{\partial G}{\partial z}\big|_q & \frac{\partial G}{\partial w}\big|_q \\
-  1 & 0 & 0 & 0 \\
-  \end{bmatrix}
-\]
-It turns out $[D_1,-D_2,D_3,-D_4]$ works where $D_i$ is the determinant of the matrix produced by deleting the $i^{\text{th}}$ column, which can be shown by duplicating rows and taking determinants
-(which will be 0).
+  \begin{table}[h]
+    \caption{Table of invariants for $n=3$.}
+    \centering
+    ~\\
+  \begin{tabular}{|l|r|}
+    \hline
+$\mu$           & ${N_{(3)}(\mu)}$ \\ \hline
+$3$ & 8                                           \\ \hline
+$2,1$                   & $9$                              \\ \hline
+$1,1,1$                 & $9$ \\ \hline
+\end{tabular}
+\end{table}
 
-After doing this it turns out that $X_{(1,3)}$ is a degree 12 curve, with singularities (cusps? TODO) at the planes $H$ with $H\cap E=4q$ for some $q$ (corresponding to the 4-torsion points). There are $4^2=16$ of these singularities.
+  \begin{table}[h]
+    \caption{Table of invariants for $n=4$.}
+    \centering
+    ~\\
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+$\mu$             & $N_{(4)}(\mu)$ & $N_{(3,1),(2,2)}(\mu)$ & $N_{(2,2),(2,2)}(\mu)$ & $N_{(3,1),(3,1)}(\mu)$ \\ \hline
+{4} & {15} & {18}        & {3}         & {20}        \\ \hline
+3,1                     & {16} & {32}        & {6}         & {28}        \\ \hline
+2,2                     & {16} & {18}        & {6}         & {36}        \\ \hline
+2,1,1                   & {16} & {36}        & {12}        & {37}        \\ \hline
+1,1,1,1                 & {16} & {48}        & {24}        & {38}        \\ \hline
+\end{tabular}
+\end{table}
 
-To compute $N_{(4),(3,1),(3,1)}$, we take the image $Y_{(1,3)}$ under projection from $H_0$. It turns out that $Y_{(1,3)}$ is a degree 10
-curve with cusps at the images of 4-torsion points (except for the image of $H_0$, which is a smooth point) and $20$ nodes, so
-\[
-N_{(4),(3,1),(3,1)}=20
-\]
-TODO: calculate $N_{(1,1,1,1),(3,1),(3,1)}$ using genus-degree formula; explain why this doesn't work for higher degree
+  \begin{table}[h]
+    \caption{Table of invariants for $n=5$.}
+    \centering
+    ~\\
+\begin{tabular}{|l|l|l|}
+\hline
+$\mu$             & $N_{(4,1),(3,1,1)}(\mu)$ & $N_{(3,1,1),(3,1,1),(3,1,1)}(\mu)$ \\ \hline
+{5} & {72}                                       & {16}                    \\ \hline
+4,1                     & {95}                                       & {36}                    \\ \hline
+3,2                     & {118}                                      & {56}                    \\ \hline
+3,1,1                   & {120}                                      & {64}                    \\ \hline
+2,2,1                   & {136}                                      & {92}                    \\ \hline
+2,1,1,1                 & {138}                                      & {101}                   \\ \hline
+1,1,1,1,1               & {140}                                      & 110                                        \\ \hline
+\end{tabular}
+\end{table}
 
 \section{Admissible covers}
+\label{section:admissible}
 
 In this section we explain a known method in the literature that we will use
 to recursively compute $W_{g,\sigma,\nu}$. This is a method used in \cite{Generalized} to prove Proposition 6, and reliant on a result from \cite{Lian}. We begin by motivating the method, and then illustrate the use of the method as adapted to the specific context of this thesis.
@@ -452,10 +667,10 @@ We first begin with a rough illustration of what we intend to do.
               \end{tikzpicture}
   
 
-  Intuitively we want to count covers from a generic stable curve with graph $A$ to a genus $0$
+  Intuitively we want to count covers from a generic stable curve with dual graph $A$ to a genus $0$
   curve, such that $p_{1,1}$ and $p_{1,2}$ are in the same fiber (with ramification indices $2$ and $1$),
   and there is marked ramification elsewhere with ramification profiles $(3),(2,1),(2,1),(2,1)$.
-  Remembering the marked points, the source should be a stable curve in $\overline{\mathcal M_{1,9}}$ with graph $\hat A$, where $\hat A$
+  Remembering the marked points, the source should be a stable curve in $\overline{\mathcal M_{1,9}}$ with dual graph $\hat A$, where $\hat A$
   becomes $A$ after applying a forgetful map.
 
   One possible graph $\hat A_1$, obtained by putting $p_{5,1}$ and $p_{5,2}$ on the genus $0$ component and other
@@ -942,9 +1157,10 @@ $C$ can be identified as $\P^1$ with $4$ points of stabilizer $\Z/2$, and is kno
 the $4$ special points, and so $N_{\mu,(2^k),(2^k)}$ can be interpreted as a relative Gromov-Witten
 invariant of the pillowcase $C$, fitting into a larger picture of classes $\langle \mu\rangle_d^{C}\in H^{g-1}(\overline{\mathcal M}_{g,\ell(\mu)})$.
 
-\subsection{Geometric interpretation}
+\subsection{Direct evaluation}
+\label{section:direct2}
 
-The problem can be restated in geometric terms as follows: let $E\subset \P^{d-1}$ be a general genus $1$ curve,
+The problem can be restated as follows: let $E\subset \P^{d-1}$ be a general genus $1$ curve,
 and let $H_0$ be a general hyperplane such that $H_0\cap E$ has type $\mu$. Then letting \[X_{(2^k)}=\{H\in(\P^{d-1})^*:H\cap E\text{ is of type }(2^k)\}\]
 and $\pi:(\P^{d-1})^*\dashrightarrow \P^{d-2}$ be projection away from $H_0$, we want the number of fibers of $\pi$
 containing multiple points of $X_{(2^k)}$.
@@ -957,13 +1173,14 @@ where the $t_i$ are the $2$-torsion points of $E$. This means we have a map $X_{
 \[
 X_{(2^k)}=X_{(2^k)}^{(1)}\cup X_{(2^k)}^{(2)}\cup X_{(2^k)}^{(3)}\cup X_{(2^k)}^{(4)}
 \]
-Each component is (abstractly? TODO) isomorphic to $E^{k-1}/\sim\cong \P^{k-1}$,
+Each component is isomorphic to $E^{k-1}/S_k\cong \P^{k-1}$,
 and our goal is to count the size of $\pi(X_{(2^k)}^{(i)})\cap \pi(X_{(2^k)}^{(j)})$
 for $i\neq j$.
 
 It will be necessary to compute the degree of $X_{(2^k)}$, so we begin with a more general calculation of the degree of $X_{\mu}$:
 
 \begin{lem}
+  \label{lemma:degree}
   If $\mu=(\mu_1,\dots,\mu_n)$ with $|\mu|=d$, then
   \[
   \text{deg}(X_{\mu})=\frac{\mu_1\cdots\mu_n\cdot d(n-1)!}{|\text{Aut}(\mu)|}
@@ -990,7 +1207,12 @@ In particular,
 \[
 \text{deg}(X_{(2^k)})=\frac{(k-1)!2^k(2k)}{k!}=2^{k+1}\implies \text{deg}(X_{(2^k)}^{(i)})=2^{k-1}.
 \]
-Let $\mu=(1^{d})$. Then the intersection is the sum of product of degrees of $X_{(2^k)}^{(i)}$ and $X_{(2^k)}^{(j)}$ for $i\neq j$, i.e.
+Let $\mu=(1^{d})$. Then $\pi:(\P^{d-1})^*\dashrightarrow\P^{d-2}$ is
+a projection map from a generic point, so $X_{(2^k)}^{(i)}$ has the same
+degree as its image under $\pi$, and the count we are interested in is the
+number of points of intersection between the images of $X_{(2^k)}^{(i)}$ and
+$X_{(2^k)}^{(j)}$ for any $i\neq j$.
+This is the sum of product of degrees of $X_{(2^k)}^{(i)}$ and $X_{(2^k)}^{(j)}$ for $i\neq j$, i.e.
 \[
 \binom 42\cdot 2^{k-1}\cdot 2^{k-1}=6\cdot 2^{d-2}=3\cdot 2^{d-1}
 \]
@@ -999,10 +1221,11 @@ in agreement with our main claim.
 
 \subsection{$\mu=(d)$}
 
-Having proved the result geometrically for $\mu=(1,\dots,1)$, we now tackle the other extreme case, where $\mu=(d)$. We will show that $N_{(d),(2^k),(2^k)}=3$
+Having proved the result directly for $\mu=(1,\dots,1)$, we now tackle the other extreme case, where $\mu=(d)$. We will show that $N_{(d),(2^k),(2^k)}=3$
 using two methods: first, by categorizing all such maps explicitly using Hurwitz theory and counting them, and second by performing a genus reduction.
 
 \subsubsection{Combinatorial solution}
+\label{section:comb}
 
 \begin{figure}[h]
   \caption{Factored Hurwitz cover with even ramification, in the case where $k$ is odd}
@@ -1229,7 +1452,7 @@ is of the form:
             \begin{align*}
               \overline H((d),(a,b),(2,1^{d-2}))\cdot \overline H((2^k),(2^k),(a,b))\cdot d\cdot\frac 1{|\Aut(a,b)|}
             \end{align*}
-            By Claim~\ref{claim:twoscycles} in Appendix 1, the second term vanishes unless $a=b=k$, in which case
+            By Claim~\ref{claim:twoscycles} in Appendix~\ref{appendix:hurwitz}, the second term vanishes unless $a=b=k$, in which case
             the count (by Claims~\ref{claim:twoscycles} and \ref{claim:Hurwitz2}) is
             \[
             (1\cdot (d-2)!)\cdot \left(\frac 1d\cdot k!\cdot k!\cdot 2\right)\cdot d\cdot\frac 12
@@ -1582,6 +1805,7 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
 \end{proof}
 
 \begin{cor}
+  \label{cor:twos}
   For any $\mu$, $N_{(2^k),(2^k)}(\mu)=3\cdot 2^{\ell(\mu)-1}$.
 \end{cor}
 \begin{proof}
@@ -1636,18 +1860,42 @@ $P_{i,1},\dots,P_{i,d-b_i+1}$ form the fiber corresponding to the
 $i^{\text{th}}$ value $b_i\in\b$.
 
 \begin{prop}
-  Elements $1$ in both $\a$ and $\b$ can be removed:
-  $S_{\a+\{1\},\b}(\mu)=S_{\a,\b+\{1\}}(\mu)=S_{\a,\b}(\mu)$.
-  We can therefore assume without loss of generality that $\a$
-  and $\b$ contain integers greater than $1$.
+  Elements $1$ in $\b$ can be removed:
+  $S_{\a,\b+\{1\}}(\mu)=S_{\a,\b}(\mu)$.
+  We can therefore assume without loss of generality that $\b$ contains integers greater than $1$.
 \end{prop}
 \begin{proof}
   The addition of a ramification profile $(1,\dots,1)$ does not affect
   our counting problem, since this is the generic form of a fiber;
-  in the case of $\b$, imposing that one marked point on the
+  imposing that one marked point on the
   generic genus $1$
   marked curve is part of a generic fiber is no restriction at all.
-  (TODO: prove more formally)
+
+  More formally,
+  we have the following commutative diagram:
+
+  \[\begin{tikzcd}
+\Hb_{1,\sigma+\{(1,\dots,1)\}} & \overline{\mathcal M}_{1,|\b|+1} \\
+\Hb_{1,\sigma} & \overline{\mathcal M}_{1,|\b|}
+	\arrow[from=1-1, to=1-2, "\pi'"]
+	\arrow[from=1-1, to=2-1]
+	\arrow[from=1-2, to=2-2]
+	\arrow[from=2-1, to=2-2, "\pi"]
+  \end{tikzcd}\]
+  This is not quite a Cartesian square, but the induced map
+  \[\Hb_{1,\sigma+\{(1,\dots,1)\}}\to \Hb_{1,\sigma}\times_{\overline{\mathcal M}_{1,|\b|}}\overline{\mathcal M}_{1,|\b|+1}
+  \]
+  is $(d-1)!$-to-$1$ since a cover $f:E\to\P^1$ with an additional marked unramified fiber
+  $y_1,\dots,y_d$
+  is equivalent to the cover with the marked point $y_1$ and an orientation
+  of the points it determines in its fiber $f^{-1}(f(y_1))$, $\{y_2,\dots,y_d\}$.
+  Therefore
+  \[
+  W'=\text{deg}(\pi')=(d-1)!\cdot\text{deg}(\pi)=(d-1)!\cdot W
+  \]
+  where $W$ and $W'$ are the labeled versions of $S_{\a,\b}(\mu)$ and
+  $S_{\a,\b+\{1\}}(\mu)$ respectively, and incorporating the normalizing factors
+  yields the result.
   \end{proof}
 
 The special case $\b=\emptyset$ is of most interest to us, as it can be rewritten
@@ -1777,11 +2025,13 @@ for the invariants $T_{k,1,1}^{(3)}$ in Proposition~\ref{prop:deg4}.
 \end{thm}
 
 \begin{proof}
-  Let $k=\ell(\mu)$. We will apply Theorem~\ref{thm:admissible}
+  Let $k=\ell(\mu)$. We can apply Theorem~\ref{thm:admissible}
   to calculate $W_{1,\sigma,\nu}$ and divide by the normalizing factor
   \[ 
-  \prod_{x\in\a+\b+\{y\}}(d-x)!\cdot |\Aut(\a)|\cdot |\Aut(\b+\{y\})|
+  \prod_{x\in\a+\b+\{y\}}(d-x)!\cdot |\Aut(\a)|\cdot |\Aut(\b+\{y\})|,
   \]
+  but for brevity we will instead perform calculations on level of
+  $N_{1,\sigma,\nu}$ to avoid writing combinatorial terms that cancel.
   Let $A$ be the following graph,
   with a genus $1$ component containing $x_1,\dots,x_k$ and all but one
   of the other fixed points:
@@ -2546,7 +2796,9 @@ Future questions: what does $T_{k,1,1}^{(n)}$ look like asymptotically in $k$, i
 
 What about higher genus?
 
-\section{Appendix 1: Hurwitz Counts}
+\appendix
+\section{Hurwitz Counts}
+\label{appendix:hurwitz}
 
 \begin{lem}
   Let $d=2k$ be even. In the symmetric group $S_d$, if $\tau$ and $\sigma$ are products of $k$ disjoint
@@ -2791,7 +3043,101 @@ In particular if $n=m=1$ and $d>3$, the Hurwitz number is $1$.
   \[
   d!\cdot\frac{a-1}{|\Aut(b,c)|}.
   \]
-  \end{proof}
+\end{proof}
+
+\section{Macaulay2 Calculations}
+\label{appendix:code}
+
+In order to work explicitly, we use the model of a genus $1$ curve
+\begin{align*}
+E=\{x^2-xy+y^2+z^2-w^2= 3x^2-10xy-5xw+4y^2+z^2+6yw+2w^2=0\}\subset\P^3
+\end{align*}
+Note that this curve's intersection with the plane $\{x=0\}$
+is
+\[
+\{y^2+z^2-w^2=4y^2+z^2+6yw+2w^2=0\}
+\]
+which is the intersection of two plane conics in a single point $p=[0:-1:0:1]$,
+of multiplicity $4$. The other $2$-torsion points are as follows:
+\begin{itemize}
+\item $t_1=[1:0:0:1]$, $\{-x-3y+w=0\}\cap E=4t_1$
+\item $t_2=[1:1:0:1]$, $\{-10/7 x+3/7 y+w=0\}\cap E=4t_2$
+  \item $t_3=[-48/43:-35/43:0:1]$, $\{-23/72 x+5/3 y+w=0\}\cap E=4t_3$
+\end{itemize}
+We aim to find explicit equations for $X_{(2,2)}$ and $X_{(3,1)}$ in this instance.
+
+First, note that \[X_{(2,2)}\cong\{(x,y)\in E^2:2x+2y=0\}/S_4=\{(x,y)\in E^2:x+y\text{ is 2-torsion}\}/S_2\]
+so $X_{(2,2)}$ is a disjoint union of four curves each corresponding to a 2-torsion point $t_i$:
+\[
+C_i=\text{image}(f_i:E\hookrightarrow(\P^3)^*),\ f_i(x)=H\text{ where }H\cap E=2x+2(t_i-x)
+\]
+Note that $f_i$ is 2-to-1 ($x$ and $t_i-x$ are in the same fiber), so $C_i\cong E/S_2\cong\P^1$. See Listing~\ref{code:X22} for the computation in M2 to compute $X_{(2,2)}$; it turns out that each $C_i$ is a plane conic. By counting points of
+intersection of the images of $C_i$ under $\pi:(\P^3)^*\dashrightarrow\P^2$, we find that
+\[
+N_{(2,2),(2,2)}(4)=3.
+\]
+By changing $\pi$ (and therefore $H_0$), we can also find
+\[
+N_{(2,2),(2,2)}(3,1)=N_{(2,2),(2,2)}(2,2)=6,\]\[ N_{(2,2),(2,2)}(2,11)=12,\ N_{(2,2),(2,2)}(1,1,1,1)=24
+\]
+
+Next we consider $X_{(3,1)}$ (calculated in Listing~\ref{code:X31}). There is a map $g:E\to(\P^3)^*$ sending $q\mapsto H$ where $H$ is the {\it osculating plane} to $E$ at $q$, i.e.\ $H$ intersects $E$ at
+$q$ with multiplicity at least 3,
+and whose image is $X_{(3,1)}$. This $H$ can be defined as the limit of planes containing $q,r,s\in E$ as $r,s\to q$, or equivalently as the limit of planes containing
+$T_qE$ and $r$ as $r\to q$.
+Let $E=\{F=G=0\}\subset\P^3$. We know that \[T_qE=\{x:\nabla_qF\cdot x=\nabla_qG\cdot x=0\}\]
+A plane containing this tangent line must be of the form \[H=\{x:(a\nabla_qF+b\nabla_qG)\cdot x=0\}\]
+for some $a,b$. If $r\in H$, then
+\[
+a\nabla_qF\cdot r+b\nabla_qG\cdot r=0\implies [a:b]=[\nabla_qG\cdot r:-\nabla_qF\cdot r]
+\]
+This equation fails when $r=q$ (since $\nabla_qF\cdot q=\nabla_qG\cdot q=0$). Letting $[u:v]$ be the limit of $[\nabla_qG\cdot r:\nabla_qF\cdot r]$
+as $r\to q$, we'll have
+\[
+H=\left\{\left(u\frac{\partial F}{\partial x}\bigg|_q-v\frac{\partial G}{\partial x}\bigg|_q\right)x+
+\left(u\frac{\partial F}{\partial y}\bigg|_q-v\frac{\partial G}{\partial y}\bigg|_q\right)y+
+\left(u\frac{\partial F}{\partial z}\bigg|_q-v\frac{\partial G}{\partial z}\bigg|_q\right)z+
+\left(u\frac{\partial F}{\partial w}\bigg|_q-v\frac{\partial G}{\partial w}\bigg|_q\right)w=0\right\}
+\]
+It remains to find $u$ and $v$. Suppose we have a (non-algebraic) parametrization of $E$ labeled $v(t)$, with $v(0)=q$. Using L'Hopital, our goal
+is to find
+\[
+\lim_{t\to 0}[\nabla_qG\cdot v(t):\nabla_qF\cdot v(t)]=\lim_{t\to 0}[\nabla_qG\cdot v'(t):\nabla_qF\cdot v'(t)]=\lim_{t\to 0}[\nabla_qG\cdot v''(t):\nabla_qF\cdot v''(t)]=[\nabla_qG\cdot v''(0):\nabla_qF\cdot v''(0)]
+\]
+
+
+We know
+$F(v(t))=0$ and $G(v(t))=0$ so
+\[
+\nabla _{v(t)}F\cdot v'(t)=\nabla _{v(t)}G\cdot v'(t)=0
+\]
+Taking derivatives again,
+\[
+\nabla_{v(t)}F\cdot v''(t)+v'(t)\cdot\left(\frac{\partial^2F}{\partial t_i\partial t_j}\right)\cdot v'(t)=\nabla_{v(t)}G\cdot v''(t)+v'(t)\cdot\left(\frac{\partial^2G}{\partial t_i\partial t_j}\right)\cdot v'(t)=0
+\]
+It remains to compute $v'(0)\cdot H\cdot v'(0)$ where $H$ is the Hessian of $F$ or $G$.
+We know that $v'(0)$ is in the kernel of $\nabla_qF$ and $\nabla_qG$ and any generic element of both kernels will work, so we choose an element of the kernel of
+\[
+\begin{bmatrix}
+  \frac{\partial F}{\partial x}\big|_q & \frac{\partial F}{\partial y}\big|_q & \frac{\partial F}{\partial z}\big|_q & \frac{\partial F}{\partial w}\big|_q \\
+  \frac{\partial G}{\partial x}\big|_q & \frac{\partial G}{\partial y}\big|_q & \frac{\partial G}{\partial z}\big|_q & \frac{\partial G}{\partial w}\big|_q \\
+  1 & 0 & 0 & 0 \\
+  \end{bmatrix}
+\]
+It turns out $[D_1,-D_2,D_3,-D_4]$ works where $D_i$ is the determinant of the matrix produced by deleting the $i^{\text{th}}$ column, which can be shown by duplicating rows and taking determinants
+(which will be 0).
+
+After doing this it turns out that $X_{(3,1)}$ is a degree 12 curve, with cusps at the planes $H$ with $H\cap E=4q$ for some $q$ (corresponding to the 4-torsion points). There are $4^2=16$ of these singularities.
+
+To compute $N_{(4),(3,1),(3,1)}$, we take the image $Y_{(3,1)}$ under projection from $H_0$. A Macaulay2 calculation shows that $Y_{(3,1)}$ is a degree 10
+curve with cusps at the images of 4-torsion points (except for the image of $H_0$, which is a smooth point) and $20$ nodes, so
+\[
+N_{(4),(3,1),(3,1)}=20.
+\]
+
+\lstinputlisting[label = {code:X22}, caption = {Macaulay2 code to compute $X_{(2,2)}$}]{X22.m2}
+
+\lstinputlisting[label = {code:X31}, caption = {Macaulay2 code to compute $X_{(3,1)}$}]{X31.m2}
 
 \printbibliography
 
