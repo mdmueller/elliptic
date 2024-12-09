@@ -2,7 +2,7 @@
 \newcommand{\mgnb}{\overline{\mathcal M_{g,n}}}
 \newcommand{\mgb}[1]{\overline{\mathcal M_{g,#1}}}
 
-\documentclass[11pt]{article}           % 11pt article
+\documentclass[thesis]{thesis-umich}           % 11pt article
 \makeatletter                   % Make '@' accessible.
 \pagestyle{myheadings}              % We do our own page headers.
 \oddsidemargin=0in              % Left margin minus 1 inch.
@@ -26,7 +26,7 @@
 \usepackage{mathrsfs}
 \usepackage{tikz-cd}
 \usepackage[shortlabels]{enumitem}
-\usepackage{relsize}
+%\usepackage{relsize}
 \usepackage{hyperref}
 \usepackage{biblatex}
 \usepackage{listings}
@@ -116,15 +116,57 @@
 \definecolor{mygreen}{RGB}{80,160,80}
 \definecolor{myred}{RGB}{200,120,100}
 
-
-\begin{document}
-
 \title{Reverse Hurwitz counts of genus $1$ curves}
 
 \author{Michael Mueller}
 
-\begin{abstract}
-  In this thesis, we study a problem that is in a sense a reversal of the Hurwitz
+\department{Mathematics}
+
+\year=2024
+
+\email{mmuelle@umich.edu}
+
+\orcid{0009-0003-1673-4826}
+
+%\frontispiece{\includegraphics[width=4in]{front_materials/frontispiece.png}}
+
+% Default style for front pages
+\frontpagestyle{7} % 7 is preferred by Rackham, but should be set individually for each front page
+
+% Dedication (the input [7] determines the style -- 7 is Rackham's preferred style)
+% \hidededication{%
+
+%\dedication[7]{
+%  My dedication...
+%  }
+
+% Acknowledgments (the input [7] determines the style -- 7 is Rackham's preferred style)
+\acknowledgments[7]{
+  My acknowledgements...
+  }
+
+% Preface
+%\preface[7]{
+%  My preface...
+%  }
+
+% Committee
+\committee{ %
+Professor Aaron Pixton, Chair \\
+Professor Vilma Mesa \\
+Professor Alex Perry \\
+Professor David Speyer
+}
+
+% Chair must be entered separately for formatting reasons.
+\chair{Professor First Name}
+
+\showlistoftables
+%\showlistofprograms
+%\showlistofappendices
+
+\abstract{
+    In this thesis, we study a problem that is in a sense a reversal of the Hurwitz
 counting problem. The Hurwitz problem asks: for a
 generic {\it target} --- $\P^1$ with a list of $n$ points  $q_1,\dots,q_n\in \P^1$ --- and
 partitions $\sigma_1,\dots,\sigma_n$ of $d$, how many degree
@@ -148,17 +190,20 @@ a closed form for a family of invariants with $x=3$.
 We also numerically compute some values of our invariants in sections
 2.3 and 5.5.
 
+  }
 
-  \end{abstract}
+\begin{document}
+
+
 
 \maketitle
 
 
 \tableofcontents
 
-\section{Introduction}
+\chapter{Introduction}
 
-\subsection{Moduli spaces of curves}
+\section{Moduli spaces of curves}
 
 Since our aim in this thesis is to count covers of curves, we
 will make heavy use of moduli spaces of both curves and maps
@@ -253,7 +298,7 @@ containing at last 3 ``special points'', i.e.\ legs or edges (\cite{Moduli}, p.\
   \end{eg}
 
 
-\subsection{Moduli spaces of maps}
+\section{Moduli spaces of maps}
 
 As we will be counting covers $C\to\P^1$, it will be useful
 to have a compact moduli space of covers of $\P^1$ to work with.
@@ -386,7 +431,7 @@ are stable graphs with the same leg set, to describe
 specializations of a curve. This notion is
 defined in \cite{Schmitt} (Definition 2.5).
 
-\subsection{Hurwitz theory}
+\section{Hurwitz theory}
 
 For partitions $\sigma_1,\dots,\sigma_n$ of $d$
 satisfying the Riemann-Hurwitz condition, there is a natural map
@@ -420,7 +465,7 @@ especially in Appendix~\ref{appendix:hurwitz}:
   This reflects the fact that up to isomorphism there is a single degree $2$ cover $\P^1\to\P^1$ with ramification over $0$ and $\infty$ ($t\mapsto t^2$), and this cover has two automorphisms ($t\mapsto -t$ and the identity).
   \end{eg}
 
-\subsection{Main results}
+\section{Main results}
 
 As we mention in the abstract,
 our aim is to ask the question: given an $n$-pointed curve
@@ -554,9 +599,9 @@ in that {\it both} a pointed source curve and certain points on the target $\P^1
   \]
 \end{eg}
 
-\section{Problem statement and general approaches}
+\chapter{Problem statement and general approaches}
 
-\subsection{Definitions}
+\section{Definitions}
 Fix a positive integer $d$, a nonnegative integer $g$, ordered partitions $\sigma_1,\dots,\sigma_n$ of $d$, and subpartitions $\nu_1,\dots,\nu_n$ (i.e., $\nu_i$ is a subset of $\sigma_i$).
 
 Let $\Hb_{g,\sigma}$ be the moduli space consisting of degree $d$ admissible covers $C\to X$ where $C$ is a genus $g$ prestable curve and $X$ is a genus $0$ prestable curve, marked points $p_{i,j}\in C$ for every $i\in\{1,\dots,n\}$ and
@@ -699,7 +744,7 @@ in some significant special cases.
   where $\overline H$ is a marked Hurwitz number.
   \end{eg}
 
-\subsection{Direct evaluation}
+\section{Direct evaluation}
 \label{section:direct1}
 We can interpret $N_{\sigma_1,\dots,\sigma_n}(\mu)$ as follows.
 
@@ -784,7 +829,7 @@ X_{\tau}\cong\{(x_1^{\tau_1},\dots,x_r^{\tau_r})\in\text{Sym}^d(E):\tau_1x_1+\do
   \end{eg}
 
 
-\subsection{Low-dimensional examples}
+\section{Low-dimensional examples}
 
 In this section, we refer to Macaulay2 calculations to
 compute $N_{\sigma_1,\dots,\sigma_n}(\mu)$ in a couple degree $4$ cases
@@ -885,10 +930,10 @@ $\mu$             & $N_{(4,1),(3,1,1)}(\mu)$ & $N_{(3,1,1),(3,1,1),(3,1,1)}(\mu)
 \end{tabular}
 \end{table}
 
-\section{Admissible covers}
+\chapter{Admissible covers}
 \label{section:admissible}
 
-In this section we explain a known method in the literature that we will use
+In this chapter we explain a known method in the literature that we will use
 to recursively compute $W_{g,\sigma,\nu}$. This is a method used to prove Proposition 6 in \cite{Generalized}, and is reliant on a result from \cite{Lian}. We begin by motivating the method, and then illustrate the use of the method as adapted to the specific context of this thesis.
 
 Recall that $W_{g,\sigma,\nu}$ is the degree of the map $\pi_{\nu}:\Hb_{g,\sigma}\to\overline{\mathcal M_{g,m}}$
@@ -1064,7 +1109,7 @@ We first begin with a rough illustration of what we intend to do.
                                     \]
   \end{eg}
 
-                \subsection{Setup}
+                \section{Setup}
 
                 We now turn to a general explanation of this technique loosely applied in the example above, and in following \cite{Generalized} we will write an explicit application of the technique to our specific invariants.
                 
@@ -1139,7 +1184,7 @@ is a nonzero multiple of $\phi_*([\mathcal H_{(\Gamma,\Gamma')}])$ on $\overline
   or equivalently that $\Gamma'$ has a single edge.
 \end{proof}
 
-\subsection{Genus reduction}
+\section{Genus reduction}
 
 We can apply this technique to compute invariants $W_{\sigma_1,\dots,\sigma_n}(d)$ by reduction to
 genus $0$ invariants, and illustrate with the following example.
@@ -1334,7 +1379,7 @@ invariant $W_{\sigma_1,\dots,\sigma_n}(\mu)$ with $\ell(\mu)\geq 2$, although in
 this case we will end up with enumerative counts in genus $0$ that
 are more complicated than Hurwitz numbers.
 
-  \subsection{Merging two points}
+  \section{Merging two points}
 
   In the case where $\ell(\mu)\geq 2$, we can consider the following graph $A$:
 
@@ -1398,9 +1443,9 @@ are more complicated than Hurwitz numbers.
                   \end{proof}
 
 
-\section{All twos case}
+\chapter{All twos case}
 
-In this section we study the invariants $N_{\mu,(2^k),(2^k)}$ defined for $d=2k$ even.
+In this chapter we study the invariants $N_{\mu,(2^k),(2^k)}$ defined for $d=2k$ even.
 We will ultimately prove that
 \[
 N_{\mu,(2^k),(2^k)}=3\cdot 2^{\ell(\mu)-1},
@@ -1411,21 +1456,20 @@ First, we will translate the calculation of $N_{\mu,(2^k),(2^k)}$ into a problem
 in projective space, which we will solve in the special case where $\mu=(1^d)$.
 We will then calculate the opposite extreme case, where $\mu=(d)$, first by use of Hurwitz theory and
 secondly by a genus reduction technique. Finally, we will establish the result in full generality using
-our most powerful technique: establishing a recursion between these invariants by use of
-our admissible covers technique, which yields the full solution in combination with either of the base
+our most powerful technique: establishing a recursion between these invariants by use of Proposition~\ref{thm:admissible}, which yields the full solution in combination with either of the base
 cases we have computed.
 
-\subsection{Motivation}
+\section{Motivation}
 
-The Gromov-Witten invariants of an elliptic curve are well understood. However, a natural generalization
+The Gromov-Witten invariants of an elliptic curve are well understood (\cite{Completed}). However, a natural generalization
 remains open: let $C$ be the quotient of an elliptic curve under the action $x\mapsto -x$.
-This action has $4$ fixed points (the two-torsion points in the group law), and so as an orbifold
-$C$ can be identified as $\P^1$ with $4$ points of stabilizer $\Z/2$, and is known as the
+This action has four fixed points (the two-torsion points in the group law), and so as an orbifold
+$C$ can be identified as $\P^1$ with four points of stabilizer $\Z/2$, and is known as the
 {\it pillowcase orbifold}. Maps $E\to C$ correspond to maps $E\to\P^1$ with ``even'' ramification over
-the $4$ special points, and so $N_{\mu,(2^k),(2^k)}$ can be interpreted as a relative Gromov-Witten
+the four special points, and so $N_{\mu,(2^k),(2^k)}$ can be interpreted as a relative Gromov-Witten
 invariant of the pillowcase $C$, fitting into a larger picture of classes $\langle \mu\rangle_d^{C}\in H^{g-1}(\overline{\mathcal M}_{g,\ell(\mu)})$.
 
-\subsection{Direct evaluation}
+\section{Direct evaluation}
 \label{section:direct2}
 
 The problem can be restated as follows: let $E\subset \P^{d-1}$ be a general genus $1$ curve,
@@ -1487,12 +1531,12 @@ This is the sum of product of degrees of $X_{(2^k)}^{(i)}$ and $X_{(2^k)}^{(j)}$
 in agreement with our main claim.
 
 
-\subsection{$\mu=(d)$}
+\section{$\mu=(d)$}
 
 Having proved the result directly for $\mu=(1,\dots,1)$, we now tackle the other extreme case, where $\mu=(d)$. We will show that $N_{(d),(2^k),(2^k)}=3$
 using two methods: first, by categorizing all such maps explicitly using Hurwitz theory and counting them, and second by performing a genus reduction.
 
-\subsubsection{Combinatorial solution}
+\subsection{Combinatorial solution}
 \label{section:comb}
 
 \begin{figure}[h]
@@ -1665,7 +1709,7 @@ $\P^1$ (by the Hurwitz counts above). Therefore,
 N_{(2^k),(2^k)}(d)=3.
 \]
 
-\subsubsection{Genus reduction}
+\subsection{Genus reduction}
 
 We apply the method of Section 3 to yield another proof that
 $N_{(2^k),(2^k)}(d)=3$:
@@ -1786,7 +1830,7 @@ is of the form:
 
 \end{proof}
 
-\subsection{Recursion and general solution}
+\section{Recursion and general solution}
 
 We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particular we will show:
 
@@ -1868,8 +1912,10 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   choices, there is a unique such map $\Gamma\to\Gamma'$, and $\Gamma$ has a unique $\hat A$-structure
   with $c_{\Gamma}=\prod\limits_{i=3}^{\ell(\mu)}\mu_i$, so the corresponding contribution to the right side of Theorem~\ref{thm:admissible} in this case is
   \begin{align*}
-    &\ell(\mu)\binom{d-2}{a+b-2,\mu_3,\dots,\mu_{\ell(\mu)}} W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)-1}}(a+b,\mu') \prod_{i=3}^{\ell(\mu)}\overline H((\mu_i),(\mu_i),(1^{\mu_i})) \overline H((a+b),(a,b),(2,1^{a+b-2})) c_{\Gamma} \\
-    &=\ell(\mu)\cdot\frac{(d-2)!}{(a+b-2)!\mu_3!\cdots\mu_{\ell(\mu)}!}\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)-1}\cdot (\ell(\mu)-1)!\cdot N_{(2^k),(2^k)}(a+b,\mu')\cdot\prod_{i=3}^{\ell(\mu)}\mu_i!\cdot (a+b-2)! \tag*{(using Claim~\ref{claim:Hurwitz2})} \\
+    &\ell(\mu)\binom{d-2}{a+b-2,\mu_3,\dots,\mu_{\ell(\mu)}} W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)-1}}(a+b,\mu') \prod_{i=3}^{\ell(\mu)}\overline H((\mu_i),(\mu_i),(1^{\mu_i})) \cdot \\
+    &\overline H((a+b),(a,b),(2,1^{a+b-2})) c_{\Gamma} \\
+    &=\ell(\mu)\cdot\frac{(d-2)!}{(a+b-2)!\mu_3!\cdots\mu_{\ell(\mu)}!}\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)-1}\cdot (\ell(\mu)-1)!\cdot N_{(2^k),(2^k)}(a+b,\mu')\cdot \\
+    &\prod_{i=3}^{\ell(\mu)}\mu_i!\cdot (a+b-2)! \tag*{(using Claim~\ref{claim:Hurwitz2})} \\
     &=(\ell(\mu))!\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)}\cdot N_{(2^k),(2^k)}(a+b,\mu') \\
   \end{align*}
 
@@ -2095,9 +2141,9 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   \end{align*}
   \end{proof}
 
-\section{$S_{\a,\b}$}
+\chapter{$S_{\a,\b}$}
 
-In this section, we consider a family of invariants $N_{g,\sigma,\nu}$ where
+In this chapter, we consider a family of invariants $N_{g,\sigma,\nu}$ where
 one ramification profile
 $\mu$ is fully marked,
 each other ramification profile $\sigma_i$ is of the form $(a,1,\dots,1)$, and
@@ -2108,7 +2154,7 @@ that allow us to compute this family of invariants, and will establish
 specific closed-forms in special cases.
 
 
-\subsection{Definitions and basic results}
+\section{Definitions and basic results}
 
 Fix a degree $d\geq 1$. For any partition $\mu$ of $d$, and multisets $\a$ and $\b$ of
 positive integers less than or equal to $d$, let
@@ -2282,7 +2328,7 @@ even in the special case of interest $\mu=(1^d)$. However, we expect that the sp
 $T_{k,t,a}^{(n)}$ are more tractable, and we will explicitly find a closed form
 for the invariants $T_{k,1,1}^{(3)}$ in Proposition~\ref{prop:deg4}.
 
-\subsection{Reduction of $\b$}
+\section{Reduction of $\b$}
 
 \begin{thm}
   \label{thm:reduceb}
@@ -2559,7 +2605,7 @@ $P_{1,1}$. So our diagram looks like:
         
 \end{proof}
 
-\subsection{Reduction of $\a$}
+\section{Reduction of $\a$}
 \begin{thm}
   \label{thm:reducea}
   For $n>0$,
@@ -2873,7 +2919,7 @@ It remains to calculate $S_{\{a_1,a_2,a_3\},\emptyset}(d)$ as a base case:
   \]
   \end{eg}
 
-\subsection{Applying recursions}
+\section{Applying recursions}
 
 In order to solve our recursions, we need the following result:
 
@@ -2933,7 +2979,7 @@ by considering a slight modification of the family of invariants
 in Example~\ref{eg:Sabns}.
 
 
-\subsection{$T_{k,1,1}^{(n)}$}
+\section{$T_{k,1,1}^{(n)}$}
 
 \begin{dfn}
   Define
@@ -3163,8 +3209,12 @@ to apply, though with some modifications.
 
 
 \appendix
-\section{Hurwitz counts}
+
+\chapter{Hurwitz counts}
 \label{appendix:hurwitz}
+
+In this appendix, we establish some results about Hurwitz numbers
+through combinatorics on the symmetric group.
 
 \begin{lem}
   \label{lem:even}
@@ -3417,7 +3467,7 @@ In particular if $n=m=1$ and $d>3$, the Hurwitz number is $1$.
   \]
 \end{proof}
 
-\section{Macaulay2 calculations}
+\chapter{Macaulay2 calculations}
 \label{appendix:code}
 
 In order to work explicitly, we use the model of a genus $1$ curve
