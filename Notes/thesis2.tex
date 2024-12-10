@@ -26,7 +26,7 @@
 \usepackage{mathrsfs}
 \usepackage{tikz-cd}
 \usepackage[shortlabels]{enumitem}
-%\usepackage{relsize}
+\usepackage{tocbasic}
 \usepackage{hyperref}
 \usepackage{biblatex}
 \usepackage{listings}
@@ -141,9 +141,10 @@
 %  }
 
 % Acknowledgments (the input [7] determines the style -- 7 is Rackham's preferred style)
-\acknowledgments[7]{
-  My acknowledgements...
-  }
+
+%\acknowledgments[7]{
+%  My acknowledgements...
+%  }
 
 % Preface
 %\preface[7]{
@@ -161,7 +162,8 @@ Professor David Speyer
 % Chair must be entered separately for formatting reasons.
 \chair{Professor First Name}
 
-\showlistoftables
+\hidelistoftables
+\hidelistoffigures
 %\showlistofprograms
 %\showlistofappendices
 
@@ -885,7 +887,7 @@ formula is critical here and it is not obvious how to replace this tool in highe
 We provide the following tables of values in degrees $d=3$, $d=4$, and $d=5$:
 
 
-  \begin{table}[h]
+  \begin{table}[ht]
     \caption{Table of invariants for $n=3$.}
     \centering
     ~\\
@@ -1837,11 +1839,20 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
 \begin{thm}
   If $a>b$, then
   \[
-  N_{(2^k),(2^k)}(a,b,\mu')=N_{(2^k),(2^k)}(a+b,\mu')+N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')
+  N_{(2^k),(2^k)}(a,b,\mu')=N_{(2^k),(2^k)}(a+b,\mu')+n_{d,b}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')
+  \]
+  where \[n_{d,b}=\begin{cases}
+  6 & d-2b=1 \\
+  3 & d-2b=2 \\
+  1 & d-2b>2 \end{cases}
   \]
   and
   \[
-  N_{(2^k),(2^k)}(a,a,\mu')=N_{(2^k),(2^k)}(2a,\mu')+2N_{(2^{k-a}),(2^{k-a})}(\mu')
+  N_{(2^k),(2^k)}(a,a,\mu')=
+  \begin{cases}
+    N_{(2^k),(2^k)}(2a,\mu')+2N_{(2^{k-a}),(2^{k-a})}(\mu') & \ell(\mu')>0 \\
+    N_{(2^k),(2^k)}(2a)+3 & \ell(\mu')=0
+    \end{cases}
   \]
   \end{thm}
 \begin{proof}
@@ -1876,9 +1887,9 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
    \vdots\\
    $0$ \\
    $0$\\};
- \matrix[dmat,right=1.5cm of mat2] (degrees2) {$\mu_1$\\
+ \matrix[dmat,right=1.5cm of mat2] (degrees2) {$\mu_{\ell(\mu)}$\\
    \vdots\\
-   $\mu_k$ \\
+   $\mu_3$ \\
  $a+b$\\};
 
  \draw  (mat1-1-1) edge["$\mu_{\ell(\mu)}$"] (mat2-1-1)
@@ -1900,7 +1911,64 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   \[
   2(a+b)-2-(a+b-2)-\left(a+b-\sum c_i-1+\sum(c_i-1)\right)=1+r
   \]
-  additional ramification on that vertex; since there cannot be a ramification profile of $(2^k)$
+  additional ramification on that vertex.
+  If $\ell(\mu)=0$ and there is a ramification profile of $(2^k)$ on the right side,
+  then $1+r=k$ and $r=k-1$ with $a+b=2k$. Since there must be a ramification
+  profile $(2^k)$ on the left, we have $c_i=2$ for all $i$ and the following
+  picture:
+
+    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=2.5em,rounded corners,
+  nodes={draw,solid,circle,minimum size=1.0cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}]
+
+  \matrix[amat,nodes=fsnode] (mat1) {$1$\\
+    $0$\\
+    \vdots \\
+  $0$\\};
+
+  \matrix[dmat,left=2cm of mat1] (degrees1) {$2$\\
+    $2$\\
+    \vdots \\
+  $2$\\};
+
+  \matrix[amat,right=7cm of mat1,nodes=ssnode] (mat2) {$0$\\};
+  
+ \matrix[dmat,right=1.5cm of mat2] (degrees2) {$d$\\};
+
+ \draw  (mat1-1-1) edge["$2$"] (mat2-1-1)
+ (mat1-2-1) edge["$2$"] (mat2-1-1)
+ (mat1-4-1) edge["$2$"] (mat2-1-1);
+
+  % draw legs for left side
+ \draw  (mat1-1-1) -- +(50:.7) node[anchor=south] {$2$}
+ (mat1-1-1) -- +(110:.7) node[anchor=south] {$2$}
+ (mat1-1-1) -- +(170:.7) node[anchor=east] {$2$}
+ (mat1-2-1) -- +(50:.7) node[anchor=south] {$2$}
+ (mat1-4-1) -- +(50:.7) node[anchor=south] {$2$};
+
+ % draw legs for right side
+ \draw  (mat2-1-1) -- +(50:.7) node[anchor=south] {$p_{1,1}$}
+ (mat2-1-1) -- +(115:.7) node[anchor=south] {$p_{1,2}$}
+ (mat2-1-1) -- +(260:.7) node[anchor=north] {$(2^k)$};
+
+    \end{tikzpicture}
+
+    By Claim~\ref{claim:twoscycles}, the Hurwitz number $H((2^k),(2^k),(a,b))$ on the right
+    side vanishes unless $a=b$.
+    If $a=b$, then the contribution of this picture to $W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,a)$ is
+    \begin{align*}
+      &2\cdot k\cdot \binom{d-2}{2,\dots,2}^2\cdot W_{(2),(2),(2)}(2)\cdot \overline H((2),(2),(1,1),(1,1))^{k-1}\cdot \overline H((2^k),(2^k),(k,k))\cdot 2^{k-1} \\
+      &=2k\cdot\frac{((d-2)!)^2}{2^{2k-2}}\cdot 6\cdot 2^{k-1}\cdot (k!)^2\cdot\frac 1k\cdot 2^{k-1} \\
+      &=2\cdot 6\cdot ((d-2)!)^2\cdot\frac{2^{2k-2}}{2^{2k-2}}\cdot (k!)^2 \\
+      &=12((d-2)!)^2\cdot (k!)^2
+      \end{align*}
+    so the contribution to $N_{(2^k),(2^k)}(a,a)$ is
+    $\frac{12((d-2)!)^2(k!)^2}{(k!)^2\cdot 2\cdot ((d-2)!)^2\cdot 2!}=3$ (corresponding to a choice of nontrivial 2-torsion point).
+  
+  Otherwise if $\ell(\mu)>0$ there cannot be a ramification profile of $(2^k)$
   on the right side, the additional ramification must be simple, and so $r=0$.
   Upon
   choosing which fiber of simple branching will appear on the right side and how it will appear,
@@ -1922,7 +1990,7 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   and the left side is the $W$ invariant of interest, since $A$ has no nontrivial automorphisms. Thus,
   the contribution to $N_{(2^k),(2^k)}(a,b,\mu')$ is
   \begin{align*}
-    \frac{W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}}{(k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)}\cdot (\ell(\mu))!} =N_{(2^k),(2^k)}(a+b,\mu').
+    \frac{(\ell(\mu))!\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)}\cdot N_{(2^k),(2^k)}(a+b,\mu')}{(k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)}\cdot (\ell(\mu))!} =N_{(2^k),(2^k)}(a+b,\mu').
   \end{align*}
 
   Next, consider the case where $p_{1,1}$ and $p_{1,2}$ are not on the same component, in which
@@ -1949,9 +2017,9 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
    $0$ \\
    $0$\\
  $0$\\};
- \matrix[dmat,right=1.5cm of mat2] (degrees2) {$\mu_3$\\
+ \matrix[dmat,right=1.5cm of mat2] (degrees2) {$\mu_{\ell(\mu)}$\\
    \vdots\\
-   $\mu_k$ \\
+   $\mu_3$ \\
    $a$\\
  $b$\\};
 
@@ -1976,18 +2044,28 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
     \end{tikzpicture}
 
     By Claim~\ref{claim:twoscycles}, $\overline H((2^e),(2^e),(2e-b,b))$ vanishes
-    unless $b=e$ (which requires $a+b-2e=a-b>0\iff a>b$), in which case the corresponding
+    unless $b=e$ (which requires $a+b-2e=a-b>0\iff a>b$).
+    Let $n_{d,b}$ be the number of choices for the fibers in which to place
+    the even ramification on the bottom left vertex. If $d-2b=a-b+d'$ (where
+    $d'=|\mu'|$) is equal to $2$, then either $a-b=2$, $d'=0$, and $n_{d,b}=\binom 32=3$
+    since there are three ramified points on the genus $1$ vertex,
+    or $a-b=d'=1$ and $n_{d,b}=\binom 42=6$ since there are four ramified points on
+    the genus $1$ vertex. If $d-2b>2$, then there are only two evenly ramified
+    fibers on the genus $1$ vertex, so the placement of even ramification
+    on the bottom left vertex is determined and $n_{d,b}=1$.
+    
+    In any case the corresponding
     contribution to $W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,b,\mu')$ is
 
     \begin{align*}
-      &\ell(\mu)\binom{d-2}{a-2,b,\mu_3,\dots,\mu_{\ell(\mu)}}\binom{k}{b}^2\binom{d-2}{2b}^{\ell(\mu)-1}W_{(2^{k-b}),(2^{k-b}),(2,1^{d-2b-2})^{\ell(\mu)-1}}(a-b,\mu') \cdot \\
+      &n_{d,b}\ell(\mu)\binom{d-2}{a-2,b,\mu_3,\dots,\mu_{\ell(\mu)}}\binom{k}{b}^2\binom{d-2}{2b}^{\ell(\mu)-1}W_{(2^{k-b}),(2^{k-b}),(2,1^{d-2b-2})^{\ell(\mu)-1}}(a-b,\mu') \cdot \\
       &\overline H((2^b),(2^b),(b,b),(1^{2b})^{\ell(\mu)-1}) \cdot\prod_{i=3}^{\ell(\mu)}
       \overline H((\mu_i),(\mu_i),(1^{\mu_i}))\mu_i\cdot \overline H((a-b,b),(a),(2,1^{a-2}))\overline H((b),(b),(1^b))\cdot b^2 \\
-      &=\ell(\mu)\frac{(d-2)!(k!)^2((d-2)!)^{\ell(\mu)-1}}{(a-2)!b!\mu_3!\cdots\mu_{\ell(\mu)}!(b!)^2((k-b)!)^2((2b)!(d-2b-2)!)^{\ell(\mu)-1}}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot((k-b)!)^2\cdot \\
+      &=n_{d,b}\ell(\mu)\frac{(d-2)!(k!)^2((d-2)!)^{\ell(\mu)-1}}{(a-2)!b!\mu_3!\cdots\mu_{\ell(\mu)}!(b!)^2((k-b)!)^2((2b)!(d-2b-2)!)^{\ell(\mu)-1}}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot((k-b)!)^2\cdot \\
       &2\cdot ((d-2b-2)!)^{\ell(\mu)-1}(\ell(\mu)-1)! \cdot\frac 1{2b}(b!)^2\cdot 2\cdot ((2b)!)^{\ell(\mu)-1}\cdot \mu_3!\cdots\mu_{\ell(\mu)}!(a-2)!b!\cdot b \\
-      &=(\ell (\mu))!N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)}
+      &=n_{d,b}(\ell (\mu))!N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)}
     \end{align*}
-    so the contribution to $N_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,b,\mu')$ is $N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')$.
+    so the contribution to $N_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,b,\mu')$ is $n_{d,b}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')$.
 
     We can now turn to the situation where $p_{1,1},\dots,p_{1,\ell(\mu)}$ appear
     on the left side of $\Gamma$, i.e.\ where their images are on the same
@@ -2105,15 +2183,26 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
                 $(d-2)!$ choices for placement of unramified points in the second chosen
                 right simple ramification profile, $\binom ka^2$ choices for placement of even ramification profiles
                 on the left side, and $\binom{d-2}{2a}^{\ell(\mu)-2}$ choices for placement of unramified points in
-                simple ramification profiles on the left side. Therefore the total
+                simple ramification profiles on the left side.
+                We also have $c_{\Gamma}=2$, since there are two ways to contract
+                edges of the graph to obtain a stabilization (one, but not
+                both, of the edges from the degree $2$ vertex on the right
+                will be contracted).
+                There are also $d-2a-1$ unfixed points to be ordered
+                on the genus $1$ vertex
+                corresponding to all but one of its edges.
+                Therefore the total
                 contribution to $W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,a,\mu')$ in this case is
                 \begin{align*}
-                  &\binom{\ell(\mu)}{2}\frac{(d-2)!)^2}{(2a-1)!(d-2a-1)!}\binom ka^2\binom{d-2}{2a}^{\ell(\mu)-2}W_{(2^{k-a}),(2^{k-a}),(2,1^{d-2a-2})^{\ell(\mu)-2}}(\mu')\overline H((a,a),(2^a),(2^a),(1^{2a})^{\ell(\mu)-1}) \cdot \\
-                  & \overline H((2),(2),(1,1)) \\
-                  &=\frac{(\ell(\mu))(\ell(\mu)-1)((d-2)!)^2}{2(2a-1)!(d-2a-1)!}\frac{(k!)^2}{(a!(k-a)!)^2}\frac{((d-2)!)^{\ell(\mu)-2}}{((2a)!(d-2a-2)!)^{\ell(\mu)-2}}((k-a)!)^2\cdot 2 \cdot \\
-                  &((d-2a-2)!)^{\ell(\mu)-2}\cdot (\ell(\mu)-2)!N_{(2^{k-a}),(2^{k-a})}(\mu')\cdot\frac{((2a)!)^{\ell(\mu)-1}((a!)^2)}{a} \\
+                  &\binom{\ell(\mu)}{2}\frac{((d-2)!)^2}{(2a-1)!(d-2a-1)!}\binom ka^2\binom{d-2}{2a}^{\ell(\mu)-2}W_{(2^{k-a}),(2^{k-a}),(2,1^{d-2a-2})^{\ell(\mu)-2}}(\mu')\cdot (d-2a-1)!\cdot  \\
+                  &
+                  \overline H((a,a),(2^a),(2^a),(1^{2a})^{\ell(\mu)-1}) \cdot
+                  \overline H((2),(2),(1,1))\cdot 2 \\
+                  &=\frac{(\ell(\mu))(\ell(\mu)-1)((d-2)!)^2}{2(2a-1)!}\frac{(k!)^2}{(a!(k-a)!)^2}\frac{((d-2)!)^{\ell(\mu)-2}}{((2a)!(d-2a-2)!)^{\ell(\mu)-2}}((k-a)!)^2\cdot 2 \cdot \\
+                  &((d-2a-2)!)^{\ell(\mu)-2}\cdot (\ell(\mu)-2)!N_{(2^{k-a}),(2^{k-a})}(\mu')\cdot\frac{((2a)!)^{\ell(\mu)-1}((a!)^2)}{a}\cdot 2 \\
+                  &=\frac{2(\ell(\mu))!((d-2)!)^{\ell(\mu)}(k!)^2N_{(2^{k-a}),(2^{k-a})}(\mu')
+                  (2a)!}{(2a-1)!a} \\
                   &=2N_{(2^{k-a}),(2^{k-a})}(\mu')\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)}\cdot (\ell(\mu))!
-                  \tag*{(TODO: fix combinatorial factors)}
                 \end{align*}
                 so the corresponding contribution
                 to $W_{(2^k),(2^k)}(a,a,\mu')$ is $2N_{(2^{k-a}),(2^{k-a})}(\mu')$.
@@ -3111,6 +3200,19 @@ For instance when $n=4$, we have:
 \item $U_{k,a}^{(4)}=U_{k,a+1}^{(4)}+U_{k-1,a-1}^{(4)}$ for $3<a<2k+2$
   \item $V_{k,t}^{(4)}=V_{k,t-1}^{(4)}+V_{k-1,t+1}^{(4)}$ for $t>1$
 \end{itemize}
+By the fact that the number of simple ramification profiles
+for $U_{k,a}^{(n)}$ is
+$\ell=k(n-3)+5-a\geq 0$, we have
+\[
+U_{k,k(n-3)+5}^{(n)}=U_{k,k(n-3)+6}^{(n)}+U_{k-1,(k-1)(n-3)+5}^{(n)}
+\]
+and since the first term vanishes, $U_{k,k(n-3)+5}^{(n)}$ is a constant
+function of $k$. For $s$ fixed and $k$
+sufficiently large, $U_{k,k(n-3)+5-s}^{(n)}$ will be a degree $s$ function
+of $k$ (since its first differences are the values $U_{k,k(n-3)+5-(s-1)}$).
+This explains the quartic form for $U_{k,1}^{(3)}$, but
+for $n>3$, we cannot expect $U_{k,1}^{(n)}$ to be polynomial.
+
 \iffalse
 The last equation yields the following result:
 \begin{prop}
@@ -3127,58 +3229,6 @@ The last equation yields the following result:
   TODO
 \end{proof}
 \fi
-We can however show without much difficulty that the
-growth rate of $U_{k,4}^{(4)}$ is at least
-exponential, and that therefore the same
-is true of $T_{k,1,1}^{(4)}=U_{k,1}^{(4)}\geq U_{k,4}^{(4)}$.
-First, let $B_k=U_{k,2k+2}^{(4)}$; since
-$d=2k+2$, this is an invariant with $\ell(\mu)=1$,
-and can therefore be computed using Theorem~\ref{thm:Sabbase}. It
-turns out that $B_0=1$, $B_1=15$, $B_2=63$, $B_3=81$,
-and all other $B_k$ are zero (for $k>3$ this
-follows from the Riemann-Hurwitz constraint).
-
-\begin{prop}
-  \label{prop:asymptotic}
-  For $0\leq r\leq 2k-1$ (i.e. $3\leq a\leq 2k+2$ where $a+r=2k+2$),
-  \[
-  U_{k,2k+2-r}^{(4)}=\sum_{i=0}^{r}\binom{r}{i}B_{k-i}=\binom{r}{k}+15\binom{r}{k-1}+63\binom{r}{k-2}+81\binom{r}{k-3}
-  \]
-\end{prop}
-\begin{proof}
-  We prove the result by induction on $r$ in
-  (with $k$ arbitrary such that $0\leq r\leq 2k-1$).
-  For $r=0$, we have
-  \[
-  U_{k,2k+2}^{(4)}=B_k=\sum_{i=0}^0\binom{0}{i}B_{k-i}
-  \]
-  by definition.
-  Suppose that the result holds for $r$, and that $r+1\leq 2k-1$.
-  If $r+1<2k-1$ (i.e.\ $r\leq 2k-3$), then
-  \begin{align*}
-    U_{k,2k+1-r}^{(4)} &= U_{k,2k+2-r}^{(4)}+U_{k-1,2k-r}^{(4)} \\
-    &=\sum_{i=0}^r\binom riB_{k-i}+U_{k-1,2(k-1)+2-r}^{(4)} \\
-    &=\sum_{i=0}^r\binom riB_{k-i}+
-    \sum_{i=0}^r\binom riB_{k-1-i} \tag*{(since $r\leq 2(k-1)-1$)}
-    \\
-    &=\sum_{i=0}^r\binom riB_{k-i}+\sum_{i=1}^{r+1}\binom r{i-1}B_{k-i} \tag*{(relabeling $i+1$ as $i$)} \\
-    &=\sum_{i=0}^{r+1}\left[\binom ri+\binom r{i-1}\right]B_{k-i}\\
-    &=\sum_{i=0}^{r+1}\binom{r+1}{i}B_{k-i}.
-  \end{align*}
-  On the other hand if $r+1=2k-1$ (i.e.\ $r=2k-2$), then
-  necessarily $k\geq 1$ and
-  \begin{align*}
-    U_{k,2k+1-r}^{(4)}&=U_{k,3}^{(4)} \\
-    &=U_{k,4}^{(4)}+U_{k-1,2}^{(4)}+V_{k-2,1}^{(4)} \\
-    &=
-  \end{align*}
-  (TODO: complete proof; mysteriously supported by numerical evidence. Maybe easier to prove if the claim is weakened?)
-\end{proof}
-By Proposition~\ref{prop:asymptotic},
-\[
-U_{k,4}^{(4)}=\sum_{i=0}^{2k-2}\binom{2k-2}{i}B_{k-i}\geq 15\binom{2k-2}{k-1}
-\]
-It is well-known \cite{Binomial} that the central binomial coefficient $\binom{2k-2}{k-1}$ grows as $4^{k-1}/\sqrt{\pi(k-1)}$ in the long run, establishing our result.
 
 We provide the following table of values of some $T_{k,1,1}^{(n)}$ in general:
 
@@ -3198,11 +3248,9 @@ We provide the following table of values of some $T_{k,1,1}^{(n)}$ in general:
   Note that $T_{1,1,1}^{(n)}=N_{(n)}(1^n)=n^2$, corresponding
   to a count of the $n$-torsion points in an elliptic curve.
 
-One future direction would
-be to determine the growth rates in general of $T_{k,1,1}^{(n)}$.
-We know that the growth rate is polynomial for $n=3$ and at least
-exponential for $n>3$; we might ask whether the growth for
-any $n>3$ is in fact exponential.
+One next step would
+be to more fully study the asymptotics of $T_{k,t,a}^{(n)}$, using
+the theory of linear recursions.
 Another direction might be to study invariants $N_{g,\sigma,\nu}$ with
 $g>1$ (or $g=0$); the technique in Section 3 will continue
 to apply, though with some modifications.
@@ -3310,7 +3358,12 @@ H((d),(2^k),(2^k),(2,1^{d-2}))=\frac k2
   \]
 \end{claim}
 \begin{proof}
-  This is a result of Lemma~\ref{lem:even}.
+  This is a result of Lemma~\ref{lem:even};
+  a product $X=\sigma\tau$ of two products of $k$
+  disjoint transpositions can have cycle type $(a,b)$
+  if and only if $a=b=k$, and the number of choices for $\sigma$ and
+  $\tau$ in this case is
+  $(d-1)!$. Dividing by $d!$ produces the result.
   \end{proof}
 
 \begin{claim}
@@ -3350,6 +3403,42 @@ H((d),(2^k,1),(2^k,1))=1
 \begin{proof}
   In the symmetric group $S_d$, we will count the number of pairs $(\sigma,\tau)$ where
   $\sigma$ and $\tau$ are of cycle type $(2^k,1)$ and $\sigma\tau$ is a $d$-cycle.
+  First, fix any $\sigma$ of cycle type $(2^k,1)$; without loss of generality,
+  assume $\sigma(1)=1$. Similarly
+  to Lemma TODO, we observe that $\sigma\tau$ is a $d$-cycle if
+  and only if there exist $y_0=1,\ y_1,\dots,y_k$ such that
+  \[
+  \{1,\dots,d\}=\{1,y_1,\dots,y_k,\sigma(y_1),\dots,\sigma(y_k)\}
+  \]
+  and:
+  \begin{itemize}
+  \item $\tau(\sigma(y_{i-1}))=y_{i}$ for $0<i\leq k$
+    \item $\tau(\sigma(y_k))=\sigma(y_k)$
+  \end{itemize}
+  This sequence can be built inductively,
+  by letting $y_i=\tau(\sigma(y_{i-1}))$, because
+  if $\tau(\sigma(y_{i-1}))=\sigma(y_{i-1})$ for some
+  $i\leq k$, then
+  $\sigma\tau$ would have a cycle of length less than $d$,
+  a contradiction:
+  \[
+  1\to \sigma(y_1)\to \sigma(y_2)\to\dots\to\sigma(y_{i-1})\to y_{i-1}\to
+  \dots\to y_2\to y_1\to 1
+  \]
+  Finally $\sigma(y_k)$ must be the single element fixed by
+  $\tau$, and in fact $\sigma\tau$ is the $d$-cycle
+  \[
+  1\to \sigma(y_1)\to\dots\to \sigma(y_k)\to y_k\to\dots\to y_1\to 1
+  \]
+  Now there are $d(d-2)(d-4)\cdots$ choices for $\sigma$
+  and $(d-1)(d-3)\cdots$ choices for $\tau$ given this observation,
+  and so our Hurwitz number is
+  \[
+  \frac{[d(d-2)(d-4)\cdots(1)][(d-1)(d-3)\cdots(2)]}{d!}=1.
+  \]
+  
+  
+
   \end{proof}
 
 \begin{claim}
