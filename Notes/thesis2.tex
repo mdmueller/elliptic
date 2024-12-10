@@ -1,6 +1,7 @@
+\newcommand{\mb}{\overline{\mathcal M}}
 \newcommand{\mgn}{\mathcal M_{g,n}}
-\newcommand{\mgnb}{\overline{\mathcal M_{g,n}}}
-\newcommand{\mgb}[1]{\overline{\mathcal M_{g,#1}}}
+\newcommand{\mgnb}{\mb_{g,n}}
+\newcommand{\mgb}[1]{\mb_{g,#1}}
 
 \documentclass[thesis]{thesis-umich}           % 11pt article
 \makeatletter                   % Make '@' accessible.
@@ -200,8 +201,6 @@ We also numerically compute some values of our invariants in sections
 
 \maketitle
 
-
-\tableofcontents
 
 \chapter{Introduction}
 
@@ -668,7 +667,7 @@ the black points of the source and stabilizes.
 \end{lem}
 \begin{proof}
   By Hurwitz theory, we know that the map $\epsilon_0$ is finite, and so $\dim(\Hb_{\sigma,\mu})=n-3$. The map $\pi_{\nu}$ will be finite if and only if
-  $\dim(\Hb_{\sigma,\mu})=\dim(\overline{\mathcal M_{g,m}})$, i.e.
+  $\dim(\Hb_{\sigma,\mu})=\dim(\mb_{g,m})$, i.e.
   \[
   3g-3+m=n-3\iff 3g+m=n.
   \]
@@ -701,10 +700,10 @@ where $\Aut(\sigma-\nu)$ denotes automorphisms of $\sigma_i-\nu_i$ for each $i$ 
   \end{eg}
 
 One way to think about $N_{g,\sigma,\nu}$ is as follows: the map
-$\pi_{\nu}:\Hb_{g,\sigma}\to\overline{\mathcal M_{g,m}}$ factors through
+$\pi_{\nu}:\Hb_{g,\sigma}\to\mb_{g,m}$ factors through
 $\Hb_{g,\sigma}/\Aut(\sigma-\nu)$, and $N_{g,\sigma,\nu}$ is the degree of the map
 \[
-\Hb_{g,\sigma}/\Aut(\sigma-\nu)\to\overline{\mathcal M_{g,m}}.
+\Hb_{g,\sigma}/\Aut(\sigma-\nu)\to\mb_{g,m}.
 \]
 
 In many cases studied in this thesis, we will specialize to the case where $g=1$,
@@ -938,9 +937,9 @@ $\mu$             & $N_{(4,1),(3,1,1)}(\mu)$ & $N_{(3,1,1),(3,1,1),(3,1,1)}(\mu)
 In this chapter we explain a known method in the literature that we will use
 to recursively compute $W_{g,\sigma,\nu}$. This is a method used to prove Proposition 6 in \cite{Generalized}, and is reliant on a result from \cite{Lian}. We begin by motivating the method, and then illustrate the use of the method as adapted to the specific context of this thesis.
 
-Recall that $W_{g,\sigma,\nu}$ is the degree of the map $\pi_{\nu}:\Hb_{g,\sigma}\to\overline{\mathcal M_{g,m}}$
+Recall that $W_{g,\sigma,\nu}$ is the degree of the map $\pi_{\nu}:\Hb_{g,\sigma}\to\mb_{g,m}$
 where $\sum\ell(\nu_i)=m$; our enumerative interpretation is that, for a fixed general $m$-pointed genus $g$ curve $(C,p_1,\dots,p_m)$, $W_{g,\sigma,\nu}$ counts the number of Hurwitz covers of the correct form with source $(C,p_1,\dots,p_m)$. One can hope (and we will see) that the same is roughly true for
-a specific $m$-pointed genus $g$ {\it stable} curve lying in a suitable boundary divisor of $\overline{\mathcal M_{g,m}}$.
+a specific $m$-pointed genus $g$ {\it stable} curve lying in a suitable boundary divisor of $\mb_{g,m}$.
 
 We first begin with a rough illustration of what we intend to do.
 
@@ -948,7 +947,7 @@ We first begin with a rough illustration of what we intend to do.
   \label{eg:fourtorsion}
   Suppose we are interested in calculating $W_{(3),(2,1),(2,1),(2,1)}(2,1)$, the degree of the map
   \[
-  \pi:\Hb_{1,\sigma}\to\overline{\mathcal M_{1,2}}
+  \pi:\Hb_{1,\sigma}\to\mb_{1,2}
   \]
   
   Let $A$ be a stable graph consisting of a genus $1$ vertex connected to a genus $0$ vertex, with two legs on the
@@ -977,7 +976,7 @@ We first begin with a rough illustration of what we intend to do.
   Intuitively we want to count covers from a generic stable curve with dual graph $A$ to a genus $0$
   curve, such that $p_{1,1}$ and $p_{1,2}$ are in the same fiber (with ramification indices $2$ and $1$),
   and there is marked ramification elsewhere with ramification profiles $(3),(2,1),(2,1),(2,1)$.
-  Remembering the marked points, the source should be a stable curve in $\overline{\mathcal M_{1,9}}$ with dual graph $\hat A$, where $\hat A$
+  Remembering the marked points, the source should be a stable curve in $\mb_{1,9}$ with dual graph $\hat A$, where $\hat A$
   becomes $A$ after applying a forgetful map.
 
   One possible graph $\hat A_1$, obtained by putting $p_{5,1}$ and $p_{5,2}$ on the genus $0$ component and other
@@ -1118,12 +1117,12 @@ We first begin with a rough illustration of what we intend to do.
 
 
 Let $A$ be a stable graph
-corresponding to a boundary stratum in $\overline{\mathcal M_{g,m}}$.
+corresponding to a boundary stratum in $\mb_{g,m}$.
 Following Proposition 3.2 of \cite{Lian}, we have a commutative diagram
 \[\begin{tikzcd}
 \amalg \mathcal H_{(\Gamma,\Gamma')} & \Hb_{g,\sigma} \\
-\amalg \overline{\mathcal M_{\hat A}} & \overline{\mathcal M_{g,N}} \\
-	\overline{\mathcal M_A} & \overline{\mathcal M_{g,m}}
+\amalg \mb_{\hat A} & \mb_{g,N} \\
+	\overline{\mathcal M_A} & \mb_{g,m}
 	\arrow[from=1-1, to=1-2]
 	\arrow[from=1-1, to=2-1, "\amalg \phi_{(\Gamma,\Gamma')}"]
         \arrow[from=2-1, to=3-1]
@@ -1146,11 +1145,11 @@ all stable graphs reducing to $A$ under the forgetful map.
 The outside square is Cartesian on the level of closed points. By
 Proposition 3.3 of \cite{Lian}, if $\mathcal H_{(\Gamma,\Gamma')}$ is of
 expected dimension, its contribution to $\xi_A^*(\pi_{\nu})_*([\Hb_{g,\sigma}])$
-is a nonzero multiple of $\phi_*([\mathcal H_{(\Gamma,\Gamma')}])$ on $\overline{\mathcal M_A}$, and in fact the coefficient is given by the product of edges contracted in the $A$-structure of $\Gamma$ divided by the size of the automorphism group.% (TODO: why?).
+is a nonzero multiple of $\phi_*([\mathcal H_{(\Gamma,\Gamma')}])$ on $\overline{\mathcal M}_A$, and in fact the coefficient is given by the product of edges contracted in the $A$-structure of $\Gamma$ divided by the size of the automorphism group.% (TODO: why?).
 
 \begin{thm}
   \label{thm:admissible}
-  If $A$ is a stable graph corresponding to a boundary divisor in $\overline{\mathcal M_{g,m}}$, then
+  If $A$ is a stable graph corresponding to a boundary divisor in $\mb_{g,m}$, then
   \[
   \frac 1{|\Aut(A)|}W_{g,\sigma,\nu}=\sum_{\hat A\rightsquigarrow A}\sum_{(\Gamma,\Gamma')}\frac 1{|\Aut(\Gamma)|}c_{\Gamma}W_{(\Gamma,\Gamma')}
   \]
@@ -1164,7 +1163,7 @@ is a nonzero multiple of $\phi_*([\mathcal H_{(\Gamma,\Gamma')}])$ on $\overline
   Note that
   \[
   \xi_A^*(\pi_{\nu})_*([\mathcal H_{g,\sigma,\nu}]) =
-  \xi_A^*(W_{g,\sigma,\nu}[\overline{\mathcal M_{g,m}}])=
+  \xi_A^*(W_{g,\sigma,\nu}[\mb_{g,m}])=
   W_{g,\sigma,\nu}[\overline{\mathcal M_A}]
   \]
   Therefore, $W_{g,\sigma,\nu}$ is a sum of
@@ -1173,15 +1172,15 @@ is a nonzero multiple of $\phi_*([\mathcal H_{(\Gamma,\Gamma')}])$ on $\overline
   $\mathcal H_{(\Gamma,\Gamma')}\to\overline{\mathcal M_A}$
   is dominant.
 
-  We have a natural map $\mathcal H_{(\Gamma,\Gamma')}\to \overline{\mathcal M_{\Gamma'}}$ remembering the target, which is finite by Hurwitz theory. Therefore,
+  We have a natural map $\mathcal H_{(\Gamma,\Gamma')}\to \mb_{\Gamma'}$ remembering the target, which is finite by Hurwitz theory. Therefore,
   \[
-  \dim(\mathcal H_{(\Gamma,\Gamma')})=\dim(\overline{\mathcal M_{\Gamma'}})
+  \dim(\mathcal H_{(\Gamma,\Gamma')})=\dim(\mb_{\Gamma'})
   \]
-  For $\mathcal H_{(\Gamma,\Gamma')}\to\overline{\mathcal M_A}$ to be
+  For $\mathcal H_{(\Gamma,\Gamma')}\to\mb_A$ to be
   dominant means therefore that
   \[
-  \dim(\overline{\mathcal M_{\Gamma'}})=\dim(\overline{\mathcal M_A})=
-  \dim(\overline{\mathcal M_{g,m}})-1=\dim(\overline{\mathcal M_{0,n}})-1
+  \dim(\mb_{\Gamma'})=\dim(\mb_A)=
+  \dim(\mb_{g,m})-1=\dim(\mb_{0,n})-1
   \]
   or equivalently that $\Gamma'$ has a single edge.
 \end{proof}
@@ -1429,14 +1428,14 @@ are more complicated than Hurwitz numbers.
                 \begin{proof}
                   Let $\Gamma\to\Gamma'$ be an admissible cover of graphs where $\Gamma$ comes with a $\hat A$-structure and $\hat A$ specializes to $A$, and assume $\Gamma$ has a genus $g$ vertex $v$.
                   Then $\Hb_{(\Gamma,\Gamma')}$ has a factor $\Hb_{v}$ corresponding to the vertex $v$,
-                  and there is a finite map $\Hb_{v}\to\overline{\mathcal M_{g,m-1}}$ which recalls
+                  and there is a finite map $\Hb_{v}\to\mb_{g,m-1}$ which recalls
                   the vertex $v$ along with the $m-2$ fixed points on the genus $g$ vertex of $A$ and
                   the point corresponding to the node of $A$. Thus,
                   \[
-                  \dim(\Hb_v)=\dim(\overline{\mathcal M_{g,m-1}})=3g-3+m-1
+                  \dim(\Hb_v)=\dim(\mb_{g,m-1})=3g-3+m-1
                   \]
                   By Lemma~\ref{lem:dim}, $\dim(\Hb_v)=n-4$. There is also a finite morphism
-                  $\Hb_v\to\overline{\mathcal M_{0,k+1}}$ where $k$ is the number of proper branch points from this
+                  $\Hb_v\to\mb_{0,k+1}$ where $k$ is the number of proper branch points from this
                   component (and thus $k+1$ is the number of branch points including the node), so
                   \[
                   k-2=n-4\implies k=n-2
