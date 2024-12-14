@@ -518,18 +518,18 @@ elsewhere?
 The primary results we establish are as follows:
 \begin{itemize}
 \item In Section 4, we study a generalization of Example~\ref{eg:firsteg}: given
-  an even degree $d=2k$, a partition $\mu=(\mu_1,\dots,\mu_k)$ of $d$, and a generic
-  $k$-pointed genus $1$ curve $(C,p_1,\dots,p_k)$, we ask how many maps
-  $f:C\to\P^1$ exist with $f^{-1}(0)=\{p_1,\dots,p_k\}$, ramification index $\mu_i$
+  an even degree $d=2k$, a partition $\mu=(\mu_1,\dots,\mu_r)$ of $d$, and a generic
+  $r$-pointed genus $1$ curve $(C,p_1,\dots,p_r)$, we ask how many maps
+  $f:C\to\P^1$ exist with $f^{-1}(0)=\{p_1,\dots,p_r\}$, ramification index $\mu_i$
   at $p_i$, and ramification profiles $(2,\dots,2)$ over both $1$ and $\infty\in\P^1$.
-  The answer to this ``even ramification'' problem is $3\cdot 2^{k-1}$, as
+  The answer to this ``even ramification'' problem is $3\cdot 2^{r-1}$, as
   proven in Corollary~\ref{cor:twos}. (In particular, there are $3$ maps of
   the kind considered in Example~\ref{eg:firsteg}.)
 \item In Section 5, we discuss a different kind of generalization: given
   a degree $d$, a partition $\mu=(\mu_1,\dots,\mu_k)$ of $d$, multisets of positive integers $\a=\{a_1,\dots,a_r\}$ and $\b=\{b_1,\dots,b_s\}$,
-  and a generic $(k+s)$-pointed genus $1$ curve $(C,x_1,\dots,x_k,P_1,\dots,P_s)$,
+  and a generic $(k+s)$-pointed genus $1$ curve $(C,p_1,\dots,p_k,P_1,\dots,P_s)$,
   we ask how many maps $f:C\to\P^1$ exist with $f^{-1}(0)=\{p_1,\dots,p_k\}$, ramification
-  index $\mu_i$ at $x_i$, ramification index $b_i$ at $P_i$, and other (unmarked) points
+  index $\mu_i$ at $p_i$, ramification index $b_i$ at $P_i$, and other (unmarked) points
   with ramification indices $a_1,\dots,a_r$.
   While we do not find a closed form solution, we develop recursive relations sufficient
   to calculate all such invariants in Theorems~\ref{thm:reduceb}, \ref{thm:reducea}, and \ref{thm:Sabbase}.
@@ -636,7 +636,7 @@ ramification profile $\sigma_i$, and the map is \'etale away from $q_1,\dots,q_n
 
 
 Let $m=\sum\ell(\nu_i)$ and $N=\sum\ell(\sigma_i)$.
-We have natural maps:
+We have natural maps: %TODO: make sure this will display next
 ~\\
 \begin{figure}[h]
   \caption{Maps from the Hurwitz moduli space}
@@ -1119,7 +1119,7 @@ Following Proposition 3.2 of \cite{Lian}, we have a commutative diagram
 \[\begin{tikzcd}
 \amalg \mathcal H_{(\Gamma,\Gamma')} & \Hb_{g,\sigma} \\
 \amalg \mb_{\hat A} & \mb_{g,N} \\
-	\overline{\mathcal M_A} & \mb_{g,m}
+	\mb_A & \mb_{g,m}
 	\arrow[from=1-1, to=1-2]
 	\arrow[from=1-1, to=2-1, "\amalg \phi_{(\Gamma,\Gamma')}"]
         \arrow[from=2-1, to=3-1]
@@ -1161,12 +1161,12 @@ is a nonzero multiple of $\phi_*([\mathcal H_{(\Gamma,\Gamma')}])$ on $\overline
   \[
   \xi_A^*(\pi_{\nu})_*([\mathcal H_{g,\sigma,\nu}]) =
   \xi_A^*(W_{g,\sigma,\nu}[\mb_{g,m}])=
-  W_{g,\sigma,\nu}[\overline{\mathcal M_A}]
+  W_{g,\sigma,\nu}[\mb_A]
   \]
   Therefore, $W_{g,\sigma,\nu}$ is a sum of
   terms $\frac 1{|\Aut(\Gamma)|}c_{\Gamma}W_{(\Gamma,\Gamma')}$, for
   any $(\Gamma,\Gamma')$ such that
-  $\mathcal H_{(\Gamma,\Gamma')}\to\overline{\mathcal M_A}$
+  $\mathcal H_{(\Gamma,\Gamma')}\to\mb_A$
   is dominant.
 
   We have a natural map $\mathcal H_{(\Gamma,\Gamma')}\to \mb_{\Gamma'}$ remembering the target, which is finite by Hurwitz theory. Therefore,
@@ -1381,7 +1381,7 @@ are more complicated than Hurwitz numbers.
 
   In the case where $\ell(\mu)\geq 2$, we can consider the following graph $A$:
 
-                \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=2.5em,rounded corners,
   nodes={draw,solid,circle,minimum size=1.0cm}},
   dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
@@ -1464,7 +1464,7 @@ remains open: let $C$ be the quotient of an elliptic curve under the action $x\m
 This action has four fixed points (the two-torsion points in the group law), and so as an orbifold
 $C$ can be identified as $\P^1$ with four points of stabilizer $\Z/2$, and is known as the
 {\it pillowcase orbifold}. Maps $E\to C$ correspond to maps $E\to\P^1$ with ``even'' ramification over
-the four special points, and so $N_{\mu,(2^k),(2^k)}$ can be interpreted as a relative Gromov-Witten
+the four special points, and so $N_{(2^k),(2^k)}(\mu)$ can be interpreted as a relative Gromov-Witten
 invariant of the pillowcase $C$, fitting into a larger picture of classes $\langle \mu\rangle_d^{C}\in H^{g-1}(\overline{\mathcal M}_{g,\ell(\mu)})$.
 
 \section{Direct evaluation}
@@ -1700,9 +1700,24 @@ using two methods: first, by categorizing all such maps explicitly using Hurwitz
 Now given this result, we can compute $N_{(2^k),(2^k)}(d)$ by counting
 the number of factored maps described in Figures \ref{fig:comb1} and \ref{fig:comb2} for a fixed $(E,p)$.
 The map $(E,p)\to(\P^1,q_1)$ is the elliptic map to $\P^1$ and therefore unique up
-to automorphisms of $\P^1$ fixing $q_1$; there are $3$ choices for the point
-$q_4$, and after this the map is uniquely determined up to automorphisms of
-$\P^1$ (by the Hurwitz counts above). Therefore,
+to automorphisms of $\P^1$.
+There are $3$ choices for the point
+$q_4$, and we consider each parity case:
+\begin{itemize}
+\item If $k$ is odd, then the orbifold count of maps
+  $\P^1\to\P^1$ with ramification profiles $(k)$ over $0$,
+  $(2^{(k-1)/2},1)$ over $1$, and $(2^{(k-1)/2},1)$ over $\infty$
+  is $1$. There is a unique way to assign $q_2$ lying over $1$
+  and $q_3$ lying over $\infty$.
+  \item
+  If $k$ is even, then the orbifold count of maps $\P^1\to\P^1$ with
+  ramification profiles $(k)$ over $0$, $(2^{k/2-1},1,1)$ over $1$, and
+  $(2^{k/2})$ over $\infty$ is $\frac 12$. There are two choices for
+  labeling $q_2$ and $q_3$, so with $q_1,q_2,q_3$ fixed, the number
+  of covers is $\frac 12\cdot 2=1$.
+\end{itemize}
+In either case, $w$ is determined as the image of $q_4$.
+Therefore,
 \[
 N_{(2^k),(2^k)}(d)=3.
 \]
@@ -1728,7 +1743,7 @@ There are two kinds of
 admissible covers $\Gamma\to\Gamma'$ with $\Gamma$ specializing to $\hat A$. The first
 is of the form:
 
-            \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
+\begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=2.5em,rounded corners,
   nodes={draw,solid,circle,minimum size=1.0cm}},
   dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
@@ -1833,13 +1848,13 @@ is of the form:
 We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particular we will show:
 
 \begin{thm}
-  If $a>b$, then
+  If $a>b$, $\mu=(a,b,\mu')$ and $d'=|\mu'|$, then
   \[
-  N_{(2^k),(2^k)}(a,b,\mu')=N_{(2^k),(2^k)}(a+b,\mu')+n_{d,b}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')
+  N_{(2^k),(2^k)}(a,b,\mu')=N_{(2^k),(2^k)}(a+b,\mu')+n_{a,b,d'}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')
   \]
-  where \[n_{d,b}=\begin{cases}
-  6 & d-2b=1 \\
-  3 & d-2b=2 \\
+  where \[n_{a,b,d'}=\begin{cases}
+  6 & a-b=2,\ d'=0 \\
+  3 & a-b=1,\ d'=1 \\
   1 & d-2b>2 \end{cases}
   \]
   and
@@ -1908,7 +1923,7 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   2(a+b)-2-(a+b-2)-\left(a+b-\sum c_i-1+\sum(c_i-1)\right)=1+r
   \]
   additional ramification on that vertex.
-  If $\ell(\mu)=0$ and there is a ramification profile of $(2^k)$ on the right side,
+  If $\ell(\mu')=0$ and there is a ramification profile of $(2^k)$ on the right side,
   then $1+r=k$ and $r=k-1$ with $a+b=2k$. Since there must be a ramification
   profile $(2^k)$ on the left, we have $c_i=2$ for all $i$ and the following
   picture:
@@ -1964,7 +1979,7 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
     so the contribution to $N_{(2^k),(2^k)}(a,a)$ is
     $\frac{12((d-2)!)^2(k!)^2}{(k!)^2\cdot 2\cdot ((d-2)!)^2\cdot 2!}=3$ (corresponding to a choice of nontrivial 2-torsion point).
   
-  Otherwise if $\ell(\mu)>0$ there cannot be a ramification profile of $(2^k)$
+  Otherwise if $\ell(\mu')>0$ there cannot be a ramification profile of $(2^k)$
   on the right side, the additional ramification must be simple, and so $r=0$.
   Upon
   choosing which fiber of simple branching will appear on the right side and how it will appear,
@@ -2041,27 +2056,27 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
 
     By Claim~\ref{claim:twoscycles}, $\overline H((2^e),(2^e),(2e-b,b))$ vanishes
     unless $b=e$ (which requires $a+b-2e=a-b>0\iff a>b$).
-    Let $n_{d,b}$ be the number of choices for the fibers in which to place
+    Let $n_{a,b,d'}$ be the number of choices for the fibers in which to place
     the even ramification on the bottom left vertex. If $d-2b=a-b+d'$ (where
-    $d'=|\mu'|$) is equal to $2$, then either $a-b=2$, $d'=0$, and $n_{d,b}=\binom 32=3$
+    $d'=|\mu'|$) is equal to $2$, then either $a-b=2$, $d'=0$, and $n_{a,b,d'}=\binom 32=3$
     since there are three ramified points on the genus $1$ vertex,
-    or $a-b=d'=1$ and $n_{d,b}=\binom 42=6$ since there are four ramified points on
+    or $a-b=d'=1$ and $n_{a,b,d'}=\binom 42=6$ since there are four ramified points on
     the genus $1$ vertex. If $d-2b>2$, then there are only two evenly ramified
     fibers on the genus $1$ vertex, so the placement of even ramification
-    on the bottom left vertex is determined and $n_{d,b}=1$.
+    on the bottom left vertex is determined and $n_{a,b,d'}=1$.
     
     In any case the corresponding
     contribution to $W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,b,\mu')$ is
 
     \begin{align*}
-      &n_{d,b}\ell(\mu)\binom{d-2}{a-2,b,\mu_3,\dots,\mu_{\ell(\mu)}}\binom{k}{b}^2\binom{d-2}{2b}^{\ell(\mu)-1}W_{(2^{k-b}),(2^{k-b}),(2,1^{d-2b-2})^{\ell(\mu)-1}}(a-b,\mu') \cdot \\
+      &n_{a,b,d'}\ell(\mu)\binom{d-2}{a-2,b,\mu_3,\dots,\mu_{\ell(\mu)}}\binom{k}{b}^2\binom{d-2}{2b}^{\ell(\mu)-1}W_{(2^{k-b}),(2^{k-b}),(2,1^{d-2b-2})^{\ell(\mu)-1}}(a-b,\mu') \cdot \\
       &\overline H((2^b),(2^b),(b,b),(1^{2b})^{\ell(\mu)-1}) \cdot\prod_{i=3}^{\ell(\mu)}
       \overline H((\mu_i),(\mu_i),(1^{\mu_i}))\mu_i\cdot \overline H((a-b,b),(a),(2,1^{a-2}))\overline H((b),(b),(1^b))\cdot b^2 \\
-      &=n_{d,b}\ell(\mu)\frac{(d-2)!(k!)^2((d-2)!)^{\ell(\mu)-1}}{(a-2)!b!\mu_3!\cdots\mu_{\ell(\mu)}!(b!)^2((k-b)!)^2((2b)!(d-2b-2)!)^{\ell(\mu)-1}}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot((k-b)!)^2\cdot \\
+      &=n_{a,b,d'}\ell(\mu)\frac{(d-2)!(k!)^2((d-2)!)^{\ell(\mu)-1}}{(a-2)!b!\mu_3!\cdots\mu_{\ell(\mu)}!(b!)^2((k-b)!)^2((2b)!(d-2b-2)!)^{\ell(\mu)-1}}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot((k-b)!)^2\cdot \\
       &2\cdot ((d-2b-2)!)^{\ell(\mu)-1}(\ell(\mu)-1)! \cdot\frac 1{2b}(b!)^2\cdot 2\cdot ((2b)!)^{\ell(\mu)-1}\cdot \mu_3!\cdots\mu_{\ell(\mu)}!(a-2)!b!\cdot b \\
-      &=n_{d,b}(\ell (\mu))!N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)}
+      &=n_{a,b,d'}(\ell (\mu))!N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)}
     \end{align*}
-    so the contribution to $N_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,b,\mu')$ is $n_{d,b}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')$.
+    so the contribution to $N_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,b,\mu')$ is $n_{a,b,d'}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')$.
 
     We can now turn to the situation where $p_{1,1},\dots,p_{1,\ell(\mu)}$ appear
     on the left side of $\Gamma$, i.e.\ where their images are on the same
