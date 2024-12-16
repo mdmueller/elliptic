@@ -1,6 +1,8 @@
 \documentclass{beamer}
 \usetheme{Boadilla}
 
+%TODO: more citations
+
 \newcommand{\mb}{\overline{\mathcal M}}
 \newcommand{\mgn}{\mathcal M_{g,n}}
 \newcommand{\mgnb}{\mb_{g,n}}
@@ -413,83 +415,25 @@
       \end{columns}
                                                 \end{frame}
 
-                                                \begin{frame}{Broadening horizons}
+                                                \begin{frame}{My problem: maps of curves}
 
-      \begin{columns}[c]
-        \begin{column}{0.6\hsize}
-      
-          \begin{itemize}
-          \item Sometimes, counting problems seem to have complicated answers\dots
-            \begin{itemize}
-            \item Intersection points of $y = x^2$ and $y=a$ ($2$ if $a>0$,
-              $1$ if $a=0$, $0$ if $a<0$)
-              \item Two lines usually intersect at a point, unless they are parallel
-              \end{itemize}
-          \end{itemize}
-        \end{column}
-        \begin{column}{0.4\hsize}
+                                                  \begin{itemize}
+                                                  \item Curves, including lines and circles, are of interest
+                                                  \item My work answers questions like: how many {\it maps} are there from one curve to another satisfying
+                                                    $X$ condition?
+                                                  \item Studying maps, or relations, between objects yields information about those objects themselves (e.g., Yoneda Lemma)
+                                                    
+                                                    ~\\
 
-          \begin{tikzpicture}
-            \draw[domain=-1:1,samples=50,color=gray!50,thick] plot (\x, \x*\x);
-            \draw[domain=-1:1,samples=50,color=gray!50,thick] plot (\x, -1);
-            \draw[<->] (2,-1) to (2,1);
-            \draw[<->] (3,-1) to (3,1);
-          \end{tikzpicture}
+                                                      ``Tell me who your friends are, and I will tell you what you are.'' -Proverb (original source unknown)
 
-        \end{column}
-      \end{columns}
+                                                    ~\\
+                                                    
+                                                      ``Society does not consist of individuals, but expresses the sum of interrelations,
+                                                      the relations within which these individuals stand.'' -Marx, {\it Grundrisse}
+                                                  \end{itemize}
                                                 \end{frame}
 
-                                                \begin{frame}{Broadening horizons}
-
-      \begin{columns}[c]
-        \begin{column}{0.6\hsize}
-      
-          \begin{itemize}
-          \item Sometimes, counting problems seem to have complicated answers\dots
-            \begin{itemize}
-            \item Intersection points of $y = x^2$ and $y=a$ ($2$ if $a>0$,
-              $1$ if $a=0$, $0$ if $a<0$)
-              \item Two lines usually intersect at a point, unless they are parallel
-            \end{itemize}
-          \item In a broader setting, the answers are simpler:
-            \begin{itemize}
-            \item $x^2=a$ always has two complex solutions, with multiplicity
-            \item Two lines always intersect at a single point, in the
-              projective plane
-            \end{itemize}
-            %TODO: explain what any of this has to do w/ my thesis
-          \end{itemize}
-        \end{column}
-        \begin{column}{0.4\hsize}
-
-          \begin{tikzpicture}
-            \draw[domain=-1:1,samples=50,color=gray!50,thick] plot (\x, \x*\x);
-            \draw[domain=-1:1,samples=50,color=gray!50,thick] plot (\x, -1);
-            \fill (1.7,-1) circle (0.6mm) node[below] {$(i,-1)$};
-            \fill (3.1,-1) circle (0.6mm) node[below] {$(-i,-1)$};
-          \end{tikzpicture}
-
-          ~\\
-          \includegraphics[scale=0.16]{projective.png}
-
-        \end{column}
-      \end{columns}
-                                                \end{frame}
-
-                                                                                                           \begin{frame}{Broadening horizons (continued)}
-
-                                                                                                             \begin{itemize}
-
-                                                                                                             \item ``Extra'' objects are useful in mathematics: complex numbers, calculus (infinitesimals), etc
-                                                                                                             \item Sometimes to count objects $X$ satisfying some condition, it is useful to consider
-                                                                                                               other objects $Y$ in place of $X$
-                                                                                                             \end{itemize}
-                                                                                                             ~\\
-``People who in other respects show a fair degree of common sense may regard [the absurdity of contradiction] as having the same self-evident validity as the statement that a straight line cannot be a curve and a curve cannot be straight. But, regardless of all protests made by common sense, the differential calculus under certain circumstances nevertheless equates straight lines and curves, and thus obtains results which common sense, insisting on the absurdity of straight lines being identical with curves, can never attain.'' - Engels, Anti-Dühring
-
-
-                                                                                                           \end{frame}
 
                                                                                                            \begin{frame}{Elliptic curves}
 
@@ -596,7 +540,7 @@
                                                                                                                                                                                                                           \end{frame}
 
                                                                                                                                                                                                                           \begin{frame}{Admissible covers of graphs}
-                                                                                                                                                                                                                            Dual graph description of an admissible cover:
+                                                                                                                                                                                                                            Dual graph description of an admissible cover \cite{Admissible}:
                                       \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=1.5em,rounded corners,
   nodes={draw,solid,circle,minimum size=0.6cm}},
@@ -835,7 +779,7 @@ elsewhere? ($\sigma_1=(4)$, $\sigma_2=(2,2)$, $\sigma_3=(2,2)$, $\sigma_4=(2,1,1
                                                                                                                                                                                                                               with line bundle $\mathcal L=\mathcal O(\sigma_1)$,
                                                                                                                                                                                                                               and we count lines $\ell\subset\P^d$ satisfying some conditions
                                                                                                                                                                                                                             \item {\bf Factoring:} if we're lucky, we can factor our maps as $E\to\P^1\to\P^1$ and perform simpler counts
-                                                                                                                                                                                                                            \item {\bf Admissible covers:} we apply the method of Cela, Pandharipande and Schmitt \cite{Cela}, counting the number of admissible covers from a non-generic
+                                                                                                                                                                                                                            \item {\bf Admissible covers:} we apply the method used by Cela, Pandharipande and Schmitt \cite{Cela} (reliant on \cite{Lian}), counting the number of admissible covers from a non-generic
                                                                                                                                                                                                                               {\it stable} curve
                                                                                                                                                                                                                             \end{itemize}
 
@@ -1352,8 +1296,9 @@ $\mu$             & $N_{(4)}(\mu)$ & $N_{(3,1),(2,2)}(\mu)$ & $N_{(2,2),(2,2)}(\
                                                                                                                                                                                                                             \end{itemize}
                                                                                                                                                                                                                           \end{frame}
 
-                                                                                                                                                                                                                          \begin{frame}{References}
-                                                                                                                                                                                                                            \printbibliography
+                                                                                                                                                                                                                          \begin{frame}[shrink=20]{References}
+
+                                                                                                                                                                                                                   { \printbibliography}
                                                                                                                                                                                                                           \end{frame}
 
 \end{document}
