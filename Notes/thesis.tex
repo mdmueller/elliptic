@@ -1,8 +1,3 @@
-\newcommand{\mb}{\overline{\mathcal M}}
-\newcommand{\mgn}{\mathcal M_{g,n}}
-\newcommand{\mgnb}{\mb_{g,n}}
-\newcommand{\mgb}[1]{\mb_{g,#1}}
-
 \documentclass[thesis]{thesis-umich}           % 11pt article
 \makeatletter                   % Make '@' accessible.
 \pagestyle{myheadings}              % We do our own page headers.
@@ -29,9 +24,9 @@
 \usepackage[shortlabels]{enumitem}
 \usepackage{tocbasic}
 \usepackage{hyperref}
-\usepackage{biblatex}
+%\usepackage{biblatex}
 \usepackage{listings}
-\addbibresource{sources.bib}
+%\addbibresource{sources.bib}
 
 \makeatletter
 \newcommand*{\relrelbarsep}{.386ex}
@@ -61,6 +56,11 @@
 %==============================================================================
 % Macros (make your own commands)
 %==============================================================================
+
+\newcommand{\mb}{\overline{\mathcal M}}
+\newcommand{\mgn}{\mathcal M_{g,n}}
+\newcommand{\mgnb}{\mb_{g,n}}
+\newcommand{\mgb}[1]{\mb_{g,#1}}
 
 % For problem and part headers
 \newcounter{problemcounter}
@@ -163,10 +163,9 @@ Professor David Speyer
 % Chair must be entered separately for formatting reasons.
 \chair{Professor First Name}
 
-\hidelistoftables
-\hidelistoffigures
-%\showlistofprograms
-%\showlistofappendices
+\showlistoftables
+\showlistoffigures
+\showlistofappendices
 
 \abstract{
     In this thesis, we study a problem that is in a sense a reversal of the Hurwitz
@@ -193,7 +192,9 @@ a closed form for a family of invariants with $x=3$.
 We also numerically compute some values of our invariants in sections
 2.3 and 5.5.
 
-  }
+}
+
+\acknowledgments[7]{TODO}
 
 \begin{document}
 
@@ -366,10 +367,11 @@ there is a type of map, known as an admissible cover of graphs:
 \begin{eg}
 
   We depict an admissible map of graphs $\Gamma\to\Gamma'$, where the upper three vertices are
-  in graph $\Gamma$ and the lower two vertices are in graph $\Gamma'$;
-  we use the convention that vertices in the source map to the vertex in
-  the target of the same color:
-  ~\\
+  in graph $\Gamma$ and the lower two vertices are in graph $\Gamma'$:
+
+  \begin{figure}[h]
+  \caption{Illustration of an admissible cover of graphs.}
+  \centering
                                       \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=2.5em,rounded corners,
   nodes={draw,solid,circle,minimum size=1.0cm}},
@@ -400,7 +402,7 @@ there is a type of map, known as an admissible cover of graphs:
 
  \matrix[amat,nodes=fsnode,below=2cm of mat1] (mat3) {$0$\\};
 
- \matrix[amat,nodes=ssnode,below=2cm of mat2] (mat4) {$0$\\};
+ \matrix[amat,nodes=ssnode,below=3cm of mat2] (mat4) {$0$\\};
 
   \draw (mat3-1-1) -- +(160:.7) node[anchor=east] {$q_1$}
   (mat3-1-1) -- +(45:.7) node[anchor=west] {$q_2$};
@@ -409,17 +411,19 @@ there is a type of map, known as an admissible cover of graphs:
 
  \draw  (mat3-1-1) edge[] (mat4-1-1);
 
- \draw  (mat1-2-1) edge[->] (mat3-1-1);
- \draw  (mat2-1-1) edge[->] (mat4-1-1);
+ \draw  (mat1-2-1) edge[->,shorten <= 0.3cm, shorten >= 0.3cm] (mat3-1-1);
+ \draw  (mat2-1-1) edge[->,shorten <= 0.3cm, shorten >= 0.3cm] (mat4-1-1);
 
                                       \end{tikzpicture}
+                                      \end{figure}
 
                                       The numbers in red are the degrees $d_v$ for each vertex of the
                                       source, while the labels of edges
                                       are the ramification indices $d_e$.
                                       Note that the sum of degrees of
                                       vertices over the blue target
-                                      vertex is $2+1=3$.
+                                      vertex is $2+1=3$. (In future, we will omit the arrows, and use the convention that vertices in the source map to the vertex in
+  the target of the same color. When no target is drawn, we assume it can be described by a blue and a green vertex with edge between them.)
 
 \end{eg}
 
@@ -461,6 +465,8 @@ especially in Appendix~\ref{appendix:hurwitz}:
   H((2),(2))=\frac 1{2!}\cdot |\{(s_1,s_2)\in S_2^2:s_i\text{ is a transposition},\ s_1s_2=1\}|=\frac 12
   \]
   This reflects the fact that up to isomorphism there is a single degree $2$ cover $\P^1\to\P^1$ with ramification over $0$ and $\infty$ ($t\mapsto t^2$), and this cover has two automorphisms ($t\mapsto -t$ and the identity).
+  %TODO: show picture with fixed points in red?
+  %end of chapter 2: comparison of generalized Tevelev degree, Hurwitz numbers and my invariants?
   \end{eg}
 
 \section{Main results}
@@ -558,34 +564,34 @@ in that {\it both} a pointed source curve and certain points on the target $\P^1
   $q_1,\dots,q_4\in\P^1$. We can consider degree $4$ maps $C\to\P^1$ where $p_1$ and $p_2$ are unramified points in the same fiber over $q_1$, $p_3$ and $p_4$ are unramified points in the same fiber over $q_2$, and $p_5$ and $p_6$ are ramified of index $2$ over the points $q_3$ and $q_4$ respectively.
 
   \begin{figure}[h]
-  \caption{Illustration of the covers in Example~\ref{eg:tevelev}. Note that each depicted fiber has two unramified points not shown, and there are $5$ simply branched points not shown.}
+  \caption{Illustration of the covers in Example~\ref{eg:tevelev}. Note that each depicted fiber has two unramified points not shown, and there are $5$ simply branched points not shown. Each red point is fixed.}
   \centering
 \begin{tikzpicture}
   \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
   \foreach \x/\p/\l in {-5.5/$p_1$/1, -4.5/$p_2$/1}
   {
-    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \filldraw[red] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (-3.4+.3*\x, -3.5);
   }
   \foreach \x/\p/\l in {-3/$p_3$/1, -2/$p_4$/1}
   {
-    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \filldraw[red] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (-1.7+.3*\x, -3.5);
   }
   \foreach \x/\p/\l in {0.3/$p_3$/2}
   {
-    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \filldraw[red] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (.2+.3*\x, -3.5);
     }
   \foreach \x/\p/\l in {3.3/$p_4$/2}
   {
-    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \filldraw[red] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (2+.4*\x, -3.5);
     }
 
     \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, -4);
   \foreach \x/\q in {-5/$q_1$, -2.45/$q_2$, .3/$q_3$, 3.3/$q_4$}
-    \filldraw[black] (\x,-4) circle (0.6mm) node[below] {\q};
+    \filldraw[red] (\x,-4) circle (0.6mm) node[below] {\q};
 \end{tikzpicture}
 
 \label{fig:tevelev}
@@ -636,10 +642,10 @@ ramification profile $\sigma_i$, and the map is \'etale away from $q_1,\dots,q_n
 
 
 Let $m=\sum\ell(\nu_i)$ and $N=\sum\ell(\sigma_i)$.
-We have natural maps: %TODO: make sure this will display next
-~\\
+We have natural maps:
+%TODO: make sure this will display next
 \begin{figure}[h]
-  \caption{Maps from the Hurwitz moduli space}
+  \caption{Maps from the Hurwitz moduli space; red points are fixed}
   \centering
   \[\begin{tikzcd}
 	{\overline{\mathcal H}_{g,\sigma}} & {\overline{\mathcal M}_{g,N}} \\
@@ -999,8 +1005,8 @@ We first begin with a rough illustration of what we intend to do.
 
   % draw legs for left side
  \draw (mat1-1-1) -- +(45:.7) node[anchor=west] {$p_{2,1}$}
- (mat1-1-1) -- +(220:.7) node[anchor=north] {$p_{3,1}$}
- (mat1-1-1) -- +(245:.7) node[anchor=north] {$p_{3,2}$}
+ (mat1-1-1) -- +(245:.7) node[anchor=north] {$p_{3,1}$}
+ (mat1-1-1) -- +(295:.7) node[anchor=north] {$p_{3,2}$}
  (mat1-1-1) -- +(165:.7) node[anchor=east] {$p_{4,1}$}
  (mat1-1-1) -- +(190:.7) node[anchor=east] {$p_{4,2}$};
 %  (mat1-1-1) -- +(95:.7) node[anchor=south] {$p_{5,1}$}
@@ -1010,29 +1016,13 @@ We first begin with a rough illustration of what we intend to do.
  \draw  (mat2-1-1) -- +(10:.7) node[anchor=west] {$p_{1,1}$}
  (mat2-1-1) -- +(345:.7) node[anchor=west] {$p_{1,2}$}
  (mat2-1-1) -- +(50:.7) node[anchor=south] {$p_{5,1}$}
- (mat2-1-1) -- +(85:.7) node[anchor=south] {$p_{5,2}$};
-
- \matrix[amat,nodes=fsnode,below=2cm of mat1] (mat3) {$0$\\};
-
- \matrix[amat,nodes=ssnode,below=2cm of mat2] (mat4) {$0$\\};
-
-  \draw (mat3-1-1) -- +(45:.7) node[anchor=west] {$q_2$}
-  (mat3-1-1) -- +(180:.7) node[anchor=east] {$q_4$}
-  (mat3-1-1) -- +(240:.7) node[anchor=north] {$q_3$};
-   
-  \draw  (mat4-1-1) -- +(0:.7) node[anchor=west] {$q_1$}
- (mat4-1-1) -- +(70:.7) node[anchor=south] {$q_5$};
-
- \draw  (mat3-1-1) edge[] (mat4-1-1);
-
- \draw  (mat1-1-1) edge[->] (mat3-1-1);
- \draw  (mat2-1-1) edge[->] (mat4-1-1);
+ (mat2-1-1) -- +(90:.7) node[anchor=east] {$p_{5,2}$};
 
                 \end{tikzpicture}
 
                   Another possible graph $\hat A_2$, obtained by putting $p_{2,1}$ on the genus $0$ component
                   and the other marked points on the genus $1$ component,
-                  is the source of another type of admissible cover in $\Hb_{1,\sigma}$:
+                  is the source of another type of admissible cover in $\Hb_{1,\sigma}$ (we omit the target, consisting of a blue and a green genus $0$ vertex with one edge between them):
 
                                     \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=2.5em,rounded corners,
@@ -1062,29 +1052,11 @@ We first begin with a rough illustration of what we intend to do.
  (mat1-2-1) -- +(220:.7) node[anchor=north] {$p_{3,2}$}
  (mat1-1-1) -- +(165:.7) node[anchor=east] {$p_{4,1}$}
  (mat1-2-1) -- +(165:.7) node[anchor=east] {$p_{4,2}$};
-%  (mat1-1-1) -- +(95:.7) node[anchor=south] {$p_{5,1}$}
-% (mat1-1-1) -- +(125:.7) node[anchor=south] {$p_{5,2}$};
 
  % draw legs for right side
  \draw  (mat2-1-1) -- +(10:.7) node[anchor=west] {$p_{1,1}$}
  (mat2-1-1) -- +(345:.7) node[anchor=west] {$p_{1,2}$}
  (mat2-1-1) -- +(50:.7) node[anchor=south] {$p_{2,1}$};
-
- \matrix[amat,nodes=fsnode,below=2cm of mat1] (mat3) {$0$\\};
-
- \matrix[amat,nodes=ssnode,below=2cm of mat2] (mat4) {$0$\\};
-
-  \draw (mat3-1-1) -- +(45:.7) node[anchor=west] {$q_5$}
-  (mat3-1-1) -- +(180:.7) node[anchor=east] {$q_4$}
-  (mat3-1-1) -- +(240:.7) node[anchor=north] {$q_3$};
-   
-  \draw  (mat4-1-1) -- +(0:.7) node[anchor=west] {$q_1$}
- (mat4-1-1) -- +(50:.7) node[anchor=south] {$q_2$};
-
- \draw  (mat3-1-1) edge[] (mat4-1-1);
-
- \draw  (mat1-2-1) edge[->] (mat3-1-1);
- \draw  (mat2-1-1) edge[->] (mat4-1-1);
 
                 \end{tikzpicture}
 
@@ -1216,15 +1188,15 @@ genus $0$ invariants, and illustrate with the following example.
 
   % draw legs for left side
  \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {$p_{1,1}$}
- (mat1-1-1) -- +(215:.7) node[anchor=north] {$p_{3,1}$}
+ (mat1-1-1) -- +(215:.7) node[anchor=east] {$p_{3,1}$}
  (mat1-1-1) -- +(245:.7) node[anchor=north] {$p_{3,2}$}
- (mat1-1-1) -- +(285:.7) node[anchor=north] {$p_{3,3}$};
+ (mat1-1-1) -- +(285:.7) node[anchor=west] {$p_{3,3}$};
 
  % draw legs for right side
  \draw  (mat2-1-1) -- +(60:.7) node[anchor=west] {$p_{2,1}$}
- (mat2-1-1) -- +(305:.7) node[anchor=west] {$p_{4,1}$}
+ (mat2-1-1) -- +(305:.7) node[anchor=north] {$p_{4,1}$}
  (mat2-1-1) -- +(330:.7) node[anchor=west] {$p_{4,2}$}
- (mat2-1-1) -- +(355:.7) node[anchor=west] {$p_{4,3}$};
+ (mat2-1-1) -- +(360:.7) node[anchor=west] {$p_{4,3}$};
 
               \end{tikzpicture}
 
@@ -1261,24 +1233,9 @@ genus $0$ invariants, and illustrate with the following example.
 
  % draw legs for right side
  \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$p_{2,1}$}
- (mat2-1-1) -- +(300:.7) node[anchor=west] {$p_{4,1}$}
+  (mat2-1-1) -- +(305:.7) node[anchor=north] {$p_{4,1}$}
  (mat2-1-1) -- +(330:.7) node[anchor=west] {$p_{4,2}$}
- (mat2-1-1) -- +(355:.7) node[anchor=west] {$p_{4,3}$};
-
- \matrix[amat,nodes=fsnode,below=2cm of mat1] (mat3) {$0$\\};
-
- \matrix[amat,nodes=ssnode,below=2cm of mat2] (mat4) {$0$\\};
-
-  \draw (mat3-1-1) -- +(125:.7) node[anchor=south] {$q_1$}
- (mat3-1-1) -- +(215:.7) node[anchor=north] {$q_3$};
-   
-  \draw  (mat4-1-1) -- +(30:.7) node[anchor=west] {$q_2$}
- (mat4-1-1) -- +(330:.7) node[anchor=west] {$q_4$};
-
- \draw  (mat3-1-1) edge[] (mat4-1-1);
-
- \draw  (mat1-1-1) edge[->] (mat3-1-1);
- \draw  (mat2-1-1) edge[->] (mat4-1-1);
+ (mat2-1-1) -- +(360:.7) node[anchor=west] {$p_{4,3}$};
 
                 \end{tikzpicture}
 
@@ -1337,17 +1294,6 @@ genus $0$ invariants, and illustrate with the following example.
  (mat2-2-1) -- +(330:.7) node[anchor=west] {$p_{4,2}$}
  (mat2-3-1) -- +(330:.7) node[anchor=west] {$p_{4,3}$};
 
- \matrix[amat,nodes=fsnode,below=2cm of mat1] (mat3) {$0$\\};
-
- \matrix[amat,nodes=ssnode,below=2cm of mat2] (mat4) {$0$\\};
-
-  \draw (mat3-1-1) -- +(125:.7) node[anchor=south] {$q_1$}
- (mat3-1-1) -- +(215:.7) node[anchor=north] {$q_2$};
-   
-  \draw  (mat4-1-1) -- +(30:.7) node[anchor=west] {$q_3$}
- (mat4-1-1) -- +(330:.7) node[anchor=west] {$q_4$};
-
- \draw  (mat3-1-1) edge[] (mat4-1-1);
 
                                 \end{tikzpicture}
 
@@ -1856,16 +1802,19 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   N_{(2^k),(2^k)}(a,b,\mu')=N_{(2^k),(2^k)}(a+b,\mu')+n_{a,b,d'}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')
   \]
   where \[n_{a,b,d'}=\begin{cases}
-  6 & a-b=2,\ d'=0 \\
-  3 & a-b=1,\ d'=1 \\
+  3 & a-b=2,\ d'=0 \\
+  6 & a-b=1,\ d'=1 \\
   1 & d-2b>2 \end{cases}
   \]
   and
   \[
   N_{(2^k),(2^k)}(a,a,\mu')=
+  N_{(2^k),(2^k)}(2a,\mu')+
   \begin{cases}
-    N_{(2^k),(2^k)}(2a,\mu')+2N_{(2^{k-a}),(2^{k-a})}(\mu') & \ell(\mu')>0 \\
-    N_{(2^k),(2^k)}(2a)+3 & \ell(\mu')=0
+    2N_{(2^{k-a}),(2^{k-a})}(\mu') & |\mu'|>2 \\
+    3 & |\mu'|=0 \\
+    6 & \mu'=(2) \\
+    12 & \mu'=(1,1)
     \end{cases}
   \]
   \end{thm}
@@ -1879,6 +1828,7 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   Suppose the points $p_{1,1},\dots,p_{1,\ell(\mu)}$ appear on the right side of $\Gamma$, i.e.
   their images are not on the same component as the image of the genus $1$ vertex. If
   $p_{1,1}$ and $p_{1,2}$ are on the same component, then we have the picture:
+  %TODO: fix picture issue
 
   \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
   row sep=2.5em,rounded corners,
@@ -1978,7 +1928,7 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
       &=2k\cdot\frac{((d-2)!)^2}{2^{2k-2}}\cdot 6\cdot 2^{k-1}\cdot (k!)^2\cdot\frac 1k\cdot 2^{k-1} \\
       &=2\cdot 6\cdot ((d-2)!)^2\cdot\frac{2^{2k-2}}{2^{2k-2}}\cdot (k!)^2 \\
       &=12((d-2)!)^2\cdot (k!)^2
-      \end{align*}
+      \end{align*} %TODO: make lines shorter
     so the contribution to $N_{(2^k),(2^k)}(a,a)$ is
     $\frac{12((d-2)!)^2(k!)^2}{(k!)^2\cdot 2\cdot ((d-2)!)^2\cdot 2!}=3$ (corresponding to a choice of nontrivial 2-torsion point).
   
@@ -2198,6 +2148,21 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
                 right simple ramification profile, $\binom ka^2$ choices for placement of even ramification profiles
                 on the left side, and $\binom{d-2}{2a}^{\ell(\mu)-2}$ choices for placement of unramified points in
                 simple ramification profiles on the left side.
+                As for choices of placement for even ramification:
+                \begin{itemize}
+                  \item
+                If $\mu'=(2)$, then there are $3$ unmarked ramified points on
+                the genus $1$ vertex, and two must be marked as being in
+                even ramification fibers, yielding $\binom 32=3$ choices.
+              \item If $\mu'=(1,1)$, then there are
+                $4$ unmarked ramified points on the genus $1$ vertex,
+                yielding $\binom 42=6$ choices.
+              \item If $d'>2$, then there is a single choice, as the
+                genus $1$ vertex unambiguously has two even ramification profiles.
+                \end{itemize}
+                
+
+                
                 We also have $c_{\Gamma}=2$, since there are two ways to contract
                 edges of the graph to obtain a stabilization (one, but not
                 both, of the edges from the degree $2$ vertex on the right
@@ -2218,30 +2183,53 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
                   (2a)!}{(2a-1)!a} \\
                   &=2N_{(2^{k-a}),(2^{k-a})}(\mu')\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)}\cdot (\ell(\mu))!
                 \end{align*}
-                so the corresponding contribution
-                to $W_{(2^k),(2^k)}(a,a,\mu')$ is $2N_{(2^{k-a}),(2^{k-a})}(\mu')$.
+                multiplied by $3$ if $\mu'=(2)$ or by $6$ if $\mu'=(1,1)$.
+                Therefore the corresponding contribution
+                to $W_{(2^k),(2^k)}(a,a,\mu')$ is $2N_{(2^{k-a}),(2^{k-a})}(\mu')$
+                if $d'>2$, $3\cdot 2\cdot 1=6$ if $\mu'=(2)$, and
+                $6\cdot 2\cdot 1=12$ if $\mu'=(1,1)$.
 
 \end{proof}
 
 \begin{cor}
   \label{cor:twos}
-  For any $\mu$, $N_{(2^k),(2^k)}(\mu)=3\cdot 2^{\ell(\mu)-1}$.
+  Let $d=2k$ be any even integer greater than $2$. For any $\mu$ with sum $|\mu|=d$, $N_{(2^k),(2^k)}(\mu)=3\cdot 2^{\ell(\mu)-1}$.
+  %TODO: edit to incorporate special cases from previous theorem
 \end{cor}
 \begin{proof}
   We can prove this by induction on $\ell(\mu)$; the base case $\ell(\mu)=1$ was proven in Theorems~\ref{thm:combinatorial} and \ref{thm:genusreduction3}. Assume
-  the result for all $\nu$ with $\ell(\nu)\leq k$, and suppose $\ell(\mu)=k\geq 2$.
-  Then we can write $\mu=(a,b,\mu')$. If $a=b$, then
-  \begin{align*}
+  the result for all $\nu$ with $\ell(\nu)< r$, and suppose $\ell(\mu)=r\geq 2$.
+  Then we can write $\mu=(a,b,\mu')$ with $d'=|\mu'|$. If $a=b$, then we have
+  four cases:
+  \begin{enumerate}
+  \item If $\mu'$ is empty: $N_{(2^k),(2^k)}(a,a)=N_{(2^k),(2^k)}(2a)+3=3+3=3\cdot 2^{r-1}$
+  \item If $\mu'=(2)$: $N_{(2^k),(2^k)}(a,a,2)=N_{(2^k),(2^k)}(2a,2)+6=6+6=12=3\cdot 2^{r-1}$
+  \item If $\mu'=(1,1)$: $N_{(2^k),(2^k)}(a,a,1,1)=N_{(2^k),(2^k)}(2a,1,1)+12=12+12+3\cdot 2^{r-1}$
+  \item If $d'>2$:
+      \begin{align*}
     N_{(2^k),(2^k)}(a,a,\mu') &= N_{(2^k),(2^k)}(2a,\mu')+2N_{(2^{k-a}),(2^{k-a})}(\mu') \\
-    &=3\cdot 2^{\ell(\mu)-2}+2(3\cdot 2^{\ell(\mu)-3}) \\
-    &=3\cdot 2^{\ell(\mu)-1}
+    &=3\cdot 2^{r-2}+2(3\cdot 2^{r-3}) \\
+    &=3\cdot 2^{r-1}
   \end{align*}
-  and similarly if $a>b$ (without loss of generality),
+
+    \end{enumerate}
+  Now if $a>b$ (without loss of generality), we have three cases:
+  \begin{enumerate}
+  \item If $a-b=2$ and $d'=0$:
+    \[
+    N_{(2^k),(2^k)}(a,a-2)=N_{(2^k),(2^k)}(2a-2)+3N_{(2),(2)}(2)=3+3\cdot 1=6=3\cdot 2^{r-1}
+    \]
+  \item If $a-b=1$ and $d'=1$:
+    \[
+    N_{(2^k),(2^k)}(a,a-1,1)=N_{(2^k),(2^k)}(2a-1,1)+6N_{(2),(2)}(1,1)=6+6\cdot 1=12=3\cdot 2^{r-1}
+    \]
+    \item If $d-2b>2$:
     \begin{align*}
       N_{(2^k),(2^k)}(a,b,\mu') &= N_{(2^k),(2^k)}(a+b,\mu')+2N_{(2^{k-b}),(2^{k-b})}(a-b,\mu') \\
-      &= 3\cdot 2^{\ell(\mu)-2}+3\cdot 2^{\ell(\mu)-2} \\
-      &= 3\cdot 2^{\ell(\mu)-1}.
-  \end{align*}
+      &= 3\cdot 2^{r-2}+3\cdot 2^{r-2} \\
+      &= 3\cdot 2^{r-1}.
+    \end{align*}
+    \end{enumerate}
   \end{proof}
 
 \chapter{$S_{\a,\b}$}
@@ -3664,6 +3652,29 @@ N_{(3,1),(3,1)}(4)=20.
 
 \lstinputlisting[label = {code:X31}, caption = {Macaulay2 code to compute $X_{(3,1)}$}]{X31.m2}
 
-\printbibliography[heading=bibintoc, title={References}]
+%\sloppy
+%\printbibliography[heading=bibintoc, title={References}]
+\bibliographystyle{plain}
+\bibliography{sources.bib}
 
 \end{document}
+
+%TODO:
+%formatting: multi line equations
+%acknowledgements
+%label a few more things as figures
+%add a few more citations
+
+% for paper: less intro background
+% include comparison with Hurwitz/Tevelev, mention the pushforward diagram
+% combining sections 1&2
+% probably remove direct evaluation stuff, maybe include a remark somewhere
+% sec3 could use some polishing
+% sec4: worth including factoring & genus reduction, then recursion
+% sec5: find ways to avoid repetition; could state all recursions next to each other, omit most details in the second recursion. Don't include anything
+% about the asymptotics, just quartic example
+% Hurwitz appendix: just include a table with all six results
+
+% put Aaron in acknowledgements but not coauthor
+% go back to more generic paper format; ams art?
+% have a note at end of intro or sthing saying this is an edited version of dissertation
