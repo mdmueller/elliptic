@@ -163,6 +163,20 @@ Professor David Speyer
 % Chair must be entered separately for formatting reasons.
 \chair{Professor First Name}
 
+\acknowledgments[7]{
+        I am indebted to many people who supported me throughout my PhD and made this work possible, including:
+      \begin{itemize}
+      \item My advisor, Aaron Pixton, for his generous mentorship and help;
+      \item Teresa Stokes, Kayla Papp and other (current/former) math department staff, without whom none of us could function;
+      \item Fellow math grads (Karthik, Suchitra, Anna, Shelby, Sayantan, Mala, Sameer, Danny, Andy, Maxie, and more) for their friendship, camaraderie, and
+        help navigating grad school;
+        \item My parents, brother and the rest of my family, as well as my partner Tif, for their unwavering support;
+      \item Comrades in GEO and TAHRIR (Lucy, Kathleen, Jared, Ember, Evelyn, Finn, Garima, Sahil, Amir F, Amir M, Rebecca, the SIs, Ethan, Yash, Moayad, Sammie, Avi, K, and more), who
+        have shown what it is to support each other through action, and what we owe each other --- from Ann Arbor to Palestine.
+        \end{itemize}
+TODO
+  }
+
 \showlistoftables
 \showlistoffigures
 \showlistofappendices
@@ -193,8 +207,6 @@ We also numerically compute some values of our invariants in sections
 2.3 and 5.5.
 
 }
-
-\acknowledgments[7]{TODO}
 
 \begin{document}
 
@@ -417,7 +429,7 @@ there is a type of map, known as an admissible cover of graphs:
                                       \end{tikzpicture}
                                       \end{figure}
 
-                                      The numbers in red are the degrees $d_v$ for each vertex of the
+                                      The numbers in red boxes are the degrees $d_v$ for each vertex of the
                                       source, while the labels of edges
                                       are the ramification indices $d_e$.
                                       Note that the sum of degrees of
@@ -471,8 +483,7 @@ especially in Appendix~\ref{appendix:hurwitz}:
 
 \section{Main results}
 
-As we mention in the abstract,
-our aim is to ask the question: given an $n$-pointed curve
+Our aim is to answer the question: given an $n$-pointed curve
 $(C,p_1,\dots,p_r)$ of genus $g$ and
 partitions $\mu,\sigma_1,\dots,\sigma_n$ of $d$ with $\ell(\mu)=r$,
 how many degree $d$ covers $C\to\P^1$ are there with ramification profile $\mu$ over $0$
@@ -522,7 +533,7 @@ elsewhere?
 \end{figure}
 
 The primary results we establish are as follows:
-\begin{itemize}
+\begin{enumerate}
 \item In Section 4, we study a generalization of Example~\ref{eg:firsteg}: given
   an even degree $d=2k$, a partition $\mu=(\mu_1,\dots,\mu_r)$ of $d$, and a generic
   $r$-pointed genus $1$ curve $(C,p_1,\dots,p_r)$, we ask how many maps
@@ -531,7 +542,7 @@ The primary results we establish are as follows:
   The answer to this ``even ramification'' problem is $3\cdot 2^{r-1}$, as
   proven in Corollary~\ref{cor:twos}. (In particular, there are $3$ maps of
   the kind considered in Example~\ref{eg:firsteg}.)
-\item In Section 5, we discuss a different kind of generalization: given
+\item In Section 5, we study a different problem: given
   a degree $d$, a partition $\mu=(\mu_1,\dots,\mu_k)$ of $d$, multisets of positive integers $\a=\{a_1,\dots,a_r\}$ and $\b=\{b_1,\dots,b_s\}$,
   and a generic $(k+s)$-pointed genus $1$ curve $(C,p_1,\dots,p_k,P_1,\dots,P_s)$,
   we ask how many maps $f:C\to\P^1$ exist with $f^{-1}(0)=\{p_1,\dots,p_k\}$, ramification
@@ -539,22 +550,22 @@ The primary results we establish are as follows:
   with ramification indices $a_1,\dots,a_r$.
   While we do not find a closed form solution, we develop recursive relations sufficient
   to calculate all such invariants in Theorems~\ref{thm:reduceb}, \ref{thm:reducea}, and \ref{thm:Sabbase}.
-\item As a special case of the previous point: given a degree $d$ and a generic $d$-pointed genus $1$ curve $(C,x_1,\dots,x_d)$, we ask
+\item As a special case of point $2$: given a degree $d$ and a generic $d$-pointed genus $1$ curve $(C,x_1,\dots,x_d)$, we ask
   how many maps $f:C\to\P^1$ exist with $f^{-1}(0)=\{p_1,\dots,p_d\}$ and $d-2$ points in $C$ with ramification index $3$. Proposition~\ref{prop:deg4} shows that the answer is an explicit quartic in $d$, illustrating in this special case the usage of recurrence relations from Section 5.
   
-  \end{itemize}
+  \end{enumerate}
 
 Along the way we will demonstrate multiple techniques to calculate the enumerative
 invariants of interest to us:
 \begin{enumerate}
 \item Direct evaluation, by using the line bundle characterization of maps to $\P^1$ to recast the problem as an enumerative question about subvarieties of projective space (explained in Sections \ref{section:direct1} and \ref{section:direct2})
 \item Factoring covers as $C\to\P^1\to\P^1$, with the latter map of degree greater than $1$, where possible; this method is used in Section~\ref{section:comb}
-  \item The method outlined in Section~\ref{section:admissible}, of solving the problem for a non-generic pointed {\it stable} curve. This method is not new; it was used originally in \cite{Cela} thanks to a technical result of \cite{Lian}, and is also used in \cite{Generalized}. Adapted to our context, it allows us to turn our central question into a combination of graph combinatorics and solving recurrence relations. In particular, we use this method heavily in Sections 4 and 5.
+  \item Solving the problem for a non-generic pointed {\it stable} curve. This method is not new; it was used originally in \cite{Cela} thanks to a technical result of \cite{Lian}, and is also used in \cite{Generalized}. Adapted to our context, it allows us to turn our central question into a combination of graph combinatorics and solving recurrence relations. In particular, we use this method heavily in Sections 4 and 5. (We outline this method in Section~\ref{section:admissible}.)
   \end{enumerate}
 
 We note that the enumerative problem here is similar to a notion in the literature,
 that of {\it generalized Tevelev degree} \cite{Generalized}. Like our problem, the notion
-of generalized Tevelev degree turns the Hurwitz question somewhat on its head by fixing
+of generalized Tevelev degree turns the Hurwitz question on its head by fixing
 a pointed source curve before counting possible covers of $\P^1$. However, there is a crucial difference
 in that {\it both} a pointed source curve and certain points on the target $\P^1$ (where fibers will be ramified) are fixed. For instance:
 
@@ -614,6 +625,48 @@ marked points $q_1,\dots,q_n\in X$ such that
 the fiber over $q_i$ is $\{p_{i,1},\dots,p_{i,\ell(\sigma_i)}\}$ with
 ramification profile $\sigma_i$, and the map is \'etale away from $q_1,\dots,q_n$ and any nodes of the target. (See \cite{Admissible} for a reference on moduli spaces of admissible covers.) Our situation is described in Figure \ref{fig:hurwitz}.
 
+%TODO: something other than color, for accessibility?
+
+
+Let $m=\sum\ell(\nu_i)$ and $N=\sum\ell(\sigma_i)$.
+We have natural maps:
+%TODO: make sure this will display next
+\begin{figure}[h]
+  \caption{Maps from the Hurwitz moduli space; red points are fixed}
+  \centering
+  \[\begin{tikzcd}
+	{\overline{\mathcal H}_{g,\sigma}} & {\overline{\mathcal M}_{g,N}} \\
+	{\overline{\mathcal M}_{0,n}} & {\overline{\mathcal M}_{g,m}}
+	\arrow["{\epsilon_g}", from=1-1, to=1-2]
+	\arrow["{\epsilon_0}"', from=1-1, to=2-1]
+	\arrow["{\pi_{\nu}}"', from=1-1, to=2-2]
+	\arrow["\iota", from=1-2, to=2-2]
+\end{tikzcd}\]
+\label{fig:maps}
+\end{figure}
+
+
+
+Here $\pi_{\nu}$ remembers the source curve and red points, i.e.\ the points corresponding to $\nu$; $\epsilon_0$ remembers the target with its marked
+branch points; $\epsilon_g$ remembers the source curve and both red
+and black points; and $\iota$ is the forgetful map, which forgets
+the black points of the source and stabilizes.
+
+
+
+\begin{lem}
+  \label{lem:dim}
+  The source and target of $\pi_{\nu}$ are of the same dimension when $3g+m=n$,
+  and thus if $\pi_{\nu}$ is finite this condition must hold.
+\end{lem}
+\begin{proof}
+  By Hurwitz theory, we know that the map $\epsilon_0$ is finite, and so $\dim(\Hb_{\sigma,\mu})=n-3$. The map $\pi_{\nu}$ will be finite if and only if
+  $\dim(\Hb_{\sigma,\mu})=\dim(\mb_{g,m})$, i.e.
+  \[
+  3g-3+m=n-3\iff 3g+m=n.
+  \]
+\end{proof}
+
 \begin{figure}[h]
   \caption{Depiction of a Hurwitz cover with notation used in this thesis}
   \centering
@@ -637,44 +690,6 @@ ramification profile $\sigma_i$, and the map is \'etale away from $q_1,\dots,q_n
 
 \label{fig:hurwitz}
 \end{figure}
-
-%TODO: something other than color, for accessibility?
-
-
-Let $m=\sum\ell(\nu_i)$ and $N=\sum\ell(\sigma_i)$.
-We have natural maps:
-%TODO: make sure this will display next
-\begin{figure}[h]
-  \caption{Maps from the Hurwitz moduli space; red points are fixed}
-  \centering
-  \[\begin{tikzcd}
-	{\overline{\mathcal H}_{g,\sigma}} & {\overline{\mathcal M}_{g,N}} \\
-	{\overline{\mathcal M}_{0,n}} & {\overline{\mathcal M}_{g,m}}
-	\arrow["{\epsilon_g}", from=1-1, to=1-2]
-	\arrow["{\epsilon_0}"', from=1-1, to=2-1]
-	\arrow["{\pi_{\nu}}"', from=1-1, to=2-2]
-	\arrow["\iota", from=1-2, to=2-2]
-\end{tikzcd}\]
-\label{fig:maps}
-\end{figure}
-
-Here $\pi_{\nu}$ remembers the source curve and red points, i.e.\ the points corresponding to $\nu$; $\epsilon_0$ remembers the target with its marked
-branch points; $\epsilon_g$ remembers the source curve and both red
-and black points; and $\iota$ is the forgetful map, which forgets
-the black points of the source and stabilizes.
-
-\begin{lem}
-  \label{lem:dim}
-  The source and target of $\pi_{\nu}$ are of the same dimension when $3g+m=n$,
-  and thus if $\pi_{\nu}$ is finite this condition must hold.
-\end{lem}
-\begin{proof}
-  By Hurwitz theory, we know that the map $\epsilon_0$ is finite, and so $\dim(\Hb_{\sigma,\mu})=n-3$. The map $\pi_{\nu}$ will be finite if and only if
-  $\dim(\Hb_{\sigma,\mu})=\dim(\mb_{g,m})$, i.e.
-  \[
-  3g-3+m=n-3\iff 3g+m=n.
-  \]
-  \end{proof}
 
 When the condition of Lemma~\ref{lem:dim} is satisfied, we can define:
 \begin{dfn}
@@ -810,7 +825,7 @@ X_{\tau}\cong\{(x_1^{\tau_1},\dots,x_r^{\tau_r})\in\text{Sym}^d(E):\tau_1x_1+\do
   \[
   N_{\sigma_1,\dots,\sigma_n}(\mu)=\left|\left\{q\in\P^{d-2}-\bigcup_{i=1}^kB_i:\pi^{-1}(q)=\{H_1,\dots,H_n\}\text{ where }H_i\in X_{\sigma_i}\text{ are distinct}\right\}\right|
   \]
-  where $B_i=\{\ell\subset(\P^{d-1})^*:H_0\in \ell\subset\{H:p_i\in H\}\}$ is a hyperplane in $\{\text{lines in }(\P^{d-1})^*\text{ through }H_0\}\cong \P^{d-2}$.
+  where $B_i=\{\ell\subset(\P^{d-1})^*:H_0\in \ell\subset\{H:p_i\in H\}\}$ is a hyperplane in \[\{\text{lines in }(\P^{d-1})^*\text{ through }H_0\}\cong \P^{d-2}.\]
      (Note that if $\mu=(1,\dots,1)$, then $\pi$ is a projection onto a generic hyperplane.)
 \end{prop}
 \begin{proof}
@@ -835,7 +850,8 @@ X_{\tau}\cong\{(x_1^{\tau_1},\dots,x_r^{\tau_r})\in\text{Sym}^d(E):\tau_1x_1+\do
 
 \section{Low-dimensional examples}
 
-In this section, we refer to Macaulay2 calculations to
+In this section, we use
+Macaulay2 calculations to
 compute $N_{\sigma_1,\dots,\sigma_n}(\mu)$ in a couple degree $4$ cases
 using Proposition~\ref{prop:direct}; the
 code and some details are in Appendix~\ref{appendix:code}). We provide tables with values of some invariants in degrees $3$, $4$, and $5$.
@@ -857,7 +873,7 @@ so $X_{(2,2)}$ is a disjoint union of four curves each corresponding to a 2-tors
 \[
 C_i=\text{image}(f_i:E\hookrightarrow(\P^3)^*),\ f_i(x)=H\text{ where }H\cap E=2x+2(t_i-x)
 \]
-Note that $f_i$ is 2-to-1 ($x$ and $t_i-x$ are in the same fiber), so $C_i\cong E/S_2\cong\P^1$. See Listing~\ref{code:X22} for the computation in M2 to compute $X_{(2,2)}$; it turns out that each $C_i$ is a plane conic. Consequently,
+Note that $f_i$ is 2-to-1 ($x$ and $t_i-x$ are in the same fiber), so $C_i\cong E/S_2\cong\P^1$. See Listing~\ref{code:X22} for the computation in Macaulay2 to compute $X_{(2,2)}$; it turns out that each $C_i$ is a plane conic. Consequently,
 we know for instance that
 \[
 N_{(2,2),(2,2)}(1,1,1,1)=\#\left(\bigcup_{i\neq j}\pi(C_i)\cap \pi(C_j)\right)=\binom 42\cdot 2^2=24
@@ -886,7 +902,7 @@ number of singularities
 --- is generalizable to tackle $N_{\tau,\tau}(\mu)$. However, the degree-genus
 formula is critical here and it is not obvious how to replace this tool in higher dimensions.
 
-We provide the following tables of values in degrees $d=3$, $d=4$, and $d=5$:
+We provide the following tables of invariants in degrees $d=3$, $d=4$, and $d=5$:
 
 
   \begin{table}[ht]
@@ -937,11 +953,15 @@ $\mu$             & $N_{(4,1),(3,1,1)}(\mu)$ & $N_{(3,1,1),(3,1,1),(3,1,1)}(\mu)
 \chapter{Admissible covers}
 \label{section:admissible}
 
-In this chapter we explain a known method in the literature that we will use
-to recursively compute $W_{g,\sigma,\nu}$. This is a method used to prove Proposition 6 in \cite{Generalized}, and is reliant on a result from \cite{Lian}. We begin by motivating the method, and then illustrate the use of the method as adapted to the specific context of this thesis.
+Up to now, we have computed our invariants of interest by direct evaluation in some
+low-dimensional cases, including
+by use of Macaulay2. 
+In this chapter we explain a more systematic and general
+known method in the literature that we will use
+to recursively compute invariants $W_{g,\sigma,\nu}$. Cela and Lian use this method to prove Proposition 6 in \cite{Generalized}, relying on a result from an earlier paper of Lian's \cite{Lian}. We begin by motivating the method, and then illustrate the use of the method as adapted to the specific context of this thesis.
 
 Recall that $W_{g,\sigma,\nu}$ is the degree of the map $\pi_{\nu}:\Hb_{g,\sigma}\to\mb_{g,m}$
-where $\sum\ell(\nu_i)=m$; our enumerative interpretation is that, for a fixed general $m$-pointed genus $g$ curve $(C,p_1,\dots,p_m)$, $W_{g,\sigma,\nu}$ counts the number of Hurwitz covers of the correct form with source $(C,p_1,\dots,p_m)$. One can hope (and we will see) that the same is roughly true for
+where $\sum\ell(\nu_i)=m$; our enumerative interpretation is that, for a fixed general $m$-pointed genus $g$ curve $(C,p_1,\dots,p_m)$, $W_{g,\sigma,\nu}$ counts the number of Hurwitz covers of the correct form with source $(C,p_1,\dots,p_m)$. One can hope (and we will confirm) that the same is roughly true for
 a specific $m$-pointed genus $g$ {\it stable} curve lying in a suitable boundary divisor of $\mb_{g,m}$.
 
 We first begin with a rough illustration of what we intend to do.
@@ -1389,14 +1409,14 @@ are more complicated than Hurwitz numbers.
 
 \chapter{All twos case}
 
-In this chapter we study the invariants $N_{\mu,(2^k),(2^k)}$ defined for $d=2k$ even.
+In this chapter we study the invariants $N_{(2^k),(2^k)}(\mu)$ defined for $d=2k$ even.
 We will ultimately prove that
 \[
-N_{\mu,(2^k),(2^k)}=3\cdot 2^{\ell(\mu)-1},
+N_{(2^k),(2^k)}(\mu)=3\cdot 2^{\ell(\mu)-1},
 \]
 along the way demonstrating techniques to compute our invariants, which will prove the result in special instances.
 
-First, we will translate the calculation of $N_{\mu,(2^k),(2^k)}$ into a problem of intersection theory
+First, we will translate the calculation of $N_{(2^k),(2^k)}(\mu)$ into a problem of intersection theory
 in projective space, which we will solve in the special case where $\mu=(1^d)$.
 We will then calculate the opposite extreme case, where $\mu=(d)$, first by use of Hurwitz theory and
 secondly by a genus reduction technique. Finally, we will establish the result in full generality using
@@ -1408,9 +1428,9 @@ cases we have computed.
 The Gromov-Witten invariants of an elliptic curve are well understood (\cite{Completed}). However, a natural generalization
 remains open: let $C$ be the quotient of an elliptic curve under the action $x\mapsto -x$.
 This action has four fixed points (the two-torsion points in the group law), and so as an orbifold
-$C$ can be identified as $\P^1$ with four points of stabilizer $\Z/2$, and is known as the
+$C$ can be identified as $\P^1$ with four points of stabilizer $\Z/2$. This orbifold $C$ is known as the
 {\it pillowcase orbifold}. Maps $E\to C$ correspond to maps $E\to\P^1$ with ``even'' ramification over
-the four special points; one can hope to use the degeneration formula (TODO: cite) to find
+the four special points; one can hope to use the degeneration formula (as developed in \cite{Degeneration}) to find
 relative Gromov-Witten invariants of $C$, splitting $C$ into a union
 of $\P^1s$ with two $\Z/2$-stabilizer points each and a node, and $N_{(2^k),(2^k)}(\mu)$ is a relative Gromov-Witten invariant
 for each of these two special $\P^1s$.
@@ -1419,7 +1439,7 @@ In general, one can hope to understand the sequence of classes $\langle \mu\rang
 \section{Direct evaluation}
 \label{section:direct2}
 
-The problem can be restated as follows: let $E\subset \P^{d-1}$ be a general genus $1$ curve,
+The problem of this chapter, to compute $N_{(2^k),(2^k)}(\mu)$, can be restated as follows: let $E\subset \P^{d-1}$ be a general genus $1$ curve,
 and let $H_0$ be a general hyperplane such that $H_0\cap E$ has type $\mu$. Then letting \[X_{(2^k)}=\{H\in(\P^{d-1})^*:H\cap E\text{ is of type }(2^k)\}\]
 and $\pi:(\P^{d-1})^*\dashrightarrow \P^{d-2}$ be projection away from $H_0$, we want the number of fibers of $\pi$
 containing multiple points of $X_{(2^k)}$.
@@ -1676,15 +1696,7 @@ N_{(2^k),(2^k)}(d)=3.
 We apply the method of Section 3 to yield another proof that
 $N_{(2^k),(2^k)}(d)=3$:
 
-\begin{thm}
-  \label{thm:genusreduction3}
-  For $d=2k$ even,
-  \[
-  W_{(2^k),(2^k),(2,1^{d-2})}(d)=6(d-2)!\cdot (k!)^2
-  \]
-\end{thm}
-\begin{proof}
-  Let $A$ be a stable graph consisting of a genus $0$ vertex with a loop and a marked point $p_{1,1}$.
+ Let $A$ be a stable graph consisting of a genus $0$ vertex with a loop and a marked point $p_{1,1}$.
   Let $\hat A$ be the stable graph with additional marked points on the genus $0$ vertex for
   the further ramification.
 
@@ -1786,11 +1798,11 @@ is of the form:
               &=2(d-2)!\cdot (k!)^2
             \end{align*}
             We conclude by adding up and seeing that the right-hand side of Theorem~\ref{thm:admissible} is
-            \[
-            (d-2)!\cdot (k!)^2+ 2(d-2)!\cdot (k!)^2=3(d-2)!\cdot (k!)^2\implies W_{(2^k),(2^k),(2,1^{d-2})}(d)=6(d-2)!\cdot (k!)^2.
-            \]
+            \begin{align*}
+              (d-2)!\cdot (k!)^2+ 2(d-2)!\cdot (k!)^2=3(d-2)!\cdot (k!)^2&\implies W_{(2^k),(2^k),(2,1^{d-2})}(d)=6(d-2)!\cdot (k!)^2 \\
+              &\implies N_{(2^k),(2^k)}(d)=3.
+            \end{align*}
 
-\end{proof}
 
 \section{Recursion and general solution}
 
@@ -1938,16 +1950,14 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   choosing which fiber of simple branching will appear on the right side and how it will appear,
   for which there are
   \[
-  \ell(\mu)\cdot \binom{d-2}{a+b-2,\mu_3,\dots,\mu_{\ell(\mu)}}
+  C=\ell(\mu)\cdot \binom{d-2}{a+b-2,\mu_3,\dots,\mu_{\ell(\mu)}}
   \]
   %TODO: say some version of Theorem 3.1 which uses N, A and not W, hat(A)?
   choices, there is a unique such map $\Gamma\to\Gamma'$, and $\Gamma$ has a unique $\hat A$-structure
   with $c_{\Gamma}=\prod\limits_{i=3}^{\ell(\mu)}\mu_i$, so the corresponding contribution to the right side of Theorem~\ref{thm:admissible} in this case is
   \begin{align*}
-    &\ell(\mu)\binom{d-2}{a+b-2,\mu_3,\dots,\mu_{\ell(\mu)}} W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)-1}}(a+b,\mu') \prod_{i=3}^{\ell(\mu)}\overline H((\mu_i),(\mu_i),(1^{\mu_i})) \cdot \\
-    &\overline H((a+b),(a,b),(2,1^{a+b-2})) c_{\Gamma} \\
-    &=\ell(\mu)\cdot\frac{(d-2)!}{(a+b-2)!\mu_3!\cdots\mu_{\ell(\mu)}!}\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)-1}\cdot (\ell(\mu)-1)!\cdot N_{(2^k),(2^k)}(a+b,\mu')\cdot \\
-    &\prod_{i=3}^{\ell(\mu)}\mu_i!\cdot (a+b-2)! \tag*{(using Claim~\ref{claim:Hurwitz2})} \\
+    &C\cdot W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)-1}}(a+b,\mu') \prod_{i=3}^{\ell(\mu)}\overline H((\mu_i),(\mu_i),(1^{\mu_i})) \cdot \overline H((a+b),(a,b),(2,1^{a+b-2})) c_{\Gamma} \\
+    &=\frac{\ell(\mu)(d-2)!}{(a+b-2)!\mu_3!\cdots\mu_{\ell(\mu)}!}\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)-1} (\ell(\mu)-1)! N_{(2^k),(2^k)}(a+b,\mu')\cdot \prod_{i=3}^{\ell(\mu)}\mu_i!\cdot (a+b-2)! \tag*{(using Claim~\ref{claim:Hurwitz2})} \\
     &=(\ell(\mu))!\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)}\cdot N_{(2^k),(2^k)}(a+b,\mu') \\
   \end{align*}
 
@@ -2025,8 +2035,8 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
       &n_{a,b,d'}\ell(\mu)\binom{d-2}{a-2,b,\mu_3,\dots,\mu_{\ell(\mu)}}\binom{k}{b}^2\binom{d-2}{2b}^{\ell(\mu)-1}W_{(2^{k-b}),(2^{k-b}),(2,1^{d-2b-2})^{\ell(\mu)-1}}(a-b,\mu') \cdot \\
       &\overline H((2^b),(2^b),(b,b),(1^{2b})^{\ell(\mu)-1}) \cdot\prod_{i=3}^{\ell(\mu)}
       \overline H((\mu_i),(\mu_i),(1^{\mu_i}))\mu_i\cdot \overline H((a-b,b),(a),(2,1^{a-2}))\overline H((b),(b),(1^b))\cdot b^2 \\
-      &=n_{a,b,d'}\ell(\mu)\frac{(d-2)!(k!)^2((d-2)!)^{\ell(\mu)-1}}{(a-2)!b!\mu_3!\cdots\mu_{\ell(\mu)}!(b!)^2((k-b)!)^2((2b)!(d-2b-2)!)^{\ell(\mu)-1}}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot((k-b)!)^2\cdot \\
-      &2\cdot ((d-2b-2)!)^{\ell(\mu)-1}(\ell(\mu)-1)! \cdot\frac 1{2b}(b!)^2\cdot 2\cdot ((2b)!)^{\ell(\mu)-1}\cdot \mu_3!\cdots\mu_{\ell(\mu)}!(a-2)!b!\cdot b \\
+      &=n_{a,b,d'}\ell(\mu)\frac{(d-2)!(k!)^2((d-2)!)^{\ell(\mu)-1}}{(a-2)!b!\mu_3!\cdots\mu_{\ell(\mu)}!(b!)^2((k-b)!)^2((2b)!(d-2b-2)!)^{\ell(\mu)-1}}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot \\
+      &2((k-b)!)^2\cdot ((d-2b-2)!)^{\ell(\mu)-1}(\ell(\mu)-1)! \cdot\frac 1{2b}(b!)^2\cdot 2\cdot ((2b)!)^{\ell(\mu)-1}\cdot \mu_3!\cdots\mu_{\ell(\mu)}!(a-2)!b!\cdot b \\
       &=n_{a,b,d'}(\ell (\mu))!N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)}
     \end{align*}
     so the contribution to $N_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)}}(a,b,\mu')$ is $n_{a,b,d'}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')$.
@@ -2194,17 +2204,16 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
 \begin{cor}
   \label{cor:twos}
   Let $d=2k$ be any even integer greater than $2$. For any $\mu$ with sum $|\mu|=d$, $N_{(2^k),(2^k)}(\mu)=3\cdot 2^{\ell(\mu)-1}$.
-  %TODO: edit to incorporate special cases from previous theorem
 \end{cor}
 \begin{proof}
-  We can prove this by induction on $\ell(\mu)$; the base case $\ell(\mu)=1$ was proven in Theorems~\ref{thm:combinatorial} and \ref{thm:genusreduction3}. Assume
+  We can prove this by induction on $\ell(\mu)$; the base case $\ell(\mu)=1$ was proven in Theorem~\ref{thm:combinatorial}. Assume
   the result for all $\nu$ with $\ell(\nu)< r$, and suppose $\ell(\mu)=r\geq 2$.
   Then we can write $\mu=(a,b,\mu')$ with $d'=|\mu'|$. If $a=b$, then we have
   four cases:
   \begin{enumerate}
   \item If $\mu'$ is empty: $N_{(2^k),(2^k)}(a,a)=N_{(2^k),(2^k)}(2a)+3=3+3=3\cdot 2^{r-1}$
   \item If $\mu'=(2)$: $N_{(2^k),(2^k)}(a,a,2)=N_{(2^k),(2^k)}(2a,2)+6=6+6=12=3\cdot 2^{r-1}$
-  \item If $\mu'=(1,1)$: $N_{(2^k),(2^k)}(a,a,1,1)=N_{(2^k),(2^k)}(2a,1,1)+12=12+12+3\cdot 2^{r-1}$
+  \item If $\mu'=(1,1)$: $N_{(2^k),(2^k)}(a,a,1,1)=N_{(2^k),(2^k)}(2a,1,1)+12=12+12=3\cdot 2^{r-1}$
   \item If $d'>2$:
       \begin{align*}
     N_{(2^k),(2^k)}(a,a,\mu') &= N_{(2^k),(2^k)}(2a,\mu')+2N_{(2^{k-a}),(2^{k-a})}(\mu') \\
@@ -2232,7 +2241,7 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
     \end{enumerate}
   \end{proof}
 
-\chapter{$S_{\a,\b}$}
+\chapter{Invariants $S_{\a,\b}$}
 
 In this chapter, we consider a family of invariants $N_{g,\sigma,\nu}$ where
 one ramification profile
@@ -3383,11 +3392,11 @@ H((d),(2^k),(2^{k-1},1,1))=\frac 12
   \[
   Z\sigma=XY\sigma=XY'
   \]
-  is a product of two disjoint cycles. By the lemma above,
+  is a product of two disjoint cycles. By Lemma~\ref{lem:even},
   this occurs if and only if $X$ and $Y'$ multiply to two disjoint $k$-cycles and are of
   the form written in the lemma, so the number of corresponding choices
   for $X$ and $Y$ is equal to the number of choices for $X$ and $Y'$ multiplying
-  to two disjoint $k$-cycles (of which there are $(d-1)!$ by Claim 8) times the number
+  to two disjoint $k$-cycles (of which there are $(d-1)!$ by the proof of Claim~\ref{claim:twoscomplete}) times the number
   of choices for $\sigma$, of which there are $k$. Thus,
   \[
   H((d),(2^k),(2^{k-1},1,1))=\frac{(d-1)!\cdot k}{d!}=\frac 12
@@ -3407,7 +3416,7 @@ H((d),(2^k,1),(2^k,1))=1
   $\sigma$ and $\tau$ are of cycle type $(2^k,1)$ and $\sigma\tau$ is a $d$-cycle.
   First, fix any $\sigma$ of cycle type $(2^k,1)$; without loss of generality,
   assume $\sigma(1)=1$. Similarly
-  to Lemma TODO, we observe that $\sigma\tau$ is a $d$-cycle if
+  to Lemma~\ref{lem:even}, we observe that $\sigma\tau$ is a $d$-cycle if
   and only if there exist $y_0=1,\ y_1,\dots,y_k$ such that
   \[
   \{1,\dots,d\}=\{1,y_1,\dots,y_k,\sigma(y_1),\dots,\sigma(y_k)\}
@@ -3584,7 +3593,7 @@ so $X_{(2,2)}$ is a disjoint union of four curves each corresponding to a 2-tors
 \[
 C_i=\text{image}(f_i:E\hookrightarrow(\P^3)^*),\ f_i(x)=H\text{ where }H\cap E=2x+2(t_i-x)
 \]
-Note that $f_i$ is 2-to-1 ($x$ and $t_i-x$ are in the same fiber), so $C_i\cong E/S_2\cong\P^1$. See Listing~\ref{code:X22} for the computation in M2 to compute $X_{(2,2)}$; it turns out that each $C_i$ is a plane conic. By counting points of
+Note that $f_i$ is 2-to-1 ($x$ and $t_i-x$ are in the same fiber), so $C_i\cong E/S_2\cong\P^1$. See Listing~\ref{code:X22} for the computation in Macaulay2 to compute $X_{(2,2)}$; it turns out that each $C_i$ is a plane conic. By counting points of
 intersection of the images of $C_i$ under $\pi:(\P^3)^*\dashrightarrow\P^2$, we find that
 \[
 N_{(2,2),(2,2)}(4)=3.
@@ -3660,8 +3669,9 @@ N_{(3,1),(3,1)}(4)=20.
 \end{document}
 
 %TODO:
-%formatting: multi line equations
 %acknowledgements
+%edit abstract
+%references: should have url/doi?
 %label a few more things as figures
 %add a few more citations
 
