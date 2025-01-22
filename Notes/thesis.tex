@@ -24,9 +24,9 @@
 \usepackage[shortlabels]{enumitem}
 \usepackage{tocbasic}
 \usepackage{hyperref}
-%\usepackage{biblatex}
+\usepackage{url}
 \usepackage{listings}
-%\addbibresource{sources.bib}
+\usepackage[T1]{fontenc}
 
 \makeatletter
 \newcommand*{\relrelbarsep}{.386ex}
@@ -113,17 +113,18 @@
 % YOUR DOCUMENT (start here)
 %==============================================================================
 
-\definecolor{myblue}{RGB}{100,180,255}
-\definecolor{mygreen}{RGB}{80,160,80}
-\definecolor{myred}{RGB}{200,120,100}
+\definecolor{myblue}{RGB}{120,94,240}
+\definecolor{mygreen}{RGB}{255,194,10}
+\definecolor{myred}{RGB}{0,158,115}
+\definecolor{mypink}{RGB}{220,38,127}
 
-\title{Reverse Hurwitz counts of genus $1$ curves}
+\title{Reverse Hurwitz Counts of Genus $1$ Curves}
 
 \author{Michael Mueller}
 
 \department{Mathematics}
 
-\year=2024
+\year=2025
 
 \email{mmuelle@umich.edu}
 
@@ -137,9 +138,21 @@
 % Dedication (the input [7] determines the style -- 7 is Rackham's preferred style)
 % \hidededication{%
 
-%\dedication[7]{
-%  My dedication...
-%  }
+\dedication[7]{
+%  \textit{To those displaced and discarded by the University (and world), and all those who struggle for a new one.
+%    And in particular: to the Palestinian struggle and the
+  %    righteous movement for divestment.}
+%  \textit{To all struggles toward a new University; in particular to the
+%    movement for a University that divests from the murder of Palestinians and invests in life.}
+\textit{To all struggles toward a people's University, one that divests from the murder of Palestinians and invests in life.}
+  
+%  \textit{To the Palestinian cause, and to all struggles toward a new University that divests from death and invests in life.}
+%        righteous movement for our institutions to divest from death and invest in life.}
+    
+%  And in particular: to the Palestian people, whose liberation is necessary for to TODO; may they win liberation from the river
+%  to the sea.
+%  TODO
+  }
 
 % Acknowledgments (the input [7] determines the style -- 7 is Rackham's preferred style)
 
@@ -164,17 +177,27 @@ Professor David Speyer
 \chair{Professor First Name}
 
 \acknowledgments[7]{
-        I am indebted to many people who supported me throughout my PhD and made this work possible, including:
-      \begin{itemize}
-      \item My advisor, Aaron Pixton, for his generous mentorship and help;
-      \item Teresa Stokes, Kayla Papp and other (current/former) math department staff, without whom none of us could function;
-      \item Fellow math grads (Karthik, Suchitra, Anna, Shelby, Sayantan, Mala, Sameer, Danny, Andy, Maxie, and more) for their friendship, camaraderie, and
-        help navigating grad school;
-        \item My parents, brother and the rest of my family, as well as my partner Tif, for their unwavering support;
-      \item Comrades in GEO and TAHRIR (Lucy, Kathleen, Jared, Ember, Evelyn, Finn, Garima, Sahil, Amir F, Amir M, Rebecca, the SIs, Ethan, Yash, Moayad, Sammie, Avi, K, and more), who
-        have shown what it is to support each other through action, and what we owe each other --- from Ann Arbor to Palestine.
-        \end{itemize}
-TODO
+
+  My time as a PhD student has confirmed to me how the work we do is never done alone, but requires many forms of
+  support and community.
+  I am indebted to many people who supported me throughout my PhD and made this work possible:
+
+  My advisor, Aaron Pixton, has provided me with generous mentorship over the years; his consistent guidance
+  and mathematical expertise was hugely helpful, especially when I felt stuck or unsure of next steps. Many ideas
+  in this dissertation came out of our regular meetings, which were invaluable to me. I am also grateful to the rest of
+  my committee, and to other mathematics faculty I have had conversations with and taken courses from over the years.
+
+  Mathematics department staff, both current and former, have been a huge source of support in graduate school. Kayla Papp (and before her Jessica Highfield) was an essential support to me in navigating the dissertation process; Jessica Randolph provided much-appreciated help with graduate funding; Teresa Stokes was a consistent supporter and lifeline for me and other graduate students over her years as graduate program coordinator, from regular check-ins with each of us to sharing advice on navigating the challenges of graduate school to organizing departmental events that built community. I likely am not even fully aware of how I have benefited from the work done by department staff, without whom this department could not function. %TODO: name more?
+
+  Fellow math graduate students (Karthik, Suchitra, Anna, Shelby, Sayantan, Mala, Sameer, Danny, Andy, Maxie, and more) have been a consistent source of friendship, camaraderie, and help navigating graduate school. From studying together in the first-year basement office, to celebrating birthdays and holidays, to taking action to better our department and working conditions, I deeply appreciate all we have done together and thank you for all you have contributed in enabling me to reach this point.
+
+  My family, particularly my parents and my brother Jeff, have always been a source of encouragement and support throughout my education
+  and my life in general. Without them, I could not be here. My partner Tif has also been an unwavering support and I am deeply grateful for her presence in my life.
+
+  Finally, I owe more than I can say to comrades
+  in the labor and Palestine solidarity movements (Lucy, Kathleen, Jared, Ember, Evelyn, Finn, Garima, Sahil, Amir F, Amir M, Rebecca, the SIs, Sammie, Avi, Ethan, Yash, Moayad, Ryan, K, and countless other participants).
+  From the 2020 and 2023 GEO strikes to the campaign for divestment at UM,
+  they have shown what it is to support each other through action, and what we owe each other --- from Ann Arbor to Palestine. 
   }
 
 \showlistoftables
@@ -197,20 +220,23 @@ elsewhere ramification profiles $\sigma_1,\dots,\sigma_n$?
 While the enumerative invariants we study bear a similarity to
 generalized Tevelev degrees, they are more difficult to express in
 closed form in general. Nonetheless, we establish key results:
-in Section 4 we prove a closed form result in the case where
+after proving a closed form result in the case where
 the ramification profiles $\sigma_1$ and $\sigma_2$ are
-``even'' (consisting of $2,\dots,2$), and in Section 5 we establish
+``even'' (consisting of $2,\dots,2$), we go on to establish
 recursive formulas to compute invariants where each ramification
-profile is of the form $(x,1,\dots,1)$, ultimately arriving at
-a closed form for a family of invariants with $x=3$.
-We also numerically compute some values of our invariants in sections
-2.3 and 5.5.
+profile is of the form $(x,1,\dots,1)$.
+A special case for $n$ fixed asks: given a generic $d$-pointed genus $1$ curve $(E,p_1,\dots,p_d)$ where $d=k(n-2)+2$, how many covers $(E,p_1,\dots,p_d)\to(\P^1,0)$ are there with $k$ (unspecified) points of $E$ having ramification index $n$? We show that when $n=3$, the answer is an explicit quartic in $k$.
 
 }
 
 \begin{document}
 
-
+\tikzset{amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=2.5em,rounded corners,
+  nodes={draw,solid,circle,minimum size=0.8cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=0.8cm},draw=myred},
+  fsnode/.style={fill=myblue},
+  ssnode/.style={fill=mygreen}}
 
 \chapter{Introduction}
 
@@ -259,7 +285,7 @@ space of {\it stable} $n$-pointed curves:
 \end{dfn}
 
 The moduli of stable $n$-pointed genus $g$ curves is known as $\overline{\mathcal M}_{g,n}$ and is a projective variety (Theorem 2.15 in \cite{Moduli}).
-The properties of stable pointed curves are often reflected in associated graphs:
+The properties of stable pointed curves are often reflected in associated graphs (defined in \cite{Vakil}, p.\ 6):
 
 \begin{dfn}
   The {\bf dual graph} of a stable $n$-pointed curve $(C,x_1,\dots,x_n)$
@@ -276,12 +302,10 @@ containing at last 3 ``special points'', i.e.\ legs or edges (\cite{Moduli}, p.\
 \begin{eg}
   The following is a dual graph of an element of $\overline{\mathcal M}_{4,2}$:
 
-    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+      \caption{Example of a dual graph of a stable curve}
+  \centering
+    \begin{tikzpicture}[thick]
 
   \matrix[amat] (mat1) {$1$\\};
 
@@ -294,17 +318,18 @@ containing at last 3 ``special points'', i.e.\ legs or edges (\cite{Moduli}, p.\
   (mat2-1-1) edge (mat3-1-1);
  
   % draw legs for right side
- \draw  (mat3-1-1) -- +(30:.7) node[anchor=west] {$x_1$}
- (mat3-1-1) -- +(330:.7) node[anchor=west] {$x_2$};
+ \draw  (mat3-1-1) -- +(30:.58) node[anchor=west] {$x_1$}
+ (mat3-1-1) -- +(330:.58) node[anchor=west] {$x_2$};
 
     \end{tikzpicture}
+    \end{figure}
 
     Every moduli $\overline{\mathcal M}_{g,n}$ has a stratification
     by dual graph, and the codimension of each locus
     \[
     X_G=\{(C,x_1,\dots,x_n):\text{ stable graph is }G\}
     \]
-    is equal to the number of edges of $G$ (\cite{Vakil}).
+    is equal to the number of edges of $G$ (Fact 4 of \cite{Vakil}).
   
   \end{eg}
 
@@ -314,7 +339,9 @@ containing at last 3 ``special points'', i.e.\ legs or edges (\cite{Moduli}, p.\
 As we will be counting covers $C\to\P^1$, it will be useful
 to have a compact moduli space of covers of $\P^1$ to work with.
 There are multiple ways to compactify moduli of smooth covers;
-one common one is the moduli of stable maps $\overline{\mathcal M}_{g,n}(\P^1,\beta)$. While this is frequently used in Gromov-Witten theory,
+one common one is the moduli of stable maps $\overline{\mathcal M}_{g,n}(\P^1,\beta)$
+(see \cite{StableMaps} for notes on the subject). While this moduli
+space is frequently used in Gromov-Witten theory,
 we will not use it here.
 
 Instead we will use the {\it moduli of admissible covers}, originally
@@ -384,12 +411,7 @@ there is a type of map, known as an admissible cover of graphs:
   \begin{figure}[h]
   \caption{Illustration of an admissible cover of graphs.}
   \centering
-                                      \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+                                      \begin{tikzpicture}[thick]
 
                                       \matrix[amat,nodes=fsnode] (mat1) {$1$\\
                                       $0$\\};
@@ -406,20 +428,20 @@ there is a type of map, known as an admissible cover of graphs:
  (mat1-2-1) edge["$1$"] (mat2-1-1);
 
   % draw legs for left side
- \draw (mat1-2-1) -- +(160:.7) node[anchor=east] {$p_1$}
- (mat1-2-1) -- +(45:.7) node[anchor=west] {$p_2$};
+ \draw (mat1-2-1) -- +(160:.58) node[anchor=east] {$p_1$}
+ (mat1-2-1) -- +(45:.58) node[anchor=west] {$p_2$};
 
  % draw legs for right side
- \draw (mat2-1-1) -- +(345:.7) node[anchor=west] {$p_{3}$};
+ \draw (mat2-1-1) -- +(345:.58) node[anchor=west] {$p_{3}$};
 
  \matrix[amat,nodes=fsnode,below=2cm of mat1] (mat3) {$0$\\};
 
  \matrix[amat,nodes=ssnode,below=3cm of mat2] (mat4) {$0$\\};
 
-  \draw (mat3-1-1) -- +(160:.7) node[anchor=east] {$q_1$}
-  (mat3-1-1) -- +(45:.7) node[anchor=west] {$q_2$};
+  \draw (mat3-1-1) -- +(160:.58) node[anchor=east] {$q_1$}
+  (mat3-1-1) -- +(45:.58) node[anchor=west] {$q_2$};
    
-  \draw (mat4-1-1) -- +(345:.7) node[anchor=west] {$q_3$};
+  \draw (mat4-1-1) -- +(345:.58) node[anchor=west] {$q_3$};
 
  \draw  (mat3-1-1) edge[] (mat4-1-1);
 
@@ -429,13 +451,22 @@ there is a type of map, known as an admissible cover of graphs:
                                       \end{tikzpicture}
                                       \end{figure}
 
-                                      The numbers in red boxes are the degrees $d_v$ for each vertex of the
+                                      The numbers in green boxes (on the left and right edge of the diagram) are the degrees $d_v$ for each vertex of the
                                       source, while the labels of edges
                                       are the ramification indices $d_e$.
                                       Note that the sum of degrees of
                                       vertices over the blue target
-                                      vertex is $2+1=3$. (In future, we will omit the arrows, and use the convention that vertices in the source map to the vertex in
-  the target of the same color. When no target is drawn, we assume it can be described by a blue and a green vertex with edge between them.)
+                                      vertex is $2+1=3$.
+                                      Throughout this work, when
+                                      drawing diagrams like this, we
+                                      will omit the arrows, and use the
+                                      convention that vertices in the
+                                      source on the left side of the diagram
+                                      (colored purple) map to the left target
+                                      vertex (also colored blue), and similarly
+                                      for the vertices on the right side
+                                      (colored orange).
+When no target is drawn, we assume it can be described by a blue and an orange vertex with edge between them.
 
 \end{eg}
 
@@ -460,8 +491,8 @@ H^{connected}(\sigma_1,\dots,\sigma_n)=\frac{\overline H^{connected}(\sigma_1,\d
 \]
 There is a more general notion of Hurwitz number $H(\sigma_1,\dots,\sigma_n)$, in which the source of
 the cover may be disconnected.
-The following well-known characterization will be used heavily,
-especially in Appendix~\ref{appendix:hurwitz}:
+We will use the following well-known characterization heavily
+ in Appendix~\ref{appendix:hurwitz}:
 \begin{prop}[\cite{Completed}, p.\ 523]
   Let $\sigma_1,\dots,\sigma_n$ be partitions of $d$. The Hurwitz number $H(\sigma_1,\dots,\sigma_n)$ is given by
   \[
@@ -492,20 +523,22 @@ elsewhere ramification profiles $\sigma_1,\dots,\sigma_n$?
 
 \begin{eg}
   \label{eg:firsteg}
-Given a generic elliptic curve $(E,p)$, how many degree $4$ covers $E\to\P^1$ are there
-with $p$ fully ramified over $0$, and ramification profiles $(2,2)$, $(2,2)$ and $(2,1,1)$
+Given a generic elliptic curve $(E,P)$, how many degree $4$ covers $E\to\P^1$ are there
+with $P$ fully ramified over $0$, and ramification profiles $(2,2)$, $(2,2)$ and $(2,1,1)$
 elsewhere?
-(See Figure~\ref{fig:firsteg}.)
+(See Figure~\ref{fig:firsteg}. Our convention, used as well in later pictures
+of maps of curves, is that fixed points are pink with a bold label while
+unfixed points are black with a non-bold label or no label at all.)
 \end{eg}
 
 \begin{figure}[h]
-  \caption{Illustration of the covers in Example~\ref{eg:firsteg}. Here $w$ may be any value in $\P^1-\{0,1,\infty\}$.}
+  \caption{Degree $4$ covers $(E,p)\to(\P^1,0)$ with full ramification at $P$ and ramification profiles $(2,2)$, $(2,2)$ and $(2,1,1)$ elsewhere.}
   \centering
 \begin{tikzpicture}
   \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
-  \foreach \x/\p/\l in {-5/$p$/4}
+  \foreach \x/\p/\l in {-5/$\mathbf{p}$/4}
   {
-    \filldraw[black] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \filldraw[mypink] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (-5, -3.5);
   }
   \foreach \x/\p/\l in {-3//2, -2//2}
@@ -558,8 +591,8 @@ The primary results we establish are as follows:
 Along the way we will demonstrate multiple techniques to calculate the enumerative
 invariants of interest to us:
 \begin{enumerate}
-\item Direct evaluation, by using the line bundle characterization of maps to $\P^1$ to recast the problem as an enumerative question about subvarieties of projective space (explained in Sections \ref{section:direct1} and \ref{section:direct2})
-\item Factoring covers as $C\to\P^1\to\P^1$, with the latter map of degree greater than $1$, where possible; this method is used in Section~\ref{section:comb}
+\item Direct evaluation, by using the line bundle characterization of maps to $\P^1$ to recast the problem as an enumerative question about subvarieties of projective space (explained in Sections \ref{section:direct1} and \ref{section:direct2});
+\item Factoring covers as $C\to\P^1\to\P^1$, with the latter map of degree greater than $1$, where possible; we use this method in Section~\ref{section:comb};
   \item Solving the problem for a non-generic pointed {\it stable} curve. This method is not new; it was used originally in \cite{Cela} thanks to a technical result of \cite{Lian}, and is also used in \cite{Generalized}. Adapted to our context, it allows us to turn our central question into a combination of graph combinatorics and solving recurrence relations. In particular, we use this method heavily in Sections 4 and 5. (We outline this method in Section~\ref{section:admissible}.)
   \end{enumerate}
 
@@ -575,34 +608,34 @@ in that {\it both} a pointed source curve and certain points on the target $\P^1
   $q_1,\dots,q_4\in\P^1$. We can consider degree $4$ maps $C\to\P^1$ where $p_1$ and $p_2$ are unramified points in the same fiber over $q_1$, $p_3$ and $p_4$ are unramified points in the same fiber over $q_2$, and $p_5$ and $p_6$ are ramified of index $2$ over the points $q_3$ and $q_4$ respectively.
 
   \begin{figure}[h]
-  \caption{Illustration of the covers in Example~\ref{eg:tevelev}. Note that each depicted fiber has two unramified points not shown, and there are $5$ simply branched points not shown. Each red point is fixed.}
+  \caption{Illustration of the covers in Example~\ref{eg:tevelev}. Note that each depicted fiber has two unramified points not shown, and there are $5$ simply branched points not shown. Each pink, bolded point is fixed.}
   \centering
 \begin{tikzpicture}
   \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
-  \foreach \x/\p/\l in {-5.5/$p_1$/1, -4.5/$p_2$/1}
+  \foreach \x/\p/\l in {-5.5/$\mathbf{p_1}$/1, -4.5/$\mathbf{p_2}$/1}
   {
-    \filldraw[red] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \filldraw[mypink] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (-3.4+.3*\x, -3.5);
   }
-  \foreach \x/\p/\l in {-3/$p_3$/1, -2/$p_4$/1}
+  \foreach \x/\p/\l in {-3/$\mathbf{p_3}$/1, -2/$\mathbf{p_4}$/1}
   {
-    \filldraw[red] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \filldraw[mypink] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (-1.7+.3*\x, -3.5);
   }
-  \foreach \x/\p/\l in {0.3/$p_3$/2}
+  \foreach \x/\p/\l in {0.3/$\mathbf{p_3}$/2}
   {
-    \filldraw[red] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \filldraw[mypink] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (.2+.3*\x, -3.5);
     }
-  \foreach \x/\p/\l in {3.3/$p_4$/2}
+  \foreach \x/\p/\l in {3.3/$\mathbf{p_4}$/2}
   {
-    \filldraw[red] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
+    \filldraw[mypink] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["$\l$"] (2+.4*\x, -3.5);
     }
 
     \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, -4);
-  \foreach \x/\q in {-5/$q_1$, -2.45/$q_2$, .3/$q_3$, 3.3/$q_4$}
-    \filldraw[red] (\x,-4) circle (0.6mm) node[below] {\q};
+  \foreach \x/\q in {-5/$\mathbf{q_1}$, -2.45/$\mathbf{q_2}$, .3/$\mathbf{q_3}$, 3.3/$\mathbf{q_4}$}
+    \filldraw[mypink] (\x,-4) circle (0.6mm) node[below] {\q};
 \end{tikzpicture}
 
 \label{fig:tevelev}
@@ -614,7 +647,7 @@ in that {\it both} a pointed source curve and certain points on the target $\P^1
   \]
 \end{eg}
 
-\chapter{Problem statement and general approaches}
+\chapter{Problem Statement and General Approaches}
 
 \section{Definitions}
 Fix a positive integer $d$, a nonnegative integer $g$, ordered partitions $\sigma_1,\dots,\sigma_n$ of $d$, and subpartitions $\nu_1,\dots,\nu_n$ (i.e., $\nu_i$ is a subset of $\sigma_i$).
@@ -623,7 +656,7 @@ Let $\Hb_{g,\sigma}$ be the moduli space consisting of degree $d$ admissible cov
 $j\leq \ell(\sigma_i)$, 
 marked points $q_1,\dots,q_n\in X$ such that
 the fiber over $q_i$ is $\{p_{i,1},\dots,p_{i,\ell(\sigma_i)}\}$ with
-ramification profile $\sigma_i$, and the map is \'etale away from $q_1,\dots,q_n$ and any nodes of the target. (See \cite{Admissible} for a reference on moduli spaces of admissible covers.) Our situation is described in Figure \ref{fig:hurwitz}.
+ramification profile $\sigma_i$, and the map is \'etale away from $q_1,\dots,q_n$ and any nodes of the target. Our situation is described in Figure \ref{fig:hurwitz}.
 
 %TODO: something other than color, for accessibility?
 
@@ -632,7 +665,7 @@ Let $m=\sum\ell(\nu_i)$ and $N=\sum\ell(\sigma_i)$.
 We have natural maps:
 %TODO: make sure this will display next
 \begin{figure}[h]
-  \caption{Maps from the Hurwitz moduli space; red points are fixed}
+  \caption{Maps from the Hurwitz moduli space}
   \centering
   \[\begin{tikzcd}
 	{\overline{\mathcal H}_{g,\sigma}} & {\overline{\mathcal M}_{g,N}} \\
@@ -647,10 +680,10 @@ We have natural maps:
 
 
 
-Here $\pi_{\nu}$ remembers the source curve and red points, i.e.\ the points corresponding to $\nu$; $\epsilon_0$ remembers the target with its marked
-branch points; $\epsilon_g$ remembers the source curve and both red
-and black points; and $\iota$ is the forgetful map, which forgets
-the black points of the source and stabilizes.
+Here $\pi_{\nu}$ remembers the source curve and the points corresponding to $\nu$; $\epsilon_0$ remembers the target with its marked
+branch points; $\epsilon_g$ remembers the source curve and all points
+corresponding to $\sigma$; and $\iota$ is the forgetful map, which forgets
+the points of the source corresponding to $\sigma-\nu$ and stabilizes.
 
 
 
@@ -668,16 +701,16 @@ the black points of the source and stabilizes.
 \end{proof}
 
 \begin{figure}[h]
-  \caption{Depiction of a Hurwitz cover with notation used in this thesis}
+  \caption{Depiction of a Hurwitz cover with notation used in this thesis. Pink, bolded points are the ones fixed when counting $N_{g,\sigma,\nu}$.}
   \centering
 \begin{tikzpicture}
   \draw[domain=-6:6,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
-  \foreach \x/\p/\c/\l in {-5.5/$p_{1,1}$/red/$\sigma_{1,1}$, -4.5/$p_{1,\ell(\nu_1)}$/red/$\sigma_{1,\ell(\nu_1)}$, -3/$p_{1,\ell(\sigma_1)}$/black/$\sigma_{1,\ell(\sigma_1)}$}
+  \foreach \x/\p/\c/\l in {-5.5/$\mathbf{p_{1,1}}$/mypink/$\sigma_{1,1}$, -4.5/$\mathbf{p_{1,\ell(\nu_1)}}$/mypink/$\sigma_{1,\ell(\nu_1)}$, -3/$p_{1,\ell(\sigma_1)}$/black/$\sigma_{1,\ell(\sigma_1)}$}
   {
     \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) -- (-3.15+.3*\x, -3.5);
     }
-  \foreach \x/\p/\c in {2.5/$p_{n,1}$/red, 3.5/$p_{n,\ell(\nu_n)}$/red, 4.5/$p_{n,\ell(\sigma_n)}$/black}
+  \foreach \x/\p/\c in {2.5/$\mathbf{p_{n,1}}$/mypink, 3.5/$\mathbf{p_{n,\ell(\nu_n)}}$/mypink, 4.5/$p_{n,\ell(\sigma_n)}$/black}
   {
     \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) -- (2+.3*\x, -3.5);
@@ -710,9 +743,9 @@ where $\Aut(\sigma-\nu)$ denotes automorphisms of $\sigma_i-\nu_i$ for each $i$ 
 |\Aut(\sigma-\nu)|=|\Aut(\{(\sigma_i,\nu_i):1\leq i\leq n\})|\cdot \prod_i|\Aut(\sigma_i-\nu_i)|.
 \]
 \begin{eg}
-  When $g=1$, $\sigma=((2,2),(2,2),(2,2),(2,1,1),(2,1,1))$ and $\nu=((2,2),\emptyset,\emptyset,\emptyset,\emptyset)$, we have
+  When $g=1$, $\sigma=((2,2),(3,1),(2,2),(2,1,1),(2,1,1))$ and $\nu=((2,2),\emptyset,\emptyset,\emptyset,\emptyset)$, we have
   \[
-  N_{g,\sigma,\nu}=\frac{W_{g,\sigma,\nu}}{|\Aut(2,2)|^2\cdot |\Aut(2,1,1)|^2\cdot |\Aut((2,2),(2,2),(2,1,1),(2,1,1))|}=\frac{W_{g,\sigma,\nu}}{2^2\cdot 2^2\cdot 2\cdot 2}.
+  N_{g,\sigma,\nu}=\frac{W_{g,\sigma,\nu}}{|\Aut(3,1)|\cdot |\Aut(2,2)|\cdot |\Aut(2,1,1)|^2\cdot |\Aut((3,1),(2,2),(2,1,1),(2,1,1))|}=\frac{W_{g,\sigma,\nu}}{1\cdot 2\cdot 2^2\cdot 2}
   \]
   Here $\Aut(\{x_1,\dots,x_k\})$ is the subgroup of $S_k$ fixing these elements.
   \end{eg}
@@ -748,7 +781,7 @@ in some significant special cases.
 \begin{eg}
   Consider the case where $d=2$, $n=1$, $\mu=\sigma_1=\sigma_2=\sigma_3=(2)$.
   We know that there is a unique map $(E,p)\to (\mathbb P^1,0)$ of the specified form
-  up to automorphisms of $\P^1$, and it factors through the antipodal automorphism of $E$,
+  up to automorphisms of $\P^1$,
   so
   \[
   N(2)=N_{(2),(2),(2)}(2)=1.
@@ -767,7 +800,7 @@ in some significant special cases.
 \label{section:direct1}
 We can interpret $N_{\sigma_1,\dots,\sigma_n}(\mu)$ as follows.
 
-Let $d>2$. Up to automorphisms of $\P^1$, a degree $d$ map $f:E\to\P^1$ corresponds to a degree $d$ line bundle $\mathcal L$ and a basepoint-free two-dimensional subspace $V\subset H^0(E,\mathcal L)$. By Riemann-Roch, $\mathcal L$ gives an embedding $E\hookrightarrow\P(H^0(E,\mathcal L))\cong\P^{d-1}$, and a basepoint-free two-dimensional subspace $V\subset H^0(E,\mathcal L)$ corresponds to a well-defined composition
+Let $d>2$. Up to automorphisms of $\P^1$, a degree $d$ map $f:E\to\P^1$ corresponds to a degree $d$ line bundle $\mathcal L$ and a basepoint-free two-dimensional subspace $V\subset H^0(E,\mathcal L)$. By Riemann-Roch (\cite{Hartshorne}, p.\ 295), $\mathcal L$ gives an embedding $E\hookrightarrow\P(H^0(E,\mathcal L))\cong\P^{d-1}$, and a basepoint-free two-dimensional subspace $V\subset H^0(E,\mathcal L)$ corresponds to a well-defined composition
 \[
 E\hookrightarrow \P(H^0(E,\mathcal L))=\P(V\oplus V^{\perp})\dashrightarrow\P(V)\cong\P^1
 \]
@@ -808,6 +841,7 @@ with $\dim(X_{\tau})=\ell(\tau)-1$ and with
 \[
 X_{(\tau_1,\tau_2,\dots,\tau_r)}\subset X_{(\tau_1+\tau_2,\tau_3,\dots,\tau_r)}
 \]
+%(TODO: cite this stratification somewhere?)
 We have an alternate interpretation, as well, of $X_{\tau}$ as the locus of effective divisors of shape $\tau$ (or a specialization of $\tau$) equivalent to $\mu_1p_1+\dots+\mu_kp_k$, or equivalently which are zero in the group law of $E$:
 \[
 X_{\tau}\cong\{(x_1^{\tau_1},\dots,x_r^{\tau_r})\in\text{Sym}^d(E):\tau_1x_1+\dots+\tau_rx_r=0\in E\}
@@ -854,11 +888,14 @@ In this section, we use
 Macaulay2 calculations to
 compute $N_{\sigma_1,\dots,\sigma_n}(\mu)$ in a couple degree $4$ cases
 using Proposition~\ref{prop:direct}; the
-code and some details are in Appendix~\ref{appendix:code}). We provide tables with values of some invariants in degrees $3$, $4$, and $5$.
+code and some details are in Appendix~\ref{appendix:code}) We provide tables with values of some invariants in degrees $3$, $4$, and $5$.
 
 Let $d=4$, and consider a generic elliptic curve $(E,p)$ embedded in $\P^3$ via
 $\mathcal L=\mathcal O(4p)$. We have a stratification of $(\P^3)^*$:
 
+\begin{figure}[h]
+  \caption{Stratification of $(\P^3)^*$ by shape of pullback to $E$}
+  \centering
 \begin{tikzpicture}
   \node {$X_{(1,1,1,1)}$}
   child {node {$X_{(1,2)}$}
@@ -867,6 +904,7 @@ $\mathcal L=\mathcal O(4p)$. We have a stratification of $(\P^3)^*$:
       child {node[name=B] {$X_{(4)}$}}}};
   \draw (A) edge (B);
 \end{tikzpicture}
+\end{figure}
 
 First, note that \[X_{(2,2)}\cong\{(x,y)\in E^2:2x+2y=0\}/S_4=\{(x,y)\in E^2:x+y\text{ is 2-torsion}\}/S_2\]
 so $X_{(2,2)}$ is a disjoint union of four curves each corresponding to a 2-torsion point $t_i$:
@@ -886,7 +924,7 @@ the number of fibers of a generic projection $\pi:\P^3\dashrightarrow\P^2$
 containing multiple points of $X_{(3,1)}$. Equivalently this is the number of
 double fibers of the map $X_{(3,1)}-\{H_0\}\to \pi(X_{(3,1)}-\{H_0\})=Y_{(3,1)}$, or the number of nodes of $Y_{(3,1)}$.
 
-Since the projection in this case is generic, $\text{deg}(Y_{(3,1)})=\text{deg}(X_{(3,1)})=12$ (by results of Listing~\ref{code:X31}, or by Lemma~\ref{lemma:degree}) and the degree-genus formula tells us that the arithmetic genus
+Since the projection in this case is generic, $\text{deg}(Y_{(3,1)})=\text{deg}(X_{(3,1)})=12$ (by results of Listing~\ref{code:X31}, or by Lemma~\ref{lemma:degree}) and the degree-genus formula (\cite{Hartshorne} p.\ 54, Exercise 7.2) tells us that the arithmetic genus
 of $Y_{(3,1)}$ is
 \[
 g_a=\frac{(11)(10)}{2}=55
@@ -950,7 +988,7 @@ $\mu$             & $N_{(4,1),(3,1,1)}(\mu)$ & $N_{(3,1,1),(3,1,1),(3,1,1)}(\mu)
 \end{tabular}
 \end{table}
 
-\chapter{Admissible covers}
+\chapter{Admissible Covers}
 \label{section:admissible}
 
 Up to now, we have computed our invariants of interest by direct evaluation in some
@@ -973,15 +1011,13 @@ We first begin with a rough illustration of what we intend to do.
   \pi:\Hb_{1,\sigma}\to\mb_{1,2}
   \]
   
-  Let $A$ be a stable graph consisting of a genus $1$ vertex connected to a genus $0$ vertex, with two legs on the
-  genus $0$ vertex:
+  Let $A$ be the following stable graph:
 
-  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{Stable graph consisting of a genus $1$ vertex connected to a genus $0$ vertex, with two legs on the
+  genus $0$ vertex}
+    \centering
+  \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\};
 
@@ -990,10 +1026,11 @@ We first begin with a rough illustration of what we intend to do.
  \draw  (mat1-1-1) edge (mat2-1-1);
  
   % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$p_{1,1}$}
- (mat2-1-1) -- +(330:.7) node[anchor=west] {$p_{1,2}$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$p_{1,1}$}
+ (mat2-1-1) -- +(330:.58) node[anchor=west] {$p_{1,2}$};
 
-              \end{tikzpicture}
+  \end{tikzpicture}
+  \end{figure}
   
 
   Intuitively we want to count covers from a generic stable curve with dual graph $A$ to a genus $0$
@@ -1002,15 +1039,13 @@ We first begin with a rough illustration of what we intend to do.
   Remembering the marked points, the source should be a stable curve in $\mb_{1,9}$ with dual graph $\hat A$, where $\hat A$
   becomes $A$ after applying a forgetful map.
 
-  One possible graph $\hat A_1$, obtained by putting $p_{5,1}$ and $p_{5,2}$ on the genus $0$ component and other
-  marked points on the genus $1$ component, is the source of a type of admissible cover in $\Hb_{1,\sigma}$:
+  One possible graph $\hat A_1$ is the source of a type of admissible cover in $\Hb_{1,\sigma}$:
 
-                  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{A graph $\hat A_1$ obtained from $A$ by putting $p_{5,1}$ and $p_{5,2}$ on the genus $0$ component and other
+  marked points on the genus $1$ component}
+    \centering
+                  \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\};
 
@@ -1024,32 +1059,31 @@ We first begin with a rough illustration of what we intend to do.
  \draw  (mat1-1-1) edge["$3$"] (mat2-1-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(45:.7) node[anchor=west] {$p_{2,1}$}
- (mat1-1-1) -- +(245:.7) node[anchor=north] {$p_{3,1}$}
- (mat1-1-1) -- +(295:.7) node[anchor=north] {$p_{3,2}$}
- (mat1-1-1) -- +(165:.7) node[anchor=east] {$p_{4,1}$}
- (mat1-1-1) -- +(190:.7) node[anchor=east] {$p_{4,2}$};
-%  (mat1-1-1) -- +(95:.7) node[anchor=south] {$p_{5,1}$}
-% (mat1-1-1) -- +(125:.7) node[anchor=south] {$p_{5,2}$};
+ \draw (mat1-1-1) -- +(45:.58) node[anchor=west] {$p_{2,1}$}
+ (mat1-1-1) -- +(245:.58) node[anchor=north] {$p_{3,1}$}
+ (mat1-1-1) -- +(305:.58) node[anchor=north] {$p_{3,2}$}
+ (mat1-1-1) -- +(160:.58) node[anchor=east] {$p_{4,1}$}
+ (mat1-1-1) -- +(190:.58) node[anchor=east] {$p_{4,2}$};
+%  (mat1-1-1) -- +(95:.58) node[anchor=south] {$p_{5,1}$}
+% (mat1-1-1) -- +(125:.58) node[anchor=south] {$p_{5,2}$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(10:.7) node[anchor=west] {$p_{1,1}$}
- (mat2-1-1) -- +(345:.7) node[anchor=west] {$p_{1,2}$}
- (mat2-1-1) -- +(50:.7) node[anchor=south] {$p_{5,1}$}
- (mat2-1-1) -- +(90:.7) node[anchor=east] {$p_{5,2}$};
+ \draw  (mat2-1-1) -- +(10:.58) node[anchor=west] {$p_{1,1}$}
+ (mat2-1-1) -- +(345:.58) node[anchor=west] {$p_{1,2}$}
+ (mat2-1-1) -- +(50:.58) node[anchor=south] {$p_{5,1}$}
+ (mat2-1-1) -- +(90:.58) node[anchor=east] {$p_{5,2}$};
 
-                \end{tikzpicture}
+                  \end{tikzpicture}
+                  \end{figure}
 
-                  Another possible graph $\hat A_2$, obtained by putting $p_{2,1}$ on the genus $0$ component
-                  and the other marked points on the genus $1$ component,
-                  is the source of another type of admissible cover in $\Hb_{1,\sigma}$ (we omit the target, consisting of a blue and a green genus $0$ vertex with one edge between them):
+                  Another possible graph $\hat A_2$
+                  is the source of another type of admissible cover in $\Hb_{1,\sigma}$ (we omit the target, consisting of a blue and an orange genus $0$ vertex with one edge between them):
 
-                                    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+                  \begin{figure}[h]
+                    \caption{A graph $\hat A_2$ obtained from $A$ by putting $p_{2,1}$ on the genus $0$ component
+                  and the other marked points on the genus $1$ component,}
+                    \centering
+                                    \begin{tikzpicture}[thick]
 
                                       \matrix[amat,nodes=fsnode] (mat1) {$1$\\
                                       $0$\\};
@@ -1066,19 +1100,20 @@ We first begin with a rough illustration of what we intend to do.
  (mat1-2-1) edge["$1$"] (mat2-1-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(35:.7) node[anchor=west] {$p_{5,1}$}
- (mat1-2-1) -- +(35:.7) node[anchor=west] {$p_{5,2}$}
- (mat1-1-1) -- +(220:.7) node[anchor=north] {$p_{3,1}$}
- (mat1-2-1) -- +(220:.7) node[anchor=north] {$p_{3,2}$}
- (mat1-1-1) -- +(165:.7) node[anchor=east] {$p_{4,1}$}
- (mat1-2-1) -- +(165:.7) node[anchor=east] {$p_{4,2}$};
+ \draw (mat1-1-1) -- +(35:.58) node[anchor=west] {$p_{5,1}$}
+ (mat1-2-1) -- +(35:.58) node[anchor=west] {$p_{5,2}$}
+ (mat1-1-1) -- +(220:.58) node[anchor=north] {$p_{3,1}$}
+ (mat1-2-1) -- +(220:.58) node[anchor=north] {$p_{3,2}$}
+ (mat1-1-1) -- +(165:.58) node[anchor=east] {$p_{4,1}$}
+ (mat1-2-1) -- +(165:.58) node[anchor=east] {$p_{4,2}$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(10:.7) node[anchor=west] {$p_{1,1}$}
- (mat2-1-1) -- +(345:.7) node[anchor=west] {$p_{1,2}$}
- (mat2-1-1) -- +(50:.7) node[anchor=south] {$p_{2,1}$};
+ \draw  (mat2-1-1) -- +(10:.58) node[anchor=west] {$p_{1,1}$}
+ (mat2-1-1) -- +(345:.58) node[anchor=west] {$p_{1,2}$}
+ (mat2-1-1) -- +(50:.58) node[anchor=south] {$p_{2,1}$};
 
-                \end{tikzpicture}
+                                    \end{tikzpicture}
+                                    \end{figure}
 
                                     We hope that $W_{(3),(2,1),(2,1),(2,1)}(2,1)$ can be expressed
                                     as a sum of terms corresponding to these kinds of
@@ -1120,7 +1155,7 @@ Following Proposition 3.2 of \cite{Lian}, we have a commutative diagram
         \arrow[from=2-2, to=3-2]
         \arrow[from=3-1, to=3-2, "\xi_A"]
         \arrow[from=1-2, to=3-2, bend left=52, "\pi_{\nu}"]
-        \arrow[from=1-1, to=3-1, bend  right=52, "\phi"]
+        \arrow[from=1-1, to=3-1, bend right=52, "\phi"]
 \end{tikzcd}\]
 
 Here the index set of the top left object
@@ -1192,12 +1227,10 @@ genus $0$ invariants, and illustrate with the following example.
   covers whose source {\it stabilizes} to the kind we want.
   Consider the following picture:
 
-              \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{A stable graph $\Gamma$ specializing to $\hat A$}
+    \centering
+              \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$0$\\};
 
@@ -1207,31 +1240,30 @@ genus $0$ invariants, and illustrate with the following example.
  (mat1-1-1) edge[bend right] (mat2-1-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {$p_{1,1}$}
- (mat1-1-1) -- +(215:.7) node[anchor=east] {$p_{3,1}$}
- (mat1-1-1) -- +(245:.7) node[anchor=north] {$p_{3,2}$}
- (mat1-1-1) -- +(285:.7) node[anchor=west] {$p_{3,3}$};
+ \draw (mat1-1-1) -- +(95:.58) node[anchor=south] {$p_{1,1}$}
+ (mat1-1-1) -- +(215:.58) node[anchor=east] {$p_{3,1}$}
+ (mat1-1-1) -- +(245:.58) node[anchor=north] {$p_{3,2}$}
+ (mat1-1-1) -- +(285:.58) node[anchor=west] {$p_{3,3}$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(60:.7) node[anchor=west] {$p_{2,1}$}
- (mat2-1-1) -- +(305:.7) node[anchor=north] {$p_{4,1}$}
- (mat2-1-1) -- +(330:.7) node[anchor=west] {$p_{4,2}$}
- (mat2-1-1) -- +(360:.7) node[anchor=west] {$p_{4,3}$};
+ \draw  (mat2-1-1) -- +(60:.58) node[anchor=west] {$p_{2,1}$}
+ (mat2-1-1) -- +(305:.58) node[anchor=north] {$p_{4,1}$}
+ (mat2-1-1) -- +(330:.58) node[anchor=west] {$p_{4,2}$}
+ (mat2-1-1) -- +(360:.58) node[anchor=west] {$p_{4,3}$};
 
               \end{tikzpicture}
+              \end{figure}
 
-  This is a stable graph $\Gamma$ that specializes to
+  Note that $\Gamma$ can specialize to
   $\hat A$ in two ways, by contracting either of
   the two edges; each corresponds to a choice of $\hat A$-structure
   as defined in \cite{Schmitt}.
   In the sense of Definition 2.10 from \cite{Lian}, there is an admissible cover of stable graphs $\Gamma\to\Gamma'$ depicted as follows where $a+b=4$:
 
-                \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{First admissible cover $\Gamma\to\Gamma'$}
+    \centering
+                \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$0$\\};
 
@@ -1246,18 +1278,19 @@ genus $0$ invariants, and illustrate with the following example.
  (mat1-1-1) edge[bend right,"$b$"] (mat2-1-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(125:.7) node[anchor=south] {$p_{1,1}$}
- (mat1-1-1) -- +(170:.7) node[anchor=east] {$p_{3,1}$}
- (mat1-1-1) -- +(195:.7) node[anchor=east] {$p_{3,2}$}
- (mat1-1-1) -- +(215:.7) node[anchor=east] {$p_{3,3}$};
+ \draw (mat1-1-1) -- +(125:.58) node[anchor=south] {$p_{1,1}$}
+ (mat1-1-1) -- +(170:.58) node[anchor=east] {$p_{3,1}$}
+ (mat1-1-1) -- +(195:.58) node[anchor=east] {$p_{3,2}$}
+ (mat1-1-1) -- +(215:.58) node[anchor=east] {$p_{3,3}$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$p_{2,1}$}
-  (mat2-1-1) -- +(305:.7) node[anchor=north] {$p_{4,1}$}
- (mat2-1-1) -- +(330:.7) node[anchor=west] {$p_{4,2}$}
- (mat2-1-1) -- +(360:.7) node[anchor=west] {$p_{4,3}$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$p_{2,1}$}
+  (mat2-1-1) -- +(305:.58) node[anchor=north] {$p_{4,1}$}
+ (mat2-1-1) -- +(330:.58) node[anchor=west] {$p_{4,2}$}
+ (mat2-1-1) -- +(360:.58) node[anchor=west] {$p_{4,3}$};
 
                 \end{tikzpicture}
+                \end{figure}
 
                 The contribution of such $(\Gamma,\Gamma')$ is
                 \[
@@ -1277,12 +1310,10 @@ genus $0$ invariants, and illustrate with the following example.
 
                 The other type of cover $\Gamma\to\Gamma'$ to consider can be depicted as follows:
 
-                                \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+                \begin{figure}[h]
+                  \caption{Second admissible cover $\Gamma\to\Gamma'$}
+                  \centering
+                                \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$0$\\};
 
@@ -1303,19 +1334,20 @@ genus $0$ invariants, and illustrate with the following example.
  (mat1-1-1) edge["$1$"] (mat2-3-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(125:.7) node[anchor=south] {$p_{1,1}$}
- (mat1-1-1) -- +(225:.7) node[anchor=east] {$p_{2,1}$};
+ \draw (mat1-1-1) -- +(125:.58) node[anchor=south] {$p_{1,1}$}
+ (mat1-1-1) -- +(225:.58) node[anchor=east] {$p_{2,1}$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$p_{3,1}$}
- (mat2-2-1) -- +(30:.7) node[anchor=west] {$p_{3,2}$}
- (mat2-3-1) -- +(30:.7) node[anchor=west] {$p_{3,3}$}
- (mat2-1-1) -- +(330:.7) node[anchor=west] {$p_{4,1}$}
- (mat2-2-1) -- +(330:.7) node[anchor=west] {$p_{4,2}$}
- (mat2-3-1) -- +(330:.7) node[anchor=west] {$p_{4,3}$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$p_{3,1}$}
+ (mat2-2-1) -- +(30:.58) node[anchor=west] {$p_{3,2}$}
+ (mat2-3-1) -- +(30:.58) node[anchor=west] {$p_{3,3}$}
+ (mat2-1-1) -- +(330:.58) node[anchor=west] {$p_{4,1}$}
+ (mat2-2-1) -- +(330:.58) node[anchor=west] {$p_{4,2}$}
+ (mat2-3-1) -- +(330:.58) node[anchor=west] {$p_{4,3}$};
 
 
                                 \end{tikzpicture}
+                                \end{figure}
 
                                 There are two choices for placement of $p_{3,2}$ and $p_{4,2}$
                                 and two automorphisms of the graph
@@ -1328,9 +1360,10 @@ genus $0$ invariants, and illustrate with the following example.
                                   &=12
                                 \end{align*}
                                 Combining our results,
-                                \[
-                                \frac 12W_{(4),(2,1,1),(2,1,1)}(4)=48+12=60\implies W_{(4),(2,1,1),(2,1,1)}(4)=120\implies N_{(4),(2,1,1),(2,1,1)}(4)=\frac{120}{2^3}=15
-                                \]
+                                \begin{align*}
+                                  \frac 12W_{(4),(2,1,1),(2,1,1)}(4)=48+12=60&\implies W_{(4),(2,1,1),(2,1,1)}(4)=120 \\
+                                  &\implies N_{(4),(2,1,1),(2,1,1)}(4)=\frac{120}{2^3}=15
+                                \end{align*}
                                 This matches our expectation, since $N_{(4),(2,1,1),(2,1,1)}(4)$ counts
                                 nontrivial $4$-torsion points of an elliptic curve.
                                 
@@ -1347,12 +1380,10 @@ are more complicated than Hurwitz numbers.
 
   In the case where $\ell(\mu)\geq 2$, we can consider the following graph $A$:
 
-  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{Graph $A$ with two marked points on a genus $0$ vertex and all others on a genus $1$ vertex}
+    \centering
+  \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\};
 
@@ -1361,15 +1392,16 @@ are more complicated than Hurwitz numbers.
  \draw  (mat1-1-1) edge (mat2-1-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(215:.7) node[anchor=north] {$p_{1,3}$}
- (mat1-1-1) -- +(245:.7) node[anchor=north] {$\dots$}
- (mat1-1-1) -- +(285:.7) node[anchor=north] {$p_{1,\ell(\mu)}$};
+ \draw (mat1-1-1) -- +(165:.58) node[anchor=east] {$p_{1,3}$}
+ (mat1-1-1) -- +(225:.58) node[anchor=north] {$\dots$}
+ (mat1-1-1) -- +(285:.58) node[anchor=north] {$p_{1,\ell(\mu)}$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(60:.7) node[anchor=west] {$p_{1,1}$}
- (mat2-1-1) -- +(330:.7) node[anchor=west] {$p_{1,2}$};
+ \draw  (mat2-1-1) -- +(60:.58) node[anchor=west] {$p_{1,1}$}
+ (mat2-1-1) -- +(330:.58) node[anchor=west] {$p_{1,2}$};
 
-                \end{tikzpicture}
+  \end{tikzpicture}
+  \end{figure}
 
                 By applying the theorem to this graph, we can compute the value of
                 $W_{\sigma_1,\dots,\sigma_n}(\mu)$ by reduction to marked Hurwitz
@@ -1407,7 +1439,7 @@ are more complicated than Hurwitz numbers.
                   \end{proof}
 
 
-\chapter{All twos case}
+\chapter{All Twos Case}
 
 In this chapter we study the invariants $N_{(2^k),(2^k)}(\mu)$ defined for $d=2k$ even.
 We will ultimately prove that
@@ -1704,12 +1736,9 @@ There are two kinds of
 admissible covers $\Gamma\to\Gamma'$ with $\Gamma$ specializing to $\hat A$. The first
 is of the form:
 
-\begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+\begin{figure}[h]
+  \caption{First admissible cover $\Gamma\to\Gamma'$ in ``all twos'' genus reduction}
+\begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$0$\\};
 
@@ -1724,14 +1753,15 @@ is of the form:
  (mat1-1-1) edge["$b$"] (mat2-1-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {$p_{1,1}$}
- (mat1-1-1) -- +(245:.7) node[anchor=north] {$(2,1^{d-2})$};
+ \draw (mat1-1-1) -- +(95:.58) node[anchor=south] {$p_{1,1}$}
+ (mat1-1-1) -- +(245:.58) node[anchor=north] {$(2,1^{d-2})$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$(2^k)$}
- (mat2-1-1) -- +(330:.7) node[anchor=west] {$(2^k)$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$(2^k)$}
+ (mat2-1-1) -- +(330:.58) node[anchor=west] {$(2^k)$};
 
-            \end{tikzpicture}
+\end{tikzpicture}
+\end{figure}
 
             There are two $\hat A$-structures, corresponding to a choice
             of edge to contract, and so $c_{\Gamma}=a+b=d$. The right-hand count here under Theorem~\ref{thm:admissible} is
@@ -1745,14 +1775,15 @@ is of the form:
             =(d-2)!\cdot (k!)^2
             \]
 
-            Now the second picture is of the form:
-            
-            \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+            Now the second picture is of the form shown in Figure~\ref{fig:secondalltwos}.
+            With markings remembered, the number of such diagrams is
+            \[
+            2\cdot k\cdot\binom{d-2}{2}\cdot\binom{d-4}{2}\cdot\dots\cdot\binom 22=2k\cdot\frac{(d-2)!}{2^{k-1}}
+            \]
+                        \begin{figure}[h]
+              \caption{Second admissible cover $\Gamma\to\Gamma'$ in ``all twos'' genus reduction}
+              \centering
+            \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$0$\\};
 
@@ -1775,21 +1806,18 @@ is of the form:
  (mat1-1-1) edge["$2$"] (mat2-4-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {$p_{1,1}$}
- (mat1-1-1) -- +(245:.7) node[anchor=north] {$(2^k)$};
+ \draw (mat1-1-1) -- +(95:.58) node[anchor=south] {$p_{1,1}$}
+ (mat1-1-1) -- +(245:.58) node[anchor=north] {$(2^k)$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$2$}
- (mat2-1-1) -- +(330:.7) node[anchor=west] {$2$}
- (mat2-2-1) -- +(330:.7) node[anchor=west] {$2$}
- (mat2-4-1) -- +(330:.7) node[anchor=west] {$2$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$2$}
+ (mat2-1-1) -- +(330:.58) node[anchor=west] {$2$}
+ (mat2-2-1) -- +(330:.58) node[anchor=west] {$2$}
+ (mat2-4-1) -- +(330:.58) node[anchor=west] {$2$};
 
             \end{tikzpicture}
-
-            With markings remembered, the number of such diagrams is
-            \[
-            2\cdot k\cdot\binom{d-2}{2}\cdot\binom{d-4}{2}\cdot\dots\cdot\binom 22=2k\cdot\frac{(d-2)!}{2^{k-1}}
-            \]
+            \label{fig:secondalltwos}
+            \end{figure}
             There are two $\hat A$-structures, each with associated coefficient $2^{k-1}$,
             and so the combined contribution to the right-hand side of Theorem~\ref{thm:admissible} is
             \begin{align*}
@@ -1839,15 +1867,12 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
 
   Suppose the points $p_{1,1},\dots,p_{1,\ell(\mu)}$ appear on the right side of $\Gamma$, i.e.
   their images are not on the same component as the image of the genus $1$ vertex. If
-  $p_{1,1}$ and $p_{1,2}$ are on the same component, then we have the picture:
-  %TODO: fix picture issue
+  $p_{1,1}$ and $p_{1,2}$ are on the same component, then we have the picture shown in Figure~\ref{fig:alltwos1}.
 
-  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{First cover $\Gamma\to\Gamma'$ in ``all twos'' recursion}
+    \centering
+  \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\
@@ -1876,12 +1901,14 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
 
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$p_{1,\ell(\mu)}$}
- (mat2-3-1) -- +(30:.7) node[anchor=west] {$p_{1,3}$}
- (mat2-4-1) -- +(30:.7) node[anchor=west] {$p_{1,2}$}
- (mat2-4-1) -- +(330:.7) node[anchor=west] {$p_{1,1}$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$p_{1,\ell(\mu)}$}
+ (mat2-3-1) -- +(30:.58) node[anchor=west] {$p_{1,3}$}
+ (mat2-4-1) -- +(30:.58) node[anchor=west] {$p_{1,2}$}
+ (mat2-4-1) -- +(330:.58) node[anchor=west] {$p_{1,1}$};
 
   \end{tikzpicture}
+  \label{fig:alltwos1}
+  \end{figure}
 
   Riemann-Hurwitz for the bottom-right vertex tells us that there must be
   \[
@@ -1890,15 +1917,12 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   additional ramification on that vertex.
   If $\ell(\mu')=0$ and there is a ramification profile of $(2^k)$ on the right side,
   then $1+r=k$ and $r=k-1$ with $a+b=2k$. Since there must be a ramification
-  profile $(2^k)$ on the left, we have $c_i=2$ for all $i$ and the following
-  picture:
+  profile $(2^k)$ on the left, we have $c_i=2$ for all $i$ and the simplified picture in Figure~\ref{fig:alltwos1simplified}.
 
-    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{Simplification of Figure~\ref{fig:alltwos1}}
+    \centering
+    \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\
@@ -1919,18 +1943,20 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
  (mat1-4-1) edge["$2$"] (mat2-1-1);
 
   % draw legs for left side
- \draw  (mat1-1-1) -- +(50:.7) node[anchor=south] {$2$}
- (mat1-1-1) -- +(110:.7) node[anchor=south] {$2$}
- (mat1-1-1) -- +(170:.7) node[anchor=east] {$2$}
- (mat1-2-1) -- +(50:.7) node[anchor=south] {$2$}
- (mat1-4-1) -- +(50:.7) node[anchor=south] {$2$};
+ \draw  (mat1-1-1) -- +(50:.58) node[anchor=south] {$2$}
+ (mat1-1-1) -- +(110:.58) node[anchor=south] {$2$}
+ (mat1-1-1) -- +(170:.58) node[anchor=east] {$2$}
+ (mat1-2-1) -- +(50:.58) node[anchor=south] {$2$}
+ (mat1-4-1) -- +(50:.58) node[anchor=south] {$2$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(50:.7) node[anchor=south] {$p_{1,1}$}
- (mat2-1-1) -- +(115:.7) node[anchor=south] {$p_{1,2}$}
- (mat2-1-1) -- +(260:.7) node[anchor=north] {$(2^k)$};
+ \draw  (mat2-1-1) -- +(50:.58) node[anchor=south] {$p_{1,1}$}
+ (mat2-1-1) -- +(115:.58) node[anchor=south] {$p_{1,2}$}
+ (mat2-1-1) -- +(260:.58) node[anchor=north] {$(2^k)$};
 
     \end{tikzpicture}
+    \label{fig:alltwos1simplified}
+    \end{figure}
 
     By Claim~\ref{claim:twoscycles}, the Hurwitz number $H((2^k),(2^k),(a,b))$ on the right
     side vanishes unless $a=b$.
@@ -1957,7 +1983,7 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   with $c_{\Gamma}=\prod\limits_{i=3}^{\ell(\mu)}\mu_i$, so the corresponding contribution to the right side of Theorem~\ref{thm:admissible} in this case is
   \begin{align*}
     &C\cdot W_{(2^k),(2^k),(2,1^{d-2})^{\ell(\mu)-1}}(a+b,\mu') \prod_{i=3}^{\ell(\mu)}\overline H((\mu_i),(\mu_i),(1^{\mu_i})) \cdot \overline H((a+b),(a,b),(2,1^{a+b-2})) c_{\Gamma} \\
-    &=\frac{\ell(\mu)(d-2)!}{(a+b-2)!\mu_3!\cdots\mu_{\ell(\mu)}!}\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)-1} (\ell(\mu)-1)! N_{(2^k),(2^k)}(a+b,\mu')\cdot \prod_{i=3}^{\ell(\mu)}\mu_i!\cdot (a+b-2)! \tag*{(using Claim~\ref{claim:Hurwitz2})} \\
+    &=\frac{\ell(\mu)(d-2)!\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)-1}(\ell(\mu)-1)!}{(a+b-2)!\mu_3!\cdots\mu_{\ell(\mu)}!}\cdot N_{(2^k),(2^k)}(a+b,\mu')\cdot \prod_{i=3}^{\ell(\mu)}\mu_i!\cdot (a+b-2)! \tag*{(using Claim~\ref{claim:Hurwitz2})} \\
     &=(\ell(\mu))!\cdot (k!)^2\cdot 2\cdot((d-2)!)^{\ell(\mu)}\cdot N_{(2^k),(2^k)}(a+b,\mu') \\
   \end{align*}
 
@@ -1970,15 +1996,14 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
   Next, consider the case where $p_{1,1}$ and $p_{1,2}$ are not on the same component, in which
   case at least one vertex containing one of these two contains some additional ramification
   (necessarily simple).
-  This then exhausts the branch points not arising from the genus $1$ vertex, so we have the following
-  picture:
+  This then exhausts the branch points not arising from the genus $1$ vertex, so we have the picture
+  in Figure~\ref{fig:alltwoscase2}.
 
-    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+
+    \begin{figure}[h]
+    \caption{Second cover $\Gamma\to\Gamma'$ in ``all twos'' recursion}
+    \centering
+    \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\};
@@ -2005,17 +2030,19 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
 
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$p_{1,\ell(\mu)}$}
- (mat2-3-1) -- +(30:.7) node[anchor=west] {$p_{1,3}$}
- (mat2-4-1) -- +(30:.7) node[anchor=west] {$p_{1,1}$}
- (mat2-4-1) -- +(310:.7) node[anchor=west] {$(2,1^{a-2})$}
- (mat2-5-1) -- +(30:.7) node[anchor=west] {$p_{1,2}$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$p_{1,\ell(\mu)}$}
+ (mat2-3-1) -- +(30:.58) node[anchor=west] {$p_{1,3}$}
+ (mat2-4-1) -- +(30:.58) node[anchor=west] {$p_{1,1}$}
+ (mat2-4-1) -- +(310:.58) node[anchor=west] {$(2,1^{a-2})$}
+ (mat2-5-1) -- +(30:.58) node[anchor=west] {$p_{1,2}$};
 
   % draw legs for left side
- \draw  (mat1-2-1) -- +(30:.7) node[anchor=west] {$(2^e)$}
- (mat1-2-1) -- +(80:.7) node[anchor=south] {$(2^e)$};
+ \draw  (mat1-2-1) -- +(30:.58) node[anchor=west] {$(2^e)$}
+ (mat1-2-1) -- +(80:.58) node[anchor=south] {$(2^e)$};
 
     \end{tikzpicture}
+    \label{fig:alltwoscase2}
+    \end{figure}
 
     By Claim~\ref{claim:twoscycles}, $\overline H((2^e),(2^e),(2e-b,b))$ vanishes
     unless $b=e$ (which requires $a+b-2e=a-b>0\iff a>b$).
@@ -2034,7 +2061,7 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
     \begin{align*}
       &n_{a,b,d'}\ell(\mu)\binom{d-2}{a-2,b,\mu_3,\dots,\mu_{\ell(\mu)}}\binom{k}{b}^2\binom{d-2}{2b}^{\ell(\mu)-1}W_{(2^{k-b}),(2^{k-b}),(2,1^{d-2b-2})^{\ell(\mu)-1}}(a-b,\mu') \cdot \\
       &\overline H((2^b),(2^b),(b,b),(1^{2b})^{\ell(\mu)-1}) \cdot\prod_{i=3}^{\ell(\mu)}
-      \overline H((\mu_i),(\mu_i),(1^{\mu_i}))\mu_i\cdot \overline H((a-b,b),(a),(2,1^{a-2}))\overline H((b),(b),(1^b))\cdot b^2 \\
+      \overline H((\mu_i),(\mu_i),(1^{\mu_i}))\mu_i\cdot \overline H((a-b,b),(a),(2,1^{a-2}))\overline H((b),(b),(1^b))b^2 \\
       &=n_{a,b,d'}\ell(\mu)\frac{(d-2)!(k!)^2((d-2)!)^{\ell(\mu)-1}}{(a-2)!b!\mu_3!\cdots\mu_{\ell(\mu)}!(b!)^2((k-b)!)^2((2b)!(d-2b-2)!)^{\ell(\mu)-1}}N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot \\
       &2((k-b)!)^2\cdot ((d-2b-2)!)^{\ell(\mu)-1}(\ell(\mu)-1)! \cdot\frac 1{2b}(b!)^2\cdot 2\cdot ((2b)!)^{\ell(\mu)-1}\cdot \mu_3!\cdots\mu_{\ell(\mu)}!(a-2)!b!\cdot b \\
       &=n_{a,b,d'}(\ell (\mu))!N_{(2^{k-b}),(2^{k-b})}(a-b,\mu')\cdot (k!)^2\cdot 2\cdot ((d-2)!)^{\ell(\mu)}
@@ -2052,29 +2079,31 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
     simple ramification on the genus $1$ vertex (contradicting
     dimensional assumptions).
 
-    If $p_{1,1}$ and $p_{1,2}$ are on different components, we have the following
-    picture:
+    If $p_{1,1}$ and $p_{1,2}$ are on different components, we have the picture in Figure~\ref{fig:impossiblecover}.
+    This is impossible by Riemann-Hurwitz for the bottom-right vertex, and so
+    we are left with one remaining picture to consider where $p_{1,1}$ and
+    $p_{1,2}$ appear on the same component (here $2e=a+b$), in Figure~\ref{fig:thirdcoveralltwos}.
 
-        \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+
+
+      \begin{figure}[h]
+    \caption{Impossible cover $\Gamma\to\Gamma'$ in ``all twos'' recursion}
+    \centering
+        \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\
   $0$\\};
 
-  \matrix[dmat,left=2cm of mat1] (degrees1) {$d-a-b$\\
+  \matrix[dmat,left=0.6cm of mat1] (degrees1) {$d-a-b$\\
     $a$\\
   $b$\\};
 
- \matrix[amat,right=7cm of mat1,nodes=ssnode] (mat2) {$0$\\
+ \matrix[amat,right=6cm of mat1,nodes=ssnode] (mat2) {$0$\\
    $0$ \\
    $0$ \\
    $0$\\};
- \matrix[dmat,right=1.5cm of mat2] (degrees2) {$1$\\
+ \matrix[dmat,right=1.7cm of mat2] (degrees2) {$1$\\
    \vdots\\
    $1$ \\
    $e$\\};
@@ -2088,25 +2117,21 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
 
  % draw legs for right side
  \draw  
- (mat2-4-1) -- +(30:.7) node[anchor=west] {$(2,1^{e-2})$}
- (mat2-4-1) -- +(310:.7) node[anchor=west] {$(2,1^{e-2})$};
+ (mat2-4-1) -- +(30:.58) node[anchor=west] {$(2,1^{e-2})$}
+ (mat2-4-1) -- +(310:.58) node[anchor=west] {$(2,1^{e-2})$};
 
   % draw legs for left side
- \draw  (mat1-2-1) -- +(30:.7) node[anchor=west] {$p_{1,1}$}
- (mat1-3-1) -- +(30:.7) node[anchor=west] {$p_{1,2}$};
+ \draw  (mat1-2-1) -- +(30:.58) node[anchor=west] {$p_{1,1}$}
+ (mat1-3-1) -- +(30:.58) node[anchor=west] {$p_{1,2}$};
 
-    \end{tikzpicture}
+        \end{tikzpicture}
+        \label{fig:impossiblecover}
+        \end{figure}
 
-        This is impossible by Riemann-Hurwitz for the bottom-right vertex, and so
-        we are left with one remaining picture to consider where $p_{1,1}$ and
-        $p_{1,2}$ appear on the same component (here $2e=a+b$):
-
-                \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=1.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=1.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+          \begin{figure}[h]
+    \caption{Third cover $\Gamma\to\Gamma'$ in ``all twos'' recursion}
+    \centering
+                \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\};
@@ -2139,16 +2164,18 @@ We now aim to find a recursion for the terms $N_{(2^k),(2^k)}(\mu)$. In particul
 
  % draw legs for right side
  \draw  
- (mat2-4-1) -- +(30:.7) node[anchor=west] {$2$}
- (mat2-4-1) -- +(310:.7) node[anchor=west] {$2$};
+ (mat2-4-1) -- +(30:.58) node[anchor=west] {$2$}
+ (mat2-4-1) -- +(310:.58) node[anchor=west] {$2$};
 
   % draw legs for left side
- \draw  (mat1-2-1) -- +(50:.7) node[anchor=west] {$p_{1,1}$}
- (mat1-2-1) -- +(80:.7) node[anchor=south] {$p_{1,2}$}
- (mat1-2-1) -- +(160:.7) node[anchor=east] {$(2^e)$}
- (mat1-2-1) -- +(220:.7) node[anchor=north] {$(2^e)$};
+ \draw  (mat1-2-1) -- +(50:.58) node[anchor=west] {$p_{1,1}$}
+ (mat1-2-1) -- +(80:.58) node[anchor=south] {$p_{1,2}$}
+ (mat1-2-1) -- +(160:.58) node[anchor=east] {$(2^e)$}
+ (mat1-2-1) -- +(220:.58) node[anchor=north] {$(2^e)$};
 
                 \end{tikzpicture}
+                \label{fig:thirdcoveralltwos}
+                \end{figure}
 
                 By Claim~\ref{claim:twoscycles}, $\overline H((a,b),(2^e),(2^e))$ vanishes unless $a=b$.
                 There are $\binom{\ell(\mu)}{2}$ choices for simple ramification profiles to place on the right
@@ -2345,10 +2372,11 @@ Theorem~\ref{thm:reducea}).
   This counts genus $1$ covers of $\P^1$ of the following form, with red points fixed:
 
   \begin{figure}[h]
+    \caption{Example of a cover counted by $S_{\{3,2,2\},\{2\}}(4)$}
   \centering
 \begin{tikzpicture}
   \draw[domain=-7:7,samples=50,color=gray!50,thick] plot (\x, \x^3/64 - \x/2);
-  \foreach \x/\p/\c/\d in {-6/$x_1$/red/4}
+  \foreach \x/\p/\c/\d in {-6/$\mathbf{x_1}$/mypink/4}
   {
     \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (-6, -3.5);
@@ -2372,7 +2400,7 @@ Theorem~\ref{thm:reducea}).
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (1+.3*\x, -3.5);
   }
   
-  \foreach \x/\p/\c/\d in {4/$P_{1,1}$/red/2, 4.8/$P_{1,2}$/black/1, 5.7/$P_{1,3}$/black/1}
+  \foreach \x/\p/\c/\d in {4/$\mathbf{P_{1,1}}$/mypink/2, 4.8/$P_{1,2}$/black/1, 5.7/$P_{1,3}$/black/1}
   {
     \filldraw[\c] (\x,\x^3/64 - \x/2) circle (0.6mm) node[above] {\p};
     \draw[->] (\x,\x^3/64 - \x/2 - .4) to["\d"] (3+.3*\x, -3.5);
@@ -2452,12 +2480,10 @@ for the invariants $T_{k,1,1}^{(3)}$ in Proposition~\ref{prop:deg4}.
   with a genus $1$ component containing $x_1,\dots,x_k$ and all but one
   of the other fixed points:
 
-                  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+    \begin{figure}[h]
+    \caption{Graph $A$ in the reduction of $\b$}
+    \centering
+                  \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\};
 
@@ -2466,30 +2492,27 @@ for the invariants $T_{k,1,1}^{(3)}$ in Proposition~\ref{prop:deg4}.
  \draw  (mat1-1-1) edge (mat2-1-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(35:.7) node[anchor=west] {$P_{\ell(\b),1}$}
- (mat1-1-1) -- +(60:.7) node[anchor=south] {$\dots$}
- (mat1-1-1) -- +(100:.7) node[anchor=south] {$P_{2,1}$}
- (mat1-1-1) -- +(285:.7) node[anchor=north] {$(x_1,\dots,x_k)$};
+ \draw (mat1-1-1) -- +(35:.58) node[anchor=west] {$P_{\ell(\b),1}$}
+ (mat1-1-1) -- +(60:.58) node[anchor=south] {$\dots$}
+ (mat1-1-1) -- +(100:.58) node[anchor=south] {$P_{2,1}$}
+ (mat1-1-1) -- +(285:.58) node[anchor=north] {$(x_1,\dots,x_k)$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(60:.7) node[anchor=west] {$x_{k+1}$}
- (mat2-1-1) -- +(330:.7) node[anchor=west] {$P_{1,1}$};
+ \draw  (mat2-1-1) -- +(60:.58) node[anchor=west] {$x_{k+1}$}
+ (mat2-1-1) -- +(330:.58) node[anchor=west] {$P_{1,1}$};
 
-                \end{tikzpicture}
+                  \end{tikzpicture}
+                  \end{figure}
 
                   Note that $|\Aut(A)|=1$.
 We now aim to count admissible covers of graphs $\Gamma\to\Gamma'$ where $\Gamma$ has a $\hat A$-structure and $\hat A$ specializes to $A$.
 Recall by Lemma~\ref{lem:branchpoints} that there are two branch points not
   arising from the genus $1$ component.
   
-  A cover of graphs with $x_1,\dots,x_k$ on the right side looks like:
-
-\begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{First cover $\Gamma\to\Gamma'$ in reduction of $\b$}
+    \centering
+\begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\
@@ -2517,26 +2540,33 @@ Recall by Lemma~\ref{lem:branchpoints} that there are two branch points not
  (mat1-4-1) edge["$c_r$"] (mat2-4-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {fixed points};
+ \draw (mat1-1-1) -- +(95:.58) node[anchor=south] {fixed points};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$x_1$}
- (mat2-3-1) -- +(30:.7) node[anchor=west] {$x_k$}
- (mat2-4-1) -- +(30:.7) node[anchor=west] {$x_{k+1}$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$x_1$}
+ (mat2-3-1) -- +(30:.58) node[anchor=west] {$x_k$}
+ (mat2-4-1) -- +(30:.58) node[anchor=west] {$x_{k+1}$};
 
 \end{tikzpicture}
+\label{fig:reduceb1}
+\end{figure}
 
+    A cover of graphs with $x_1,\dots,x_k$ on the right side looks like Figure~\ref{fig:reduceb1}.
 There are two branch points outside the genus $1$ component, which must be the images of
 $x_1,\dots,x_k,x_{k+1}$ and of $P_{1,1}$. This means there is no extra ramification on any genus $0$ component, which is why each top right bubble
 connects only to the genus $1$ component. The bottom right bubble must have some ramification beyond what is pictured here, which is necessarily
-$P_{1,1}$. So our diagram looks like:
+$P_{1,1}$, so our diagram looks like Figure~\ref{fig:reduceb1simplified}.
+  As there is no extra ramification outside the genus $1$ component,
+  the dimension reduction of $r$ should match the codimension reduction
+  corresponding to the removal of $P_{1,1}$, which is $y-1$. So $r=y-1$ and we
+  have the first term in the claim, since $H((n),(y,1,\dots),(n-y+1,1,\dots))=1$.
 
-  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+
+\begin{figure}[h]
+  \caption{Simplification of Figure~\ref{fig:reduceb1}}
+    \label{fig:reduceb1simplified}
+    \centering
+  \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\
@@ -2564,32 +2594,30 @@ $P_{1,1}$. So our diagram looks like:
  (mat1-4-1) edge["$1$"] (mat2-4-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {fixed points};
+ \draw (mat1-1-1) -- +(95:.58) node[anchor=south] {fixed points};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$x_1$}
- (mat2-3-1) -- +(30:.7) node[anchor=west] {$x_k$}
- (mat2-4-1) -- +(30:.7) node[anchor=west] {$x_{k+1}$}
- (mat2-4-1) -- +(330:.7) node[anchor=west] {$P_{1,1}$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$x_1$}
+ (mat2-3-1) -- +(30:.58) node[anchor=west] {$x_k$}
+ (mat2-4-1) -- +(30:.58) node[anchor=west] {$x_{k+1}$}
+ (mat2-4-1) -- +(330:.58) node[anchor=west] {$P_{1,1}$};
 
   \end{tikzpicture}
+  \end{figure}
 
-  As there is no extra ramification outside the genus $1$ component,
-  the dimension reduction of $r$ should match the codimension reduction
-  corresponding to the removal of $P_{1,1}$, which is $y-1$. So $r=y-1$ and we
-  have the first term in the claim, since $H((n),(y,1,\dots),(n-y+1,1,\dots))=1$.
 
   Now consider the case where $x_1,\dots,x_k,x_{k+1}$ are on the left side. In this
   case, the branch points not coming from the genus $1$ component will be
   the image of $P_{1,1}$ and the image of another point $p_{i,1}$ (with ramification index $z\in\mathfrak a$). Consider the possibility that
-  $x_1,\dots,x_k$ are not all on the genus $1$ component:
+  $x_1,\dots,x_k$ are not all on the genus $1$ component.
+    This would require the genus $0$ on the right side to have multiple branch points contributing
+  $e$ ramification,
+  but $P_{1,1}$ cannot live on this component (because of the stabilization condition), a contradiction.
+  Therefore, $x_1,\dots,x_k$ all live on the genus $1$ component.
 
-  \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{$\Gamma\to\Gamma'$ with $x_1,\dots,x_1$ not all on genus $1$ vertex}
+  \begin{tikzpicture}[thick]
 
     \matrix[amat,nodes=fsnode] (mat1) {$0$\\
       $1$\\};
@@ -2605,28 +2633,22 @@ $P_{1,1}$. So our diagram looks like:
  (mat1-2-1) edge["$e-\mu_1$"] (mat2-1-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(120:.7) node[anchor=south] {$x_1$}
- (mat1-2-1) -- +(120:.7) node[anchor=south] {$x_2,\dots,x_k$};
+ \draw (mat1-1-1) -- +(120:.58) node[anchor=south] {$x_1$}
+ (mat1-2-1) -- +(120:.58) node[anchor=south] {$x_2,\dots,x_k$};
 
    % draw legs for right side
- \draw (mat2-1-1) -- +(100:.7) node[anchor=south] {$e$ ramif};
+ \draw (mat2-1-1) -- +(100:.58) node[anchor=south] {$e$ ramif};
 
 
   \end{tikzpicture}
+  \end{figure}
 
-  This would require the genus $0$ on the right side to have multiple branch points contributing
-  $e$ ramification,
-  but $P_{1,1}$ cannot live on this component (because of the stabilization condition), a contradiction.
-  Therefore, $x_1,\dots,x_k$ all live on the genus $1$ component.
+  Moreover the points $P_{1,1}$ and $p_{i,1}$ cannot lie on separate components, because the diagram in Figure~\ref{fig:nocompletion1} cannot be completed.
 
-  The points $P_{1,1}$ and $p_{i,1}$ cannot lie on separate components, because the following diagram cannot be completed:
-
-        \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{Cover $\Gamma\to\Gamma'$ with $P_{1,1}$ and $p_{i,1}$ on separate components}
+    \centering
+        \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\};
@@ -2642,26 +2664,26 @@ $P_{1,1}$. So our diagram looks like:
  \draw  (mat1-2-1) edge["$y$"] (mat2-2-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(115:.7) node[anchor=south] {fixed points}
- (mat1-1-1) -- +(260:.7) node[anchor=north] {$x_1,\dots,x_k$}
- (mat1-2-1) -- +(260:.7) node[anchor=east] {$x_{k+1}$};
+ \draw (mat1-1-1) -- +(115:.58) node[anchor=south] {fixed points}
+ (mat1-1-1) -- +(260:.58) node[anchor=north] {$x_1,\dots,x_k$}
+ (mat1-2-1) -- +(260:.58) node[anchor=east] {$x_{k+1}$};
 
    % draw legs for right side
- \draw (mat2-1-1) -- +(75:.7) node[anchor=south] {$p_{i,1}$}
- (mat2-2-1) -- +(265:.7) node[anchor=north] {$P_{1,1}$};
+ \draw (mat2-1-1) -- +(75:.58) node[anchor=south] {$p_{i,1}$}
+ (mat2-2-1) -- +(265:.58) node[anchor=north] {$P_{1,1}$};
 
 
- \end{tikzpicture}
+        \end{tikzpicture}
+        \label{fig:nocompletion1}
+        \end{figure}
 
   Therefore $P_{1,1}$ and $p_{i,1}$ lie on the same genus $0$ component, all other genus $0$ components on the right side have degree $1$,
-  and we end up with:
-  
-        \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  and we end up with a cover described in Figure~\ref{fig:reduceb2}.
+
+    \begin{figure}[h]
+    \caption{Second cover $\Gamma\to\Gamma'$ in reduction of $\b$}
+    \centering
+        \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\};
@@ -2684,16 +2706,18 @@ $P_{1,1}$. So our diagram looks like:
  (mat1-2-1) edge["$n$"] (mat2-4-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(115:.7) node[anchor=south] {fixed points}
- (mat1-1-1) -- +(260:.7) node[anchor=north] {$x_1,\dots,x_k$}
- (mat1-2-1) -- +(260:.7) node[anchor=north] {$x_{k+1}$};
+ \draw (mat1-1-1) -- +(115:.58) node[anchor=south] {fixed points}
+ (mat1-1-1) -- +(260:.58) node[anchor=north] {$x_1,\dots,x_k$}
+ (mat1-2-1) -- +(260:.58) node[anchor=north] {$x_{k+1}$};
 
    % draw legs for right side
- \draw (mat2-4-1) -- +(75:.7) node[anchor=south] {$P_{1,1}$}
- (mat2-4-1) -- +(265:.7) node[anchor=north] {$p_{i,1}$};
+ \draw (mat2-4-1) -- +(75:.58) node[anchor=south] {$P_{1,1}$}
+ (mat2-4-1) -- +(265:.58) node[anchor=north] {$p_{i,1}$};
 
 
         \end{tikzpicture}
+        \label{fig:reduceb2}
+        \end{figure}
 
         By Riemann-Hurwitz for the bottom-right component, 
         \[
@@ -2710,7 +2734,7 @@ $P_{1,1}$. So our diagram looks like:
   \label{thm:reducea}
   For $n>0$,
   \begin{align*}
-    S_{\a,\b}(\mu, n, m) &= \sum_{z\in\mathfrak a,\ z\leq n+m}\min(n,m,z-1,n+m-z+1)S_{\a-\{z\},\b}(\mu,n+m-z+2) \\
+    S_{\a,\b}&(\mu, n, m) = \sum_{z\in\mathfrak a,\ z\leq n+m}\min(n,m,z-1,n+m-z+1)S_{\a-\{z\},\b}(\mu,n+m-z+2) \\
     &+\sum_{z_1,z_2\in\a-\{2\}}\hat H((z_1+z_2-n-m-3,n,m),(z_1,1,\dots),(z_2,1,\dots))S_{\a-\{z_1,z_2\},\b+\{z_1+z_2-n-m-3\}}(\mu)
   \end{align*}
 \end{thm}
@@ -2722,19 +2746,22 @@ Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''
   (with ramification index $m$).
   
   If $x_1,\dots,x_k,q,r$ are on the right side, then there is one more branch point arising as the image of some $s$ (with
-  ramification index $z$). Suppose $q$ and $r$ are on different components:
+  ramification index $z$). Suppose $q$ and $r$ are on different components, as in Figure~\ref{fig:reducea1}.
+  (Without loss of generality, we suppose the component containing $q$ is the one that connects to the genus $1$.)
+  There is extra ramification on both the component containing $q$ and the lower left component, a contradiction. Therefore
+  $q$ and $r$ lie on the same component, and our picture must look like Figure~\ref{fig:reducea2}.
 
+  \begin{figure}[h]
+    \caption{Cover $\Gamma\to\Gamma'$ with $q$ and $r$ on different components}
   \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  row sep=1.0em,rounded corners,
+  nodes={draw,solid,circle,minimum size=0.8cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=1.0em,nodes={minimum size=0.8cm},draw=myred}]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\};
 
- \matrix[amat,right=7cm of mat1,nodes=ssnode] (mat2) {$0$\\
+ \matrix[amat,right=4cm of mat1,nodes=ssnode] (mat2) {$0$\\
    \vdots\\
    $0$ \\
    $0$\\
@@ -2747,26 +2774,25 @@ Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''
  (mat1-2-1) edge["$m$"] (mat2-5-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {fixed points};
+ \draw (mat1-1-1) -- +(95:.58) node[anchor=south] {fixed points};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$x_1$}
- (mat2-3-1) -- +(30:.7) node[anchor=west] {$x_k$}
- (mat2-4-1) -- +(30:.7) node[anchor=west] {$q$}
- (mat2-5-1) -- +(30:.7) node[anchor=west] {$r$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$x_1$}
+ (mat2-3-1) -- +(30:.58) node[anchor=west] {$x_k$}
+ (mat2-4-1) -- +(30:.58) node[anchor=west] {$q$}
+ (mat2-5-1) -- +(30:.58) node[anchor=west] {$r$};
 
   \end{tikzpicture}
+      \label{fig:reducea1}
+  \end{figure}
 
-  (Without loss of generality, we suppose the component containing $q$ is the one that connects to the genus $1$.)
-  There is extra ramification on both the component containing $q$ and the lower left component, a contradiction. Therefore
-  $q$ and $r$ lie on the same component, and our picture must look like:
-
-    \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{First cover $\Gamma\to\Gamma'$ in reduction of $\a$}
+    \centering
+    \begin{tikzpicture}[thick, amat/.style={matrix of nodes,nodes in empty cells,
+  row sep=.7em,rounded corners,
+  nodes={draw,solid,circle,minimum size=0.8cm}},
+  dmat/.style={matrix of nodes,nodes in empty cells,row sep=.7em,nodes={minimum size=0.8cm},draw=myred}]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\
@@ -2779,7 +2805,7 @@ Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''
   $1$\\};
 
 
- \matrix[amat,right=8cm of mat1,nodes=ssnode] (mat2) {$0$\\
+ \matrix[amat,right=5cm of mat1,nodes=ssnode] (mat2) {$0$\\
    \vdots\\
    $0$ \\
    $0$\\};
@@ -2790,22 +2816,24 @@ Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''
      $n+m$\\};
 
  \draw  (mat1-1-1) edge["$\mu_1$"] (mat2-1-1)
- (mat1-1-1) edge["$\mu_k$"] (mat2-3-1)
- (mat1-1-1) edge["$n+m-e$"] (mat2-4-1)
- (mat1-2-1) edge["$1$"] (mat2-4-1)
+ (mat1-1-1) edge["$\mu_k$",bend left=10] (mat2-3-1)
+ (mat1-1-1) edge["$n+m-e$",font=\scriptsize] (mat2-4-1)
+ (mat1-2-1) edge["$1$",bend right=2] (mat2-4-1)
  (mat1-4-1) edge["$1$"] (mat2-4-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {fixed points};
+ \draw (mat1-1-1) -- +(95:.58) node[anchor=south] {fixed points};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$x_1$}
- (mat2-3-1) -- +(30:.7) node[anchor=west] {$x_k$}
- (mat2-4-1) -- +(30:.7) node[anchor=west] {$q$}
- (mat2-4-1) -- +(50:.7) node[anchor=west] {$r$}
- (mat2-4-1) -- +(300:.7) node[anchor=west] {$s$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$x_1$}
+ (mat2-3-1) -- +(30:.58) node[anchor=west] {$x_k$}
+ (mat2-4-1) -- +(30:.58) node[anchor=west] {$q$}
+ (mat2-4-1) -- +(50:.58) node[anchor=west] {$r$}
+ (mat2-4-1) -- +(300:.58) node[anchor=west] {$s$};
 
     \end{tikzpicture}
+        \label{fig:reducea2}
+    \end{figure}
 
     By Riemann-Hurwitz for the lower right component,
     \[
@@ -2818,14 +2846,12 @@ Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''
     ramification index $z_1$) and $s_2$ (with ramification index $z_2$). By logic similar to the last proof, the
     $x_1,\dots,x_k$ all lie on the genus $1$ component.
 
-    Consider the possibility that $q$ and $r$ lie on the same component:
+    Consider the possibility that $q$ and $r$ lie on the same component, depicted in Figure~\ref{fig:qrsame}.
 
-      \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+    \begin{figure}[h]
+      \caption{Cover $\Gamma\to\Gamma'$ in reduction of $\a$ with $q$ and $r$ on the same component}
+      \centering
+      \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\};
@@ -2841,22 +2867,23 @@ Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''
  (mat1-2-1) edge["$n+m$"] (mat2-4-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {fixed points}
- (mat1-1-1) -- +(270:.7) node[anchor=north] {$x_1,\dots,x_k$}
- (mat1-2-1) -- +(270:.7) node[anchor=north] {$q$}
- (mat1-2-1) -- +(255:.7) node[anchor=north] {$r$};
+ \draw (mat1-1-1) -- +(95:.58) node[anchor=south] {fixed points}
+ (mat1-1-1) -- +(270:.58) node[anchor=north] {$x_1,\dots,x_k$}
+ (mat1-2-1) -- +(270:.58) node[anchor=north] {$q$}
+ (mat1-2-1) -- +(255:.58) node[anchor=north] {$r$};
 
       \end{tikzpicture}
+      \label{fig:qrsame}
+      \end{figure}
 
       There must be at least one additional branch point from the lower left component and at least two additional branch
-      points from the lower right component, a contradiction. Therefore, $q$ and $r$ lie on separate components:
+      points from the lower right component, a contradiction. Therefore, $q$ and $r$ lie on separate components as in
+      Figure~\ref{fig:qrdiff}.
 
-          \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+      \begin{figure}[h]
+        \caption{Cover $\Gamma\to\Gamma'$ in reduction of $\a$ with $q$ and $r$ on separate components}
+        \centering
+          \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$1$\\
     $0$\\
@@ -2884,16 +2911,18 @@ Here $\hat H$ means  ``multiply by $|\Aut(n,m,z_1+z_2-n-m-3)|/|\Aut(z_1,z_2)|$''
  (mat1-3-1) edge["$m$"] (mat2-4-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {fixed points}
- (mat1-1-1) -- +(245:.7) node[anchor=north] {$x_1,\dots,x_k$}
- (mat1-2-1) -- +(245:.7) node[anchor=north] {$q$}
- (mat1-3-1) -- +(245:.7) node[anchor=north] {$r$};
+ \draw (mat1-1-1) -- +(95:.58) node[anchor=south] {fixed points}
+ (mat1-1-1) -- +(245:.58) node[anchor=north] {$x_1,\dots,x_k$}
+ (mat1-2-1) -- +(245:.58) node[anchor=north] {$q$}
+ (mat1-3-1) -- +(245:.58) node[anchor=north] {$r$};
 
  % draw legs for right side
- \draw  (mat2-4-1) -- +(30:.7) node[anchor=west] {$s_1$}
- (mat2-4-1) -- +(300:.7) node[anchor=west] {$s_2$};
+ \draw  (mat2-4-1) -- +(30:.58) node[anchor=west] {$s_1$}
+ (mat2-4-1) -- +(300:.58) node[anchor=west] {$s_2$};
 
           \end{tikzpicture}
+          \label{fig:qrdiff}
+          \end{figure}
           
           By Riemann-Hurwitz for the lower-right component,
           \[
@@ -2910,9 +2939,13 @@ It remains to calculate $S_{\{a_1,a_2,a_3\},\emptyset}(d)$ as a base case:
   \label{thm:Sabbase}
   When $\a=\{a_1,a_2,a_3\}$, $S_{\a,\emptyset}(d)$ is given by
   \[
-  \sum_{i=1}^3\sum_{e+f=d-a_i+2}\frac{2(a_j+a_k-2) H((d),(a_i,1,\dots),(e,f,1,\dots)) H((e,f),(a_j,1,\dots),(a_k,1,\dots)) |\Aut(e,f,1^{d-e-f})|}{(a_i-2)!|\Aut(a_1,a_2,a_3)|}
-  \]
-  where $\{1,2,3\}=\{i,j,k\}$.
+  S_{\a,\emptyset}(d)=\sum_{i=1}^3\sum_{e+f=d-a_i+2}X_{i}Y_{e,f}\]
+  where
+  \begin{align*}
+    X_{i,e,f}=\frac{2(a_j+a_k-2) H((d),(a_i,1,\dots),(e,f,1,\dots))}{(a_i-2)!|\Aut(a_1,a_2,a_3)|}\cdot \\
+    &H((e,f),(a_j,1,\dots),(a_k,1,\dots)) |\Aut(e,f,1^{d-e-f})|,
+  \end{align*}
+  and $\{1,2,3\}=\{i,j,k\}$.
 \end{thm}
 \begin{proof}
   We will want to calculate $W_{(a_1,1,\dots),(a_2,1,\dots),(a_3,1,\dots)}(d)$ and then divide by \[(d-a_1)!(d-a_2)!(d-a_3)!|\Aut(a_1,a_2,a_3)|\]
@@ -2921,14 +2954,12 @@ It remains to calculate $S_{\{a_1,a_2,a_3\},\emptyset}(d)$ as a base case:
   $x_1$ with a double edge to a genus $0$ component on the right side.
   By Riemann-Hurwitz, the left component has another ramified
   point $p_{i,1}$, and the genus $0$ component to which it has a double
-  edge has two ramified points $p_{j,1}$ and $p_{k,1}$. Our picture looks like:
+  edge has two ramified points $p_{j,1}$ and $p_{k,1}$. Our picture looks like Figure~\ref{fig:Sabbasecase}.
 
-            \begin{tikzpicture}[thick,amat/.style={matrix of nodes,nodes in empty cells,
-  row sep=2.5em,rounded corners,
-  nodes={draw,solid,circle,minimum size=1.0cm}},
-  dmat/.style={matrix of nodes,nodes in empty cells,row sep=2.5em,nodes={minimum size=1.0cm},draw=myred},
-  fsnode/.style={fill=myblue},
-  ssnode/.style={fill=mygreen}]
+  \begin{figure}[h]
+    \caption{Cover $\Gamma\to\Gamma'$ in the computation of $S_{\a,\emptyset}(d)$}
+    \centering
+            \begin{tikzpicture}[thick]
 
   \matrix[amat,nodes=fsnode] (mat1) {$0$\\};
 
@@ -2951,15 +2982,17 @@ It remains to calculate $S_{\{a_1,a_2,a_3\},\emptyset}(d)$ as a base case:
  (mat1-1-1) edge["$1$"] (mat2-4-1);
 
   % draw legs for left side
- \draw (mat1-1-1) -- +(95:.7) node[anchor=south] {$x_1$}
- (mat1-1-1) -- +(245:.7) node[anchor=north] {$p_{i,1}$};
+ \draw (mat1-1-1) -- +(95:.58) node[anchor=south] {$x_1$}
+ (mat1-1-1) -- +(245:.58) node[anchor=north] {$p_{i,1}$};
 
  % draw legs for right side
- \draw  (mat2-1-1) -- +(30:.7) node[anchor=west] {$p_{j,1}$}
- (mat2-1-1) -- +(330:.7) node[anchor=west] {$p_{k,1}$};
+ \draw  (mat2-1-1) -- +(30:.58) node[anchor=west] {$p_{j,1}$}
+ (mat2-1-1) -- +(330:.58) node[anchor=west] {$p_{k,1}$};
  
 
             \end{tikzpicture}
+            \label{fig:Sabbasecase}
+            \end{figure}
 
             Riemann-Hurwitz says that
             \[
@@ -2986,10 +3019,13 @@ It remains to calculate $S_{\{a_1,a_2,a_3\},\emptyset}(d)$ as a base case:
 
             Therefore, the contribution to the right side of Theorem~\ref{thm:admissible} is
             \begin{align*}
-              &\frac{c_{\Gamma}}{|\Aut(\Gamma)|}\binom{d-a_j}{e+f-a_j}\binom{d-a_k}{e+f-a_k}(d-e-f)!\cdot\overline H((d),(a_i,1,\dots),(e,f,1,\dots))\cdot\overline H((e,f),(a_j,1,\dots),(a_k,1,\dots)) \\
-              &=\frac{e+f}{|\Aut(e,f)|}\cdot\frac{(d-a_j)!(d-a_k)!}{(e+f-a_j)!(e+f-a_k)!((d-e-f)!)^2}\cdot (d-e-f)!\cdot H((d),(a_i,1,\dots),(e,f,1,\dots))\cdot \\
-              &(d-a_i)!|\Aut(e,f,1,\dots)|H((e,f),(a_j,1,\dots),(a_k,1,\dots))\cdot (e+f-a_j)!(e+f-a_k)!|\Aut(e,f)| \\
-              &=\frac{(e+f)\prod\limits_{\ell=1}^3(d-a_{\ell})!\cdot H((d),(a_i,1,\dots),(e,f,1,\dots))H((e,f),(a_j,1,\dots),(a_k,1,\dots)) |\Aut(e,f,1,\dots)|}{(d-e-f)!}
+              &\frac{c_{\Gamma}}{|\Aut(\Gamma)|}\binom{d-a_j}{e+f-a_j}\binom{d-a_k}{e+f-a_k}(d-e-f)!\cdot \\
+              &\overline H((d),(a_i,1,\dots),(e,f,1,\dots))\cdot\overline H((e,f),(a_j,1,\dots),(a_k,1,\dots)) \\
+              &=\frac{e+f}{|\Aut(e,f)|}\cdot\frac{(d-a_j)!(d-a_k)!}{(e+f-a_j)!(e+f-a_k)!((d-e-f)!)^2}\cdot (d-e-f)!\cdot \\
+              & H((d),(a_i,1,\dots),(e,f,1,\dots))(d-a_i)!|\Aut(e,f,1,\dots)|H((e,f),(a_j,1,\dots),(a_k,1,\dots))\cdot \\
+              &(e+f-a_j)!(e+f-a_k)!|\Aut(e,f)| \\
+              &=\frac{(e+f)\prod\limits_{\ell=1}^3(d-a_{\ell})!\cdot H((d),(a_i,1,\dots),(e,f,1,\dots))H((e,f),(a_j,1,\dots),(a_k,1,\dots)) }{(d-e-f)!} \cdot \\
+              &\hspace*{0.3in}|\Aut(e,f,1,\dots)|
             \end{align*}
             and so the contribution to $S_{\a,\emptyset}(d)$ is double this
             (given $|\Aut(A)|=2$) divided by the normalizing factor, i.e.
@@ -3099,7 +3135,9 @@ Theorems~\ref{thm:reduceb} and \ref{thm:reducea} specialize to recursions
 within the family $T_{k,t,a}^{(n)}$:
 \begin{itemize}
 \item $T_{k,t,a}^{(n)}=T_{k,1,a-t+1}^{(n)}+\cdot\min(n-1,t-1,a,t+n-a-2)T_{k-1,t+n-a-2,1}^{(n)}+ T_{k,t-a,1}^{(n)}$
-  \item For $a<k(n-2)+2$, \[T_{k,1,a}^{(n)}=T_{k,1,a+1}^{(n)}+(a+1\geq n)T_{k-1,1,a+3-n}^{(n)}+\hat H((a,1,2n-a-4),(n,1,\dots),(n,1,\dots))T_{k-2,2n-a-4,1}^{(n)}\]
+\item For $a<k(n-2)+2$, \[T_{k,1,a}^{(n)}=T_{k,1,a+1}^{(n)}+T_{k-1,1,a+3-n}^{(n)}+\hat H((a,1,2n-a-4),(n,1,\dots),(n,1,\dots))T_{k-2,2n-a-4,1}^{(n)}\] if $a+1\geq n$ and
+  \[T_{k,1,a}^{(n)}=T_{k,1,a+1}^{(n)}+\hat H((a,1,2n-a-4),(n,1,\dots),(n,1,\dots))T_{k-2,2n-a-4,1}^{(n)}\]
+  if $a+1<n$.
 \end{itemize}
 Theorem~\ref{thm:Sabbase} also gives us a formula for
 $T_{k,1,k(n-2)+2}$.
@@ -3269,7 +3307,7 @@ to apply, though with some modifications.
 
 \appendix
 
-\chapter{Hurwitz counts}
+\chapter{Hurwitz Counts}
 \label{appendix:hurwitz}
 
 In this appendix, we establish some results about Hurwitz numbers
@@ -3567,7 +3605,7 @@ In particular if $n=m=1$ and $d>3$, the Hurwitz number is $1$.
   \]
 \end{proof}
 
-\chapter{Macaulay2 calculations}
+\chapter{Macaulay2 Calculations}
 \label{appendix:code}
 
 In order to work explicitly, we use the model of a genus $1$ curve
@@ -3604,8 +3642,9 @@ N_{(2,2),(2,2)}(3,1)=N_{(2,2),(2,2)}(2,2)=6,\]\[ N_{(2,2),(2,2)}(2,11)=12,\ N_{(
 \]
 
 Next we consider $X_{(3,1)}$ (calculated in Listing~\ref{code:X31}). There is a map $g:E\to(\P^3)^*$ sending $q\mapsto H$ where $H$ is the {\it osculating plane} to $E$ at $q$, i.e.\ $H$ intersects $E$ at
-$q$ with multiplicity at least 3,
-and the image of $g$ is $X_{(3,1)}$. This $H$ can be defined as the limit of planes containing $q,r,s\in E$ as $r,s\to q$, or equivalently as the limit of planes containing
+$q$ with multiplicity at least 3, %TODO: better osculating plane reference?
+and the image of $g$ is $X_{(3,1)}$
+(see \cite{Struik}, p.\ 10). This $H$ can be defined as the limit of planes containing $q,r,s\in E$ as $r,s\to q$, or equivalently as the limit of planes containing
 $T_qE$ and $r$ as $r\to q$.
 Let $E=\{F=G=0\}\subset\P^3$. We know that \[T_qE=\{x:\nabla_qF\cdot x=\nabla_qG\cdot x=0\}\]
 A plane containing this tangent line must be of the form \[H=\{x:(a\nabla_qF+b\nabla_qG)\cdot x=0\}\]
@@ -3623,9 +3662,11 @@ H=\left\{\left(u\frac{\partial F}{\partial x}\bigg|_q-v\frac{\partial G}{\partia
 \]
 It remains to find $u$ and $v$. Suppose we have a (non-algebraic) parametrization of $E$ labeled $v(t)$, with $v(0)=q$. Using L'Hopital, our goal
 is to find
-\[
-\lim_{t\to 0}[\nabla_qG\cdot v(t):\nabla_qF\cdot v(t)]=\lim_{t\to 0}[\nabla_qG\cdot v'(t):\nabla_qF\cdot v'(t)]=\lim_{t\to 0}[\nabla_qG\cdot v''(t):\nabla_qF\cdot v''(t)]=[\nabla_qG\cdot v''(0):\nabla_qF\cdot v''(0)]
-\]
+\begin{align*}
+  \lim_{t\to 0}[\nabla_qG\cdot v(t):\nabla_qF\cdot v(t)]&=\lim_{t\to 0}[\nabla_qG\cdot v'(t):\nabla_qF\cdot v'(t)] \\
+  &=\lim_{t\to 0}[\nabla_qG\cdot v''(t):\nabla_qF\cdot v''(t)] \\
+  &=[\nabla_qG\cdot v''(0):\nabla_qF\cdot v''(0)]
+\end{align*}
 
 
 We know
@@ -3647,7 +3688,7 @@ We know that $v'(0)$ is in the kernel of $\nabla_qF$ and $\nabla_qG$ and any gen
   \end{bmatrix}
 \]
 It turns out $[D_1,-D_2,D_3,-D_4]$ works where $D_i$ is the determinant of the matrix produced by deleting the $i^{\text{th}}$ column, which can be shown by duplicating rows and taking determinants
-(which will be 0).
+(which will be 0).% (TODO: citation?)
 
 After doing this it turns out that $X_{(3,1)}$ is a degree 12 curve, with cusps at the planes $H$ with $H\cap E=4q$ for some $q$ (corresponding to the 4-torsion points). There are $4^2=16$ of these singularities.
 
@@ -3670,10 +3711,9 @@ N_{(3,1),(3,1)}(4)=20.
 
 %TODO:
 %acknowledgements
-%edit abstract
 %references: should have url/doi?
-%label a few more things as figures
 %add a few more citations
+%use last defense slide for future directions?
 
 % for paper: less intro background
 % include comparison with Hurwitz/Tevelev, mention the pushforward diagram
